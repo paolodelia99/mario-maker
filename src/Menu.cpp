@@ -43,7 +43,17 @@ void Menu::menuLoop() const {
     {
         if (IsKeyReleased(KEY_UP)) c = c - 1 >= 0 ? (c - 1) % 3 : 2;
         if (IsKeyReleased(KEY_DOWN)) c = (c + 1) % 3;
-        if (IsKeyReleased(KEY_ENTER)) // goto option;
+        if (IsKeyReleased(KEY_ENTER)) {
+            switch (c) {
+                case 0:
+                    startGame();
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
+            }
+        };
 
         BeginDrawing();
 
@@ -63,4 +73,8 @@ void Menu::menuLoop() const {
     UnloadFont(textFont);
 
     CloseWindow();
+}
+
+void Menu::startGame() const {
+
 }

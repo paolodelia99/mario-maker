@@ -1,0 +1,14 @@
+{ "columns":19,
+ "image":"..\/imgs\/overworld-tiset.png",
+ "imageheight":192,
+ "imagewidth":304,
+ "margin":0,
+ "name":"overworld-tiset",
+ "spacing":0,
+ "tilecount":228,
+ "tiledversion":"1.4.1",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":1.4
+}

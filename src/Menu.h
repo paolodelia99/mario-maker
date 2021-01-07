@@ -19,6 +19,8 @@ public:
 private:
     int width;
     int height;
+
+    void startGame() const;
 };
 
 
