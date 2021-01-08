@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "Menu.h"
+#include "../include/Menu.h"
 
 Menu::Menu(int width, int height)
 :width(width), height(height)

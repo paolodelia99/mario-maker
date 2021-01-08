@@ -2,7 +2,8 @@
 // Created by paolo on 07/01/21.
 //
 
-#include "Game.h"
+#include "../include/Game.h"
+#include "../include/Map.h"
 
 Game::Game(char *mapName)
 :mapName(mapName)
@@ -14,6 +15,8 @@ Game::Game(char *mapName)
 void Game::mainLoop() {
 
     SetTargetFPS(60);
+    Map map("../assets/maps/test_world.tmx");
+    map.loadMap();
 
     while (run && !WindowShouldClose()) {
         BeginDrawing();
