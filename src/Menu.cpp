@@ -16,10 +16,6 @@ Menu::~Menu() {
 
 }
 
-void Menu::render() {
-
-}
-
 void Menu::menuLoop() const {
     const char* fontFileName = "../assets/fonts/SuperMario256.ttf";
     const char* menuItems[] = {"Play Game", "Options", "Build Map"};
@@ -28,7 +24,6 @@ void Menu::menuLoop() const {
             (Vector2){200.f, 260.0f},
             (Vector2){200.f, 320.0f}
     };
-    Rectangle menuRec = {0, 0, 100, 180};
     Font titleFont = LoadFontEx(fontFileName, 40, 0, 250);
     Font textFont = LoadFontEx(fontFileName, 32, 0, 250);
     Image coin = LoadImage("../assets/imgs/Gold Coin.png");
@@ -76,5 +71,7 @@ void Menu::menuLoop() const {
 }
 
 void Menu::startGame() const {
+    Game game(NULL);
 
+    game.mainLoop();
 }

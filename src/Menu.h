@@ -5,6 +5,7 @@
 #ifndef MARIO_MAKER_MENU_H
 #define MARIO_MAKER_MENU_H
 #include <raylib.h>
+#include "Game.h"
 
 class Menu {
 public:
@@ -14,7 +15,7 @@ public:
 
     void menuLoop() const;
 
-    void render();
+    void startGame();
 
 private:
     int width;
