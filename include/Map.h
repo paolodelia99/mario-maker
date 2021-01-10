@@ -11,6 +11,7 @@
 #include <tmxlite/Layer.hpp>
 #include <tmxlite/TileLayer.hpp>
 #include <tmxlite/ObjectGroup.hpp>
+#include "Components.h"
 
 class Map {
 public:
@@ -18,18 +19,32 @@ public:
 
     virtual ~Map();
 
+    int getHeight() const;
+
+    int getWidth() const;
+
     void loadMap();
 
     [[nodiscard]] bool isMapLoaded() {
         return loaded;
     }
 
+    const Vector2 &getSpawnPositionP1() const;
+
+    const Vector2 &getSpawnPositionP2() const;
+
+    const std::vector<TileTexture> &getMapTiles() const;
+
 private:
     void loadMapBasicInfo(const tmx::Vector2u& orientation);
 
-    void loadProperties(const std::vector<tmx::Property> properties);
+    void loadProperties(std::vector<tmx::Property> properties);
+
+    void loadMapTiles(std::vector<tmx::Tileset>& tileset, const std::set<unsigned int>& usedTiles);
 
     std::set<unsigned int> loadLayers(const std::vector<tmx::Layer::Ptr>& layers);
+
+    Texture2D getTexture(const std::string& path, tmx::Vector2u tilePosition, tmx::Vector2u tileSize);
 
 private:
     std::string name;
@@ -40,6 +55,7 @@ private:
     unsigned int** backgroundLayer;
     Vector2 spawnPositionP1;
     Vector2 spawnPostionP2;
+    std::vector<TileTexture> tileTextures;
 };
 
 

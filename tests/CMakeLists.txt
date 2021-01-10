@@ -12,4 +12,4 @@ include_directories(${source_dir}/include)
 
 add_test(NAME ${BINARY} COMMAND ${BINARY})
 
-target_link_libraries(${BINARY} PUBLIC ${CMAKE_PROJECT_NAME}_lib gtest)
+target_link_libraries(${BINARY} PUBLIC ${CMAKE_PROJECT_NAME}_lib raylib gtest gtest_main ${TMXLITE_LIBRARIES})

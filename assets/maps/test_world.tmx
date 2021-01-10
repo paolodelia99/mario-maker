@@ -4,7 +4,7 @@
   <property name="spawn_mario_x" value="6"/>
   <property name="spawn_mario_y" value="11"/>
  </properties>
- <tileset firstgid="1" name="tiles-2" tilewidth="16" tileheight="16" tilecount="812" columns="29">
+ <tileset firstgid="1" name="mapTiles-2" tilewidth="16" tileheight="16" tilecount="812" columns="29">
   <image source="../tilesets/tiles-2.png" width="464" height="448"/>
  </tileset>
  <layer id="1" name="background" width="100" height="13">

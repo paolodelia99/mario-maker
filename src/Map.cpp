@@ -2,6 +2,7 @@
 // Created by paolo on 08/01/21.
 //
 
+#include <iostream>
 #include "../include/Map.h"
 
 Map::Map(std::string filename)
@@ -13,8 +14,11 @@ Map::Map(std::string filename)
 }
 
 Map::~Map() {
-    delete graphicsLayer;
-    delete backgroundLayer;
+    for (int i = 0; i < width; i++)
+    {
+        delete[] graphicsLayer[i];
+        delete[] backgroundLayer[i];
+    }
 }
 
 void Map::loadMap() {
@@ -31,14 +35,12 @@ void Map::loadMap() {
         std::set<unsigned int> usedTiles = loadLayers(map.getLayers());
 
         // Load tileset
-        const std::vector<tmx::Tileset>& tileset = map.getTilesets();
-        const auto& tiles = tileset.at(0).getTiles();
-
-
+        loadMapTiles(const_cast<std::vector<tmx::Tileset> &>(map.getTilesets()), usedTiles);
     } else {
-        throw "Cannot load map!";
+        throw "Cannot load map from " + name;
     }
 
+    this->loaded = true;
 }
 
 void Map::loadMapBasicInfo(const tmx::Vector2u &orientation) {
@@ -98,11 +100,11 @@ std::set<unsigned int> Map::loadLayers(const std::vector<tmx::Layer::Ptr>& layer
 
             const auto& tileLayer = layer->getLayerAs<tmx::TileLayer>();
             const auto & tiles = tileLayer.getTiles();
-            for (int i = 0; i < width; i++)
+            for (int j = 0; j < height; j++)
             {
-                for (int j = 0; j < height; j++)
+                for (int i = 0; i < width; i++)
                 {
-                    unsigned int value = tiles.at(i + j).ID;
+                    unsigned int value = tiles.at(i + j * width).ID;
                     mapToLoad[i][j] = value;
                     usedTilesSet.insert(value);
                 }
@@ -111,4 +113,54 @@ std::set<unsigned int> Map::loadLayers(const std::vector<tmx::Layer::Ptr>& layer
     }
 
     return usedTilesSet;
+}
+
+Texture2D Map::getTexture(const std::string& path, tmx::Vector2u tilePosition, tmx::Vector2u tileSize) {
+    Image image = LoadImage(path.c_str());
+    ImageCrop(&image, (Rectangle){
+        static_cast<float>(tilePosition.x),
+        static_cast<float>(tilePosition.y),
+        static_cast<float>(tileSize.x),
+        static_cast<float>(tileSize.y)});
+    ImageResize(&image, 32, 32);
+
+    Texture2D texture2D = LoadTextureFromImage(image);
+    UnloadImage(image);
+
+    return texture2D;
+}
+
+void Map::loadMapTiles(std::vector<tmx::Tileset> &tileset, const std::set<unsigned int>& usedTiles) {
+    const auto& tiles = tileset.at(0).getTiles();
+    for(const auto& tile : tiles)
+    {
+        if (usedTiles.count(tile.ID))
+        {
+            Texture2D texture2D = getTexture(tile.imagePath, tile.imagePosition, tile.imageSize);
+            TileTexture pTileTexture = static_cast<TileTexture>(malloc(sizeof(TileTexture)));
+            pTileTexture->texture = texture2D;
+            pTileTexture->id = tile.ID;
+            tileTextures.push_back(pTileTexture);
+        }
+    }
+}
+
+int Map::getHeight() const {
+    return height;
+}
+
+int Map::getWidth() const {
+    return width;
+}
+
+const Vector2 &Map::getSpawnPositionP1() const {
+    return spawnPositionP1;
+}
+
+const Vector2 &Map::getSpawnPositionP2() const {
+    return spawnPostionP2;
+}
+
+const std::vector<TileTexture> &Map::getMapTiles() const {
+    return tileTextures;
 }
