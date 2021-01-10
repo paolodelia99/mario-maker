@@ -35,6 +35,16 @@ public:
 
     const std::vector<TileTexture> &getMapTiles() const;
 
+    void unloadTextures();
+
+    unsigned int **getGraphicsLayer() const;
+
+    unsigned int **getBackgroundLayer() const;
+
+    const std::map<unsigned int, TileTexture> &getTextureTable() const;
+
+    Texture2D getTexture(unsigned int id);
+
 private:
     void loadMapBasicInfo(const tmx::Vector2u& orientation);
 
@@ -46,6 +56,7 @@ private:
 
     Texture2D getTexture(const std::string& path, tmx::Vector2u tilePosition, tmx::Vector2u tileSize);
 
+
 private:
     std::string name;
     int height;
@@ -55,7 +66,7 @@ private:
     unsigned int** backgroundLayer;
     Vector2 spawnPositionP1;
     Vector2 spawnPostionP2;
-    std::vector<TileTexture> tileTextures;
+    std::map<unsigned int, TileTexture> textureLookUpTable;
 };
 
 

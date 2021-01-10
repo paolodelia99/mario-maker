@@ -33,11 +33,11 @@ TEST(mapTest, TestMapTilesLoading)
     Map map("../../assets/maps/test_world.tmx");
     map.loadMap();
     EXPECT_TRUE(map.isMapLoaded());
-    std::vector<TileTexture> mapTiles = map.getMapTiles();
+    std::map<unsigned int, TileTexture> mapTiles = map.getTextureTable();
     EXPECT_EQ(mapTiles.size(), 27);
-    for (TileTexture maptile : mapTiles)
+    for (const auto &p : mapTiles)
     {
-        EXPECT_EQ(maptile->texture.width, 32);
-        EXPECT_EQ(maptile->texture.height, 32);
+        EXPECT_EQ(p.second->texture.width, 32);
+        EXPECT_EQ(p.second->texture.height, 32);
     }
 }

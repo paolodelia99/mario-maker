@@ -39,7 +39,10 @@ include_directories(${TMXLITE_INCLUDE_DIR})
 
 set(CMAKE_CXX_STANDARD 11)
 
-file(GLOB src "src/*.cpp")
+file(GLOB src
+        "src/*.cpp"
+        "src/systems/*.cpp"
+        )
 add_executable(mario_maker ${src})
 add_library(mario_maker_lib STATIC ${src})
 

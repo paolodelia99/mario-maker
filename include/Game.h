@@ -5,10 +5,12 @@
 #ifndef MARIO_MAKER_GAME_H
 #define MARIO_MAKER_GAME_H
 #include <raylib.h>
+#include "ECS.h"
+#include "MapRenderer.h"
 
 class Game {
 public:
-    Game(char* mapName);
+    Game(char* mapName, Vector2 windowSize);
 
     void mainLoop();
 
@@ -18,6 +20,10 @@ private:
     char* mapName;
     bool run;
     bool pause;
+    ECS::World* world;
+    MapRenderer* mapRenderer_;
+    Camera2D* camera2D_;
+    Vector2 windowsSize_;
 };
 
 

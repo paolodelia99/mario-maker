@@ -1,7 +1,7 @@
 #include "../include/Menu.h"
 
 int main() {
-    Menu menu(720, 540);
+    Menu menu(704, 416);
 
     menu.menuLoop();
 

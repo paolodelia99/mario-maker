@@ -118,7 +118,7 @@ std::set<unsigned int> Map::loadLayers(const std::vector<tmx::Layer::Ptr>& layer
 Texture2D Map::getTexture(const std::string& path, tmx::Vector2u tilePosition, tmx::Vector2u tileSize) {
     Image image = LoadImage(path.c_str());
     ImageCrop(&image, (Rectangle){
-        static_cast<float>(tilePosition.x),
+        static_cast<float>(tilePosition.x - 16.f),
         static_cast<float>(tilePosition.y),
         static_cast<float>(tileSize.x),
         static_cast<float>(tileSize.y)});
@@ -140,8 +140,26 @@ void Map::loadMapTiles(std::vector<tmx::Tileset> &tileset, const std::set<unsign
             TileTexture pTileTexture = static_cast<TileTexture>(malloc(sizeof(TileTexture)));
             pTileTexture->texture = texture2D;
             pTileTexture->id = tile.ID;
-            tileTextures.push_back(pTileTexture);
+            textureLookUpTable.insert(std::make_pair(tile.ID, pTileTexture));
         }
+    }
+}
+
+Texture2D Map::getTexture(unsigned int id)
+{
+    auto it = textureLookUpTable.find(id);
+    if (it != textureLookUpTable.end()){
+        return it->second->texture;
+    } else {
+        throw "Texture not found";
+    }
+}
+
+void Map::unloadTextures()
+{
+    for (const auto &p : textureLookUpTable)
+    {
+        UnloadTexture(p.second->texture);
     }
 }
 
@@ -161,6 +179,14 @@ const Vector2 &Map::getSpawnPositionP2() const {
     return spawnPostionP2;
 }
 
-const std::vector<TileTexture> &Map::getMapTiles() const {
-    return tileTextures;
+unsigned int **Map::getGraphicsLayer() const {
+    return graphicsLayer;
+}
+
+unsigned int **Map::getBackgroundLayer() const {
+    return backgroundLayer;
+}
+
+const std::map<unsigned int, TileTexture> &Map::getTextureTable() const {
+    return textureLookUpTable;
 }

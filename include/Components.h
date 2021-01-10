@@ -31,6 +31,13 @@ struct MapTile
     unsigned int size;
 };
 
+struct CameraComponent {
+
+    explicit CameraComponent(float offset): offset(offset) {}
+
+    float offset;
+};
+
 struct TileTexture_
 {
     Texture2D texture;
