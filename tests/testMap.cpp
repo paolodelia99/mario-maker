@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 #include <tmxlite/Layer.hpp>
 #include "Map.h"
+#include "ECS.h"
 
 TEST(mapTest, TestInitMap)
 {
@@ -13,15 +14,21 @@ TEST(mapTest, TestInitMap)
 
 TEST(mapTest, TestLoadMap)
 {
+    // Needed beacause if it won't load texture
+    InitWindow(100, 100, "Mario Maker");
+    SetTargetFPS(60);
+
+    ECS::World* world = ECS::World::createWorld();
+
     Map map("../../assets/maps/test_world.tmx");
-    map.loadMap();
+    map.loadMap(world);
     EXPECT_EQ(map.getWidth(), 100);
     EXPECT_EQ(map.getHeight(), 13);
     EXPECT_EQ(map.getSpawnPositionP1().x, 6.f);
     EXPECT_EQ(map.getSpawnPositionP1().y, 11.f);
     EXPECT_EQ(map.getSpawnPositionP2().x, 4.f);
     EXPECT_EQ(map.getSpawnPositionP2().y, 11.f);
-    EXPECT_EQ(map.getMapTiles().size(), 27);
+    EXPECT_EQ(map.getTextureTable().size(), 27);
 }
 
 TEST(mapTest, TestMapTilesLoading)
@@ -30,8 +37,10 @@ TEST(mapTest, TestMapTilesLoading)
     InitWindow(100, 100, "Mario Maker");
     SetTargetFPS(60);
 
+    ECS::World* world = ECS::World::createWorld();
+
     Map map("../../assets/maps/test_world.tmx");
-    map.loadMap();
+    map.loadMap(world);
     EXPECT_TRUE(map.isMapLoaded());
     std::map<unsigned int, TileTexture> mapTiles = map.getTextureTable();
     EXPECT_EQ(mapTiles.size(), 27);

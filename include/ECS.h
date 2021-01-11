@@ -41,12 +41,12 @@ SOFTWARE.
 #define ECS_TICK_TYPE ECS::DefaultTickData
 #endif
 
-// Define what kind of allocator you want the world to use. It should have a default constructor.
+// Define what kind of allocator you want the world_ to use. It should have a default constructor.
 #ifndef ECS_ALLOCATOR_TYPE
 #define ECS_ALLOCATOR_TYPE std::allocator<ECS::Entity>
 #endif
 
-// Define ECS_TICK_NO_CLEANUP if you don't want the world to automatically cleanup dead entities
+// Define ECS_TICK_NO_CLEANUP if you don't want the world_ to automatically cleanup dead entities
 // at the beginning of each tick. This will require you to call cleanup() manually to prevent memory
 // leaks.
 //#define ECS_TICK_NO_CLEANUP
@@ -240,7 +240,7 @@ namespace ECS
     }
 
     /**
-    * Think of this as a pointer to a component. Whenever you get a component from the world or an entity,
+    * Think of this as a pointer to a component. Whenever you get a component from the world_ or an entity,
     * it'll be wrapped in a ComponentHandle.
     */
     template<typename T>
@@ -293,14 +293,14 @@ namespace ECS
         virtual ~EntitySystem() {}
 
         /**
-        * Called when this system is added to a world.
+        * Called when this system is added to a world_.
         */
         virtual void configure(World* world)
         {
         }
 
         /**
-        * Called when this system is being removed from a world.
+        * Called when this system is being removed from a world_.
         */
         virtual void unconfigure(World* world)
         {
@@ -311,7 +311,7 @@ namespace ECS
         * information about passing data to tick.
         */
 #ifdef ECS_TICK_TYPE_VOID
-        virtual void tick(World* world)
+        virtual void tick(World* world_)
 #else
         virtual void tick(World* world, ECS_TICK_TYPE data)
 #endif
@@ -330,7 +330,7 @@ namespace ECS
         virtual ~EventSubscriber() {}
 
         /**
-        * Called when an event is emitted by the world.
+        * Called when an event is emitted by the world_.
         */
         virtual void receive(World* world, const T& event) = 0;
     };
@@ -408,7 +408,7 @@ namespace ECS
         }
 
         /**
-        * Get the world associated with this entity.
+        * Get the world_ associated with this entity.
         */
         World* getWorld() const
         {
@@ -520,9 +520,9 @@ namespace ECS
     };
 
     /**
-    * The world creates, destroys, and manages entities. The lifetime of entities and _registered_ systems are handled by the world
-    * (don't delete a system without unregistering it from the world first!), while event subscribers have their own lifetimes
-    * (the world doesn't delete them automatically when the world is deleted).
+    * The world_ creates, destroys, and manages entities. The lifetime of entities and _registered_ systems are handled by the world_
+    * (don't delete a system without unregistering it from the world_ first!), while event subscribers have their own lifetimes
+    * (the world_ doesn't delete them automatically when the world_ is deleted).
     */
     class World
     {
@@ -536,7 +536,7 @@ namespace ECS
         using SubscriberPairAllocator = std::allocator_traits<Allocator>::template rebind_alloc<std::pair<const TypeIndex, std::vector<Internal::BaseEventSubscriber*, SubscriberPtrAllocator>>>;
 
         /**
-        * Use this function to construct the world with a custom allocator.
+        * Use this function to construct the world_ with a custom allocator.
         */
         static World* createWorld(Allocator alloc)
         {
@@ -548,14 +548,14 @@ namespace ECS
         }
 
         /**
-        * Use this function to construct the world with the default allocator.
+        * Use this function to construct the world_ with the default allocator.
         */
         static World* createWorld()
         {
             return createWorld(Allocator());
         }
 
-        // Use this to destroy the world instead of calling delete.
+        // Use this to destroy the world_ instead of calling delete.
         // This will emit OnEntityDestroyed events and call EntitySystem::unconfigure as appropriate.
         void destroyWorld()
         {
@@ -573,9 +573,9 @@ namespace ECS
         }
 
         /**
-        * Destroying the world will emit OnEntityDestroyed events and call EntitySystem::unconfigure() as appropriate.
+        * Destroying the world_ will emit OnEntityDestroyed events and call EntitySystem::unconfigure() as appropriate.
         *
-        * Use World::destroyWorld to destroy and deallocate the world, do not manually delete the world!
+        * Use World::destroyWorld to destroy and deallocate the world_, do not manually delete the world_!
         */
         ~World();
 
@@ -617,12 +617,12 @@ namespace ECS
         bool cleanup();
 
         /**
-        * Reset the world, destroying all entities. Entity ids will be reset as well.
+        * Reset the world_, destroying all entities. Entity ids will be reset as well.
         */
         void reset();
 
         /**
-        * Register a system. The world will manage the memory of the system unless you unregister the system.
+        * Register a system. The world_ will manage the memory of the system unless you unregister the system.
         */
         EntitySystem* registerSystem(EntitySystem* system)
         {
@@ -778,7 +778,7 @@ namespace ECS
         Entity* getById(size_t id) const;
 
         /**
-        * Tick the world. See the definition for ECS_TICK_TYPE at the top of this file for more information on
+        * Tick the world_. See the definition for ECS_TICK_TYPE at the top of this file for more information on
         * passing data through tick().
         */
 #ifdef ECS_TICK_TYPE_VOID

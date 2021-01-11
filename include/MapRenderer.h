@@ -6,8 +6,6 @@
 #define MARIO_MAKER_MAPRENDERER_H
 #include <raylib.h>
 #include "Map.h"
-#include "MapCamera.h"
-
 
 class MapRenderer {
 public:

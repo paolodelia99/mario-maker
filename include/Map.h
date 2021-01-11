@@ -12,6 +12,7 @@
 #include <tmxlite/TileLayer.hpp>
 #include <tmxlite/ObjectGroup.hpp>
 #include "Components.h"
+#include "ECS.h"
 
 class Map {
 public:
@@ -23,7 +24,7 @@ public:
 
     int getWidth() const;
 
-    void loadMap();
+    void loadMap(ECS::World* world);
 
     [[nodiscard]] bool isMapLoaded() {
         return loaded;
@@ -32,8 +33,6 @@ public:
     const Vector2 &getSpawnPositionP1() const;
 
     const Vector2 &getSpawnPositionP2() const;
-
-    const std::vector<TileTexture> &getMapTiles() const;
 
     void unloadTextures();
 
@@ -52,7 +51,7 @@ private:
 
     void loadMapTiles(std::vector<tmx::Tileset>& tileset, const std::set<unsigned int>& usedTiles);
 
-    std::set<unsigned int> loadLayers(const std::vector<tmx::Layer::Ptr>& layers);
+    std::set<unsigned int> loadLayers(const std::vector<tmx::Layer::Ptr>& layers, ECS::World* world);
 
     Texture2D getTexture(const std::string& path, tmx::Vector2u tilePosition, tmx::Vector2u tileSize);
 
@@ -66,7 +65,7 @@ private:
     unsigned int** backgroundLayer;
     Vector2 spawnPositionP1;
     Vector2 spawnPostionP2;
-    std::map<unsigned int, TileTexture> textureLookUpTable;
+    std::map<unsigned int, TileTexture> mapTextureTable;
 };
 
 

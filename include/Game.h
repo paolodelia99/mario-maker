@@ -7,6 +7,7 @@
 #include <raylib.h>
 #include "ECS.h"
 #include "MapRenderer.h"
+#include "TextureRenderer.h"
 
 class Game {
 public:
@@ -17,11 +18,18 @@ public:
     virtual ~Game();
 
 private:
-    char* mapName;
+
+    void initWorld();
+
+    void initPlayers();
+
+private:
     bool run;
     bool pause;
-    ECS::World* world;
+    ECS::World* world_;
+    Map* map_;
     MapRenderer* mapRenderer_;
+    TextureRenderer* textureRenderer_;
     Camera2D* camera2D_;
     Vector2 windowsSize_;
 };

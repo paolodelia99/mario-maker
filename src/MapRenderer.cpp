@@ -9,10 +9,7 @@ MapRenderer::~MapRenderer() {
 }
 
 MapRenderer::MapRenderer(Map *map)
-:map_(*map)
-{
-    map_.loadMap();
-}
+:map_(*map) {}
 
 void MapRenderer::render() {
     drawGraphicsLayer(map_.getBackgroundLayer());

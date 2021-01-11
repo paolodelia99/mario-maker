@@ -21,7 +21,7 @@ Map::~Map() {
     }
 }
 
-void Map::loadMap() {
+void Map::loadMap(ECS::World* world) {
     tmx::Map map;
     if(map.load(name))
     {
@@ -32,7 +32,7 @@ void Map::loadMap() {
         loadProperties(map.getProperties());
 
         // Load layers
-        std::set<unsigned int> usedTiles = loadLayers(map.getLayers());
+        std::set<unsigned int> usedTiles = loadLayers(map.getLayers(), world);
 
         // Load tileset
         loadMapTiles(const_cast<std::vector<tmx::Tileset> &>(map.getTilesets()), usedTiles);
@@ -73,18 +73,26 @@ void Map::loadProperties(const std::vector<tmx::Property> properties) {
     spawnPostionP2 = Vector2{marioSpawn.x - 2, marioSpawn.y};
 }
 
-std::set<unsigned int> Map::loadLayers(const std::vector<tmx::Layer::Ptr>& layers) {
+std::set<unsigned int> Map::loadLayers(const std::vector<tmx::Layer::Ptr>& layers, ECS::World* world) {
     std::set<unsigned int> usedTilesSet;
 
     for (const auto& layer : layers)
     {
         if(layer->getType() == tmx::Layer::Type::Object)
         {
+            std::string layerName = layer->getName();
             const auto& objectLayer = layer->getLayerAs<tmx::ObjectGroup>();
             const auto& objects = objectLayer.getObjects();
-            for(const auto& object : objects)
+
+            for (const auto& object : objects)
             {
-                //do stuff with object properties
+                tmx::FloatRect AABB = object.getAABB();
+                ECS::Entity* ent = world->create();
+                ent->assign<AABBComponent>(Vector2{AABB.left, AABB.top}, Vector2{AABB.width, AABB.height});
+                if (layerName == "pipes") ent->assign<PipeComponent>();
+                else if (layerName == "coins") ent->assign<CoinBoxComponent>();
+                else if (layerName == "bricks") ent->assign<BrickComponent>();
+                else if (layerName == "ground") ent->assign<GroundComponent>();
             }
         }
         else if(layer->getType() == tmx::Layer::Type::Tile)
@@ -140,15 +148,15 @@ void Map::loadMapTiles(std::vector<tmx::Tileset> &tileset, const std::set<unsign
             TileTexture pTileTexture = static_cast<TileTexture>(malloc(sizeof(TileTexture)));
             pTileTexture->texture = texture2D;
             pTileTexture->id = tile.ID;
-            textureLookUpTable.insert(std::make_pair(tile.ID, pTileTexture));
+            mapTextureTable.insert(std::make_pair(tile.ID, pTileTexture));
         }
     }
 }
 
 Texture2D Map::getTexture(unsigned int id)
 {
-    auto it = textureLookUpTable.find(id);
-    if (it != textureLookUpTable.end()){
+    auto it = mapTextureTable.find(id);
+    if (it != mapTextureTable.end()){
         return it->second->texture;
     } else {
         throw "Texture not found";
@@ -157,7 +165,7 @@ Texture2D Map::getTexture(unsigned int id)
 
 void Map::unloadTextures()
 {
-    for (const auto &p : textureLookUpTable)
+    for (const auto &p : mapTextureTable)
     {
         UnloadTexture(p.second->texture);
     }
@@ -188,5 +196,5 @@ unsigned int **Map::getBackgroundLayer() const {
 }
 
 const std::map<unsigned int, TileTexture> &Map::getTextureTable() const {
-    return textureLookUpTable;
+    return mapTextureTable;
 }

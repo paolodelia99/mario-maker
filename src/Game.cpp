@@ -6,23 +6,26 @@
 #include "../include/Game.h"
 
 Game::Game(char *mapName, Vector2 windowSize)
-:mapName(mapName), windowsSize_(windowSize)
+:windowsSize_(windowSize)
 {
     run = true;
     pause = false;
-    world = ECS::World::createWorld();
-
-    auto* camera2D = new Camera2D();
-    camera2D_ = camera2D;
-    mapRenderer_ = new MapRenderer(new Map(("../assets/maps/test_world.tmx")));
+    world_ = ECS::World::createWorld();
+    camera2D_ = new Camera2D();
+    map_ = new Map(mapName);
+    map_->loadMap(world_);
+    mapRenderer_ = new MapRenderer(map_);
+    textureRenderer_ = new TextureRenderer("../assets/imgs/characters.gif");
 }
 
 void Game::mainLoop() {
 
-    Vector2 postion{6 * 32, 11 * 32};
+    initWorld();
 
-    camera2D_->target = Vector2({postion.x, postion.y});
-    camera2D_->offset = Vector2({ windowsSize_.x / 4 + 34, (3 * windowsSize_.y) / 4 + 59});
+    Vector2 position{6 * 32, 11 * 32};
+
+    camera2D_->target = Vector2({position.x, position.y});
+    camera2D_->offset = Vector2({ windowsSize_.x / 4 + 14, (3 * windowsSize_.y) / 4 + 39});
     camera2D_->rotation = 0.0f;
     camera2D_->zoom = 1.0f;
 
@@ -30,12 +33,12 @@ void Game::mainLoop() {
 
     while (run && !WindowShouldClose()) {
         // Handle Inputs
-        if (IsKeyDown(KEY_RIGHT)) postion.x += 1;
-        else if (IsKeyDown(KEY_LEFT)) postion.x -= 1;
-        else if (IsKeyDown(KEY_DOWN)) postion.y += 1;
-        else if (IsKeyDown(KEY_UP)) postion.y -= 1;
+        if (IsKeyDown(KEY_RIGHT)) position.x += 2;
+        else if (IsKeyDown(KEY_LEFT)) position.x -= 2;
+        else if (IsKeyDown(KEY_DOWN)) position.y += 2;
+        else if (IsKeyDown(KEY_UP)) position.y -= 2;
 
-        camera2D_->target = (Vector2) {postion.x + 20, postion.y + 20};
+        camera2D_->target = (Vector2) {position.x, position.y};
 
         //Update
 
@@ -47,6 +50,7 @@ void Game::mainLoop() {
         BeginMode2D(*camera2D_);
 
         mapRenderer_->render();
+        textureRenderer_->renderTextureEntities(world_);
 
         EndMode2D();
 
@@ -56,6 +60,34 @@ void Game::mainLoop() {
 }
 
 Game::~Game() {
-    delete world;
+    delete world_;
     delete mapRenderer_;
+    delete textureRenderer_;
+}
+
+void Game::initWorld() {
+    initPlayers();
+}
+
+void Game::initPlayers() {
+    Vector2 spawnPositionP1 = map_->getSpawnPositionP1();
+    Vector2 spawnPositionP2 = map_->getSpawnPositionP2();
+
+    ECS::Entity* mario = world_->create();
+    mario->assign<PlayerComponent>(Vector2 {spawnPositionP1.x * 32, spawnPositionP1.y * 32});
+    mario->assign<AABBComponent>(
+            Vector2{
+                spawnPositionP1.x * 32,
+                spawnPositionP1.y * 32},
+                Vector2{16, 16});
+    mario->assign<TextureComponent>(MARIO_STAND);
+
+    ECS::Entity* luigi = world_->create();
+    luigi->assign<PlayerComponent>(Vector2 {spawnPositionP2.x * 32, spawnPositionP2.y * 32});
+    luigi->assign<AABBComponent>(
+            Vector2{
+                    spawnPositionP2.x * 32,
+                    spawnPositionP2.y * 32},
+            Vector2{16, 16});
+    luigi->assign<TextureComponent>(LUIGI_STAND);
 }
