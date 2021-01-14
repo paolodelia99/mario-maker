@@ -6,6 +6,10 @@
 #include <cstdio>
 #include <raylib.h>
 #include "TextureRenderer.h"
+#include <map>
+#include <utility>
+
+ECS_TYPE_IMPLEMENTATION;
 
 struct IntPosition
 {
@@ -18,25 +22,51 @@ struct IntPosition
 
 struct AABBComponent {
 
-    AABBComponent(const Vector2 &position, const Vector2 &size) : position_(position), size_(size) {}
+    AABBComponent(const Rectangle box) : collisionBox_(box) {}
 
-    AABBComponent operator+(const Vector2 &offset) {
-        return AABBComponent(Vector2{
-            position_.x + offset.x,
-            position_.y + offset.y}, size_);
+    AABBComponent operator+(const Vector2 &offset)
+    {
+        return AABBComponent(Rectangle{
+                collisionBox_.x + offset.x,
+                collisionBox_.y + offset.y,
+                collisionBox_.width,
+                collisionBox_.height
+        });
     }
 
-    float right() const { return position_.x + size_.x; }
+    [[ nodiscard ]] float right() const { return collisionBox_.x + collisionBox_.width; }
 
-    float left() const { return position_.x; }
+    float left() const { return collisionBox_.x; }
 
-    float top() const { return position_.y; }
+    float top() const { return collisionBox_.y; }
 
-    float bottom() const { return position_.y + size_.y; }
+    float bottom() const { return collisionBox_.y + collisionBox_.height; }
 
-    Vector2 position_;
-    Vector2 size_;
+    float getCenterX() const { return collisionBox_.x + collisionBox_.width / 2.0f; }
+
+    float getCenterY() const { return collisionBox_.y + collisionBox_.height / 2.0f; }
+
+    Rectangle collisionBox_;
 };
+
+ECS_DEFINE_TYPE(AABBComponent);
+
+struct KineticComponent {
+
+    KineticComponent(
+            float speedX,
+            float speedY,
+            float accX = 0.0,
+            float accY = 0.0)
+    : speedX_(speedX), speedY_(speedY), accX_(accX), accY_(accY) {}
+
+    float speedX_ = 0;
+    float speedY_ = 0;
+    float accX_ = 0;
+    float accY_ = 0;
+};
+
+ECS_DEFINE_TYPE(KineticComponent);
 
 struct BrickComponent {};
 
@@ -54,6 +84,8 @@ struct PlayerComponent {
 };
 
 struct GravityComponent {};
+
+struct BottomCollisionComponent {};
 
 struct AnimationComponent {
     explicit AnimationComponent(
@@ -99,4 +131,63 @@ struct TextureComponent {
     float offSetY = 0;
     int w = 0;
     int h = 0;
+};
+
+ECS_DEFINE_TYPE(TextureComponent);
+
+struct LeadCameraPlayer {};
+
+enum Command {
+    NONE_COMMAND,
+    JUMP,
+    MOVE_LEFT,
+    MOVE_RIGHT,
+    CROUCH_DOWN,
+    SPRINT,
+    SPECIAL
+};
+
+struct CommandComponent {
+
+    CommandComponent(std::map<Command, int> commandsTable)
+    : commandsTable_(std::move(commandsTable)) {}
+
+    void setCurrentCommmand(int key) {
+        auto it = commandsTable_.begin();
+        for (; it != commandsTable_.end(); it++)
+        {
+            if (it->second == key) {
+                currentCommand_ = it->first;
+                return;
+            }
+        }
+        currentCommand_ = NONE_COMMAND;
+    }
+
+    void setNewKey(Command command, int newKey) {
+        auto it = commandsTable_.find(command);
+        if (it != commandsTable_.end()) {
+            it->second = newKey;
+        }
+    }
+
+    std::map<Command, int> commandsTable_;
+    Command currentCommand_;
+};
+
+ECS_DEFINE_TYPE(CommandComponent);
+
+struct CameraComponent {
+
+    CameraComponent(Vector2 target, Vector2 offset, float rotation, float zoom)
+    {
+        Camera2D camera2D;
+        camera2D.target = target;
+        camera2D.offset = offset;
+        camera2D.rotation = rotation;
+        camera2D.zoom = zoom;
+        camera = camera2D;
+    }
+
+    Camera2D camera;
 };

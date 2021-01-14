@@ -71,8 +71,7 @@ void Menu::menuLoop() const {
 }
 
 void Menu::startGame() const {
-    Game game("../assets/maps/test_world.tmx",
-              Vector2{static_cast<float>(width), static_cast<float>(height)});
+    Game game("../assets/maps/test_world.tmx", width, height);
 
     game.mainLoop();
 }

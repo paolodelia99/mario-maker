@@ -24,6 +24,13 @@ TextureRenderer::TextureRenderer(std::string filepath)
     // Luigi Textures
     texturePositions_.insert({LUIGI_STAND, new Rectangle{275, 106, 16, 16}});
     texturePositions_.insert({LUIGI_RUN_1, new Rectangle{290, 106, 16, 16}});
+    texturePositions_.insert({LUIGI_RUN_2, new Rectangle{304, 106, 16, 16}});
+    texturePositions_.insert({LUIGI_RUN_3, new Rectangle{320, 106, 16, 16}});
+    texturePositions_.insert({LUIGI_DRIFT, new Rectangle{337, 106, 16, 16}});
+    texturePositions_.insert({LUIGI_JUMP, new Rectangle{355, 106, 16, 16}});
+    texturePositions_.insert({LUIGI_SIT_1, new Rectangle{372, 106, 16, 16}});
+    texturePositions_.insert({LUIGI_SIT_2, new Rectangle{387, 106, 16, 16}});
+    texturePositions_.insert({LUIGI_DEAD, new Rectangle{485, 106, 16, 16}});
 
     // fill texture map
     loadTextures();
@@ -91,8 +98,8 @@ void TextureRenderer::renderEntity(ECS::Entity *pEntity) {
     Rectangle rect{
         aabb->left() + texture->offSetX,
         aabb->top() + texture->offSetY,
-        texture->w > 0 ? texture->w : aabb->size_.x,
-        texture->h > 0 ? texture->h : aabb->size_.y
+        texture->w > 0 ? texture->w : aabb->collisionBox_.width,
+        texture->h > 0 ? texture->h : aabb->collisionBox_.height
     };
 
     renderTexture(texture->textureId_, rect, texture->flipH, texture->flipV);

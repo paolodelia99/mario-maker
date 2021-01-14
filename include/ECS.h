@@ -745,6 +745,16 @@ namespace ECS
         */
         void all(std::function<void(Entity*)> viewFunc, bool bIncludePendingDestroy = false);
 
+        template<typename... Components>
+        inline Entity* findFirst() {
+            auto found = std::find_if(
+                    entities.begin(),
+                    entities.end(),
+                    [&](const Entity* s) { return s->has<Components...>(); }
+            );
+            return found != entities.end() ? *found : nullptr;
+        }
+
         /**
         * Get a view for entities with a specific set of components. The list of entities is calculated on the fly, so this method itself
         * has little overhead. This is mostly useful with a range based for loop.

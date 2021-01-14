@@ -3,8 +3,5 @@
 //
 #pragma once
 
-#include <filesystem>
-
-namespace fs = std::filesystem;
-
-std::fs::path ABS_PATH = std::fs::curre
+constexpr float MARIO_ACCELERATION_X = .08f;
+constexpr float MARIO_JUMP_ACCELERATION = 0.9f;

@@ -88,7 +88,7 @@ std::set<unsigned int> Map::loadLayers(const std::vector<tmx::Layer::Ptr>& layer
             {
                 tmx::FloatRect AABB = object.getAABB();
                 ECS::Entity* ent = world->create();
-                ent->assign<AABBComponent>(Vector2{AABB.left, AABB.top}, Vector2{AABB.width, AABB.height});
+                ent->assign<AABBComponent>(Rectangle{AABB.left, AABB.top, AABB.width, AABB.height});
                 if (layerName == "pipes") ent->assign<PipeComponent>();
                 else if (layerName == "coins") ent->assign<CoinBoxComponent>();
                 else if (layerName == "bricks") ent->assign<BrickComponent>();
@@ -197,4 +197,12 @@ unsigned int **Map::getBackgroundLayer() const {
 
 const std::map<unsigned int, TileTexture> &Map::getTextureTable() const {
     return mapTextureTable;
+}
+
+int Map::getPixelHeight() const {
+    return height * 32;
+}
+
+int Map::getPixelWidth() const {
+    return width * 32;
 }

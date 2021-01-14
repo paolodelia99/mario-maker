@@ -24,6 +24,10 @@ public:
 
     int getWidth() const;
 
+    int getPixelHeight() const;
+
+    int getPixelWidth() const;
+
     void loadMap(ECS::World* world);
 
     [[nodiscard]] bool isMapLoaded() {

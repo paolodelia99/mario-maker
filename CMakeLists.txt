@@ -50,6 +50,7 @@ find_package(TMXLITE REQUIRED)
 
 include_directories(
         include
+        include/systems
         ${TMXLITE_INCLUDE_DIR})
 
 target_link_libraries(mario_maker raylib ${TMXLITE_LIBRARIES} gtest gtest_main)
