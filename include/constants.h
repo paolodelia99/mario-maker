@@ -3,5 +3,16 @@
 //
 #pragma once
 
+constexpr int GAME_TILE_SIZE = 32;
+
+constexpr int TILE_SIZE = 16;
+constexpr float MS_PER_UPDATE = 1.f / 60;
+
+constexpr float GRAVITY = .090f;
+
+constexpr float FRICTION = .94;
+constexpr float MAX_SPEED_X = 3;
+constexpr float MAX_SPEED_Y = 3;
+
 constexpr float MARIO_ACCELERATION_X = .08f;
 constexpr float MARIO_JUMP_ACCELERATION = 0.9f;

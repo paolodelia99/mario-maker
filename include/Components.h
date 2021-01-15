@@ -8,6 +8,7 @@
 #include "TextureRenderer.h"
 #include <map>
 #include <utility>
+#include <iostream>
 
 ECS_TYPE_IMPLEMENTATION;
 
@@ -85,7 +86,17 @@ struct PlayerComponent {
 
 struct GravityComponent {};
 
+struct SolidComponent {};
+
+struct FrozenComponent {};
+
 struct BottomCollisionComponent {};
+
+struct TopCollisionComponent {};
+
+struct RightCollisionComponent {};
+
+struct LeftCollisionComponent {};
 
 struct AnimationComponent {
     explicit AnimationComponent(
@@ -116,6 +127,8 @@ struct TileTexture_
     int8_t id;
 };
 typedef TileTexture_* TileTexture;
+
+struct TileComponent {};
 
 struct TextureComponent {
     explicit TextureComponent(TextureId textureId) : textureId_(textureId) {};
@@ -150,28 +163,53 @@ enum Command {
 struct CommandComponent {
 
     CommandComponent(std::map<Command, int> commandsTable)
-    : commandsTable_(std::move(commandsTable)) {}
+    : commandsKeyTable_(std::move(commandsTable))
+    {
+        createKeyCommandTable();
+    }
 
-    void setCurrentCommmand(int key) {
-        auto it = commandsTable_.begin();
-        for (; it != commandsTable_.end(); it++)
-        {
-            if (it->second == key) {
-                currentCommand_ = it->first;
-                return;
-            }
+    void setNullCommand() { currentCommand_ = NONE_COMMAND; }
+
+    void setCurrentCommand(int key) {
+        auto it = keyCommandTable_.find(key);
+        if (it != keyCommandTable_.end()) {
+            currentCommand_ = it->second;
+            return;
         }
         currentCommand_ = NONE_COMMAND;
     }
 
-    void setNewKey(Command command, int newKey) {
-        auto it = commandsTable_.find(command);
-        if (it != commandsTable_.end()) {
-            it->second = newKey;
+    void createKeyCommandTable() {
+        for (std::map<Command, int>::iterator i = commandsKeyTable_.begin(); i != commandsKeyTable_.end(); ++i)
+            keyCommandTable_[i->second] = i->first;
+    }
+
+    void unsetCurrentCommand(int key) {
+        switch (currentCommand_) {
+            case JUMP:
+                std::cout << "Jump" << std::endl;
+            case NONE_COMMAND:
+                std::cout << "None" << std::endl;
+        }
+        auto it = keyCommandTable_.find(key);
+        if (it != keyCommandTable_.end()) {
+            if (currentCommand_ == it->second) {
+                currentCommand_ = NONE_COMMAND;
+            }
         }
     }
 
-    std::map<Command, int> commandsTable_;
+    void setNewKey(Command command, int newKey) {
+        auto it = commandsKeyTable_.find(command);
+        if (it != commandsKeyTable_.end()) {
+            it->second = newKey;
+        }
+
+        createKeyCommandTable();
+    }
+
+    std::map<Command, int> commandsKeyTable_;
+    std::map<int, Command> keyCommandTable_;
     Command currentCommand_;
 };
 
@@ -190,4 +228,11 @@ struct CameraComponent {
     }
 
     Camera2D camera;
+};
+
+struct MapObjectsComponent {
+
+
+private:
+    ECS::Entity** tiles;
 };

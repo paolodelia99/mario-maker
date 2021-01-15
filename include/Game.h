@@ -7,14 +7,16 @@
 #include <raylib.h>
 #include <iostream>
 #include "ECS.h"
+#include "constants.h"
 #include "MapRenderer.h"
 #include "TextureRenderer.h"
 #include "CameraSystem.h"
 #include "PlayerSystem.h"
+#include "PhysicSystem.h"
 
 class Game {
 public:
-    Game(char* mapName, const int screenWidth, const int screenHeight);
+    Game(const char* mapName, const int screenWidth, const int screenHeight, bool secondPlayer);
 
     void mainLoop();
 
@@ -33,6 +35,7 @@ private:
 private:
     bool run;
     bool pause;
+    bool secondPlayer;
     ECS::World* world_;
     Camera2D * pCamera_;
     Map* pMap_;

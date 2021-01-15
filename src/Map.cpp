@@ -88,7 +88,9 @@ std::set<unsigned int> Map::loadLayers(const std::vector<tmx::Layer::Ptr>& layer
             {
                 tmx::FloatRect AABB = object.getAABB();
                 ECS::Entity* ent = world->create();
-                ent->assign<AABBComponent>(Rectangle{AABB.left, AABB.top, AABB.width, AABB.height});
+                ent->assign<AABBComponent>(Rectangle{AABB.left * 2 , AABB.top * 2, AABB.width * 2, AABB.height * 2});
+                ent->assign<SolidComponent>();
+                ent->assign<TileComponent>();
                 if (layerName == "pipes") ent->assign<PipeComponent>();
                 else if (layerName == "coins") ent->assign<CoinBoxComponent>();
                 else if (layerName == "bricks") ent->assign<BrickComponent>();
