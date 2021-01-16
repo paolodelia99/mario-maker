@@ -7,7 +7,7 @@
 #include <raylib.h>
 #include "ECS.h"
 #include "Components.h"
-#include "constants.h"
+#include "Constants.h"
 
 
 using namespace ECS;

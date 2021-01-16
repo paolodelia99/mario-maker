@@ -77,11 +77,30 @@ struct CoinBoxComponent {};
 
 struct GroundComponent {};
 
+enum PlayerState {
+    STANDING,
+    JUMPING,
+    RUNNING,
+    DRIFTING,
+    DUCKING,
+    INVINCIBLE
+};
+
 struct PlayerComponent {
 
-    PlayerComponent(Vector2 home): home_(home) {};
+    PlayerComponent(Vector2 home)
+    : home_(home)
+    {
+        current_state_ = STANDING;
+    };
 
     Vector2 home_;
+    PlayerState current_state_;
+    bool duck = false;
+    bool sprint = false;
+    bool jump = false;
+    int left = 0;
+    int right = 0;
 };
 
 struct GravityComponent {};
@@ -100,12 +119,12 @@ struct LeftCollisionComponent {};
 
 struct AnimationComponent {
     explicit AnimationComponent(
-                std::vector<Texture2D>&& textures,
+                std::vector<TextureId> textures,
                 int duration,
                 bool flipH = false,
                 bool flipV = false,
                 bool loop = true
-    ) : textures{textures},
+    ) : textures{std::move(textures)},
         duration{duration},
         counter{duration},
         flipH{flipH},
@@ -118,7 +137,7 @@ struct AnimationComponent {
     bool flipV = false;
     bool loop = true;
     int8_t currentTexture = 0;
-    std::vector<Texture2D> textures;
+    std::vector<TextureId> textures;
 };
 
 struct TileTexture_

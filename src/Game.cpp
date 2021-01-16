@@ -38,8 +38,11 @@ void Game::mainLoop() {
         //Update
         while (lag >= MS_PER_UPDATE) {
             world_->tick(0.0f);
+            world_->disableSystem(animationSystem_);
             lag -= MS_PER_UPDATE;
         }
+
+        world_->enableSystem(animationSystem_);
 
         // Drawing
         BeginDrawing();
@@ -140,6 +143,7 @@ void Game::registerSystems() {
             pMap_->getPixelWidth(),
             pMap_->getPixelHeight()));
     world_->registerSystem(new PlayerSystem());
+    animationSystem_ = world_->registerSystem(new AnimationSystem());
     world_->registerSystem(new PhysicSystem());
 }
 

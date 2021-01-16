@@ -9,7 +9,7 @@
 
 using namespace ECS;
 
-class PlayerSystem : public EntitySystem{
+class PlayerSystem : public EntitySystem {
 public:
     PlayerSystem();
 
@@ -19,7 +19,7 @@ public:
 
     void tick(World* world, float delta) override;
 
-private:
+    void setAnimation(Entity* playerEntity, PlayerState state);
 
 };
 

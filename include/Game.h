@@ -7,12 +7,13 @@
 #include <raylib.h>
 #include <iostream>
 #include "ECS.h"
-#include "constants.h"
+#include "Constants.h"
 #include "MapRenderer.h"
 #include "TextureRenderer.h"
 #include "CameraSystem.h"
 #include "PlayerSystem.h"
 #include "PhysicSystem.h"
+#include "AnimationSystem.h"
 
 class Game {
 public:
@@ -45,6 +46,7 @@ private:
     size_t player1Id_;
     const int screenWidth_;
     const int screenHeight_;
+    ECS::EntitySystem* animationSystem_;
 };
 
 

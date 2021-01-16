@@ -16,7 +16,7 @@ TEST(textureManagerTest, testRenderTexture) {
 
         ClearBackground(RAYWHITE);
 
-        textureLoader->renderTexture(MARIO_STAND, (Rectangle) {250.f / 2, 250.f / 2, 16, 16});
+        textureLoader->renderTexture(MARIO_STAND, (Rectangle) {250.f / 2, 250.f / 2, 16, 16}, true);
 
         DrawText("this IS a texture loaded from an image!", 300, 370, 10, GRAY);
 
