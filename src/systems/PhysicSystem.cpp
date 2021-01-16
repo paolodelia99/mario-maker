@@ -14,11 +14,6 @@ void PhysicSystem::tick(World *world, float delta) {
 
     for (auto ent : world->each<GravityComponent, KineticComponent>())
     {
-        if (ent->get<KineticComponent>()->accY_ < 0) {
-            std::cout << "accY: " << ent->get<KineticComponent>()->accY_ << std::endl;
-            std::cout << "speedY: " << ent->get<KineticComponent>()->speedY_ << std::endl;
-        }
-
         ent->get<KineticComponent>()->accY_ += GRAVITY;
     }
 
@@ -29,8 +24,6 @@ void PhysicSystem::tick(World *world, float delta) {
     {
         auto aabb = ent->get<AABBComponent>();
         auto kinetic = ent->get<KineticComponent>();
-
-        std::cout << kinetic->accY_ << std::endl;
 
         for (auto object : world->each<TileComponent, AABBComponent, SolidComponent>())
         {

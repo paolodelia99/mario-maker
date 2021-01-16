@@ -30,7 +30,9 @@ void PlayerSystem::tick(World *world, float delta) {
                 kinetic->accY_ = 0;
                 break;
             case JUMP:
-                kinetic->accY_ = -MARIO_JUMP_ACCELERATION;
+                if (ent->has<BottomCollisionComponent>()) {
+                    kinetic->accY_ = -MARIO_JUMP_ACCELERATION;
+                }
                 break;
             case MOVE_RIGHT:
                 kinetic->accX_ = (float) (MARIO_ACCELERATION_X) * 1.7f;
