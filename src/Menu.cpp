@@ -72,7 +72,7 @@ void Menu::menuLoop() const {
 
 void Menu::startGame() const {
     const char* mapPath = "../assets/maps/test_world.tmx";
-    Game game(mapPath, width, height, true);
+    Game game(mapPath, width, height, SECOND_PLAYER);
 
     game.mainLoop();
 }

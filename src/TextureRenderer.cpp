@@ -6,6 +6,7 @@
 
 #include <utility>
 #include <Components.h>
+#include <Constants.h>
 
 TextureRenderer::TextureRenderer(std::string filepath)
 : filepath_(std::move(filepath))
@@ -53,7 +54,7 @@ void TextureRenderer::renderTexture(TextureId textureId, Rectangle dstRect, bool
         if (dstRect.width == 0) dstRect.width = it1->second->width;
         if (dstRect.height == 0) dstRect.height = it1->second->height;
         Texture2D texture2D = it->second;
-        //DrawTexture(texture2D, dstRect.x, dstRect.y, WHITE);
+        if (DEBUG) DrawRectangleLinesEx(dstRect, 2, RED);
         DrawTextureRec(texture2D,
                        Rectangle{0, 0, (flipH ? -1 : 1) * dstRect.width, dstRect.height } ,
                        Vector2{dstRect.x, dstRect.y},

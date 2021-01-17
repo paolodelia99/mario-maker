@@ -3,6 +3,9 @@
 //
 #pragma once
 
+constexpr bool DEBUG = true;
+constexpr bool SECOND_PLAYER = false;
+
 constexpr int GAME_TILE_SIZE = 32;
 
 constexpr int TILE_SIZE = 16;

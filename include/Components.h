@@ -194,7 +194,6 @@ struct CommandComponent {
     void setNullCommand() { currentCommand_ = NONE_COMMAND; }
 
     void setCurrentCommand(int key) {
-        std::cout << "Key: " << key << std::endl;
         auto it = keyCommandTable_.find(key);
         if (it != keyCommandTable_.end()) {
             currentCommand_ = it->second;
