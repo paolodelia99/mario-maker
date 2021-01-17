@@ -13,7 +13,7 @@ Game::Game(const char *mapName, const int screenWidth, const int screenHeight, b
     pMap_ = new Map(mapName);
     pMap_->loadMap(world_);
     pMapRenderer_ = new MapRenderer(pMap_);
-    pTextureRenderer_ = new TextureRenderer("../assets/imgs/characters.gif");
+    pTextureRenderer_ = new TextureRenderer("../assets/imgs/players-tileset.png");
 }
 
 void Game::mainLoop() {
@@ -108,11 +108,12 @@ void Game::initPlayers() {
                                             {JUMP, KEY_UP},
                                             {MOVE_LEFT, KEY_LEFT},
                                             {MOVE_RIGHT, KEY_RIGHT},
-                                            {CROUCH_DOWN, KEY_DOWN}
+                                            {DUCK, KEY_DOWN}
                                     });
     mario->assign<GravityComponent>();
     mario->assign<SolidComponent>();
     mario->assign<KineticComponent>(0.0f, 0.0f);
+    mario->assign<MarioComponent>();
 
     // Second Player
     if (secondPlayer) {
@@ -129,10 +130,12 @@ void Game::initPlayers() {
                 {JUMP, KEY_W},
                 {MOVE_LEFT, KEY_A},
                 {MOVE_RIGHT, KEY_D},
-                {CROUCH_DOWN, KEY_S}
+                {DUCK, KEY_S}
         });
         luigi->assign<GravityComponent>();
         luigi->assign<SolidComponent>();
+        luigi->assign<KineticComponent>(0.0f, 0.0f);
+        luigi->assign<LuigiComponent>();
     }
 }
 

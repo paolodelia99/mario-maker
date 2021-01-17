@@ -40,8 +40,8 @@ void PhysicSystem::tick(World *world, float delta) {
 
             Rectangle collisionRect = GetCollisionRec(newCollisionBox, objCollisionBox);
 
-            std::cout << "Bottom: " << aabb->bottom() << std::endl;
-            std::cout << "collision height: " << collisionRect.height << std::endl;
+            // std::cout << "Bottom: " << aabb->bottom() << std::endl;
+            // std::cout << "collision height: " << collisionRect.height << std::endl;
 
             // Check y collision
             if (collisionRect.height != 0) {

@@ -29,6 +29,23 @@ void PlayerSystem::tick(World *world, float delta) {
         ComponentHandle<PlayerComponent> playerComponent = ent->get<PlayerComponent>();
 
         switch (currentCommand) {
+            case JUMP:
+                std::cout << "Jump" << std::endl;
+                break;
+            case NONE_COMMAND:
+                std::cout << "None" << std::endl;
+                break;
+            case MOVE_LEFT:
+                std::cout << "Left" << std::endl;
+                break;
+            case MOVE_RIGHT:
+                std::cout << "Right" << std::endl;
+                break;
+            default:
+                break;
+        }
+
+        switch (currentCommand) {
             case NONE_COMMAND:
                 kinetic->accX_ = 0;
                 kinetic->accY_ = 0;
@@ -49,7 +66,7 @@ void PlayerSystem::tick(World *world, float delta) {
                 playerComponent->right = false;
                 playerComponent->left = true;
                 break;
-            case CROUCH_DOWN:
+            case DUCK:
                 kinetic->accX_ = 0;
                 playerComponent->duck = true;
                 break;
@@ -74,6 +91,10 @@ void PlayerSystem::tick(World *world, float delta) {
             setAnimation(ent, PlayerState::JUMPING);
         }
 
+        if (playerComponent->duck){
+            setAnimation(ent, PlayerState::DUCKING);
+        }
+
         int lookingLeft = 0;
         if (playerComponent->left || playerComponent->right) lookingLeft = playerComponent->left;
         ent->get<TextureComponent>()->flipH = lookingLeft;
@@ -92,25 +113,47 @@ void PlayerSystem::setAnimation(Entity *playerEntity, PlayerState state) {
 
         switch (state) {
             case RUNNING:
-                playerEntity->assign<AnimationComponent>(
+                if (playerEntity->has<MarioComponent>()) {
+                    playerEntity->assign<AnimationComponent>(
                             std::vector<TextureId>{
-                                TextureId::MARIO_RUN_1,
-                                TextureId::MARIO_RUN_2,
-                                TextureId::MARIO_RUN_3},
+                                    TextureId::MARIO_RUN_1,
+                                    TextureId::MARIO_RUN_2,
+                                    TextureId::MARIO_RUN_3},
                             RUNNING_ANIMATION_SPEED
-                        );
+                    );
+                } else {
+                    playerEntity->assign<AnimationComponent>(
+                            std::vector<TextureId>{
+                                    TextureId::LUIGI_RUN_1,
+                                    TextureId::LUIGI_RUN_2,
+                                    TextureId::LUIGI_RUN_3},
+                            RUNNING_ANIMATION_SPEED
+                    );
+                }
                 break;
             case STANDING:
-                playerEntity->assign<TextureComponent>(TextureId::MARIO_STAND);
+                playerEntity->assign<TextureComponent>(
+                        playerEntity->has<MarioComponent>() ?
+                        TextureId::MARIO_STAND : TextureId::LUIGI_STAND
+                        );
                 break;
             case DRIFTING:
-                playerEntity->assign<TextureComponent>(TextureId::MARIO_DRIFT);
+                playerEntity->assign<TextureComponent>(
+                        playerEntity->has<MarioComponent>() ?
+                        TextureId::MARIO_DRIFT : TextureId::LUIGI_DRIFT
+                        );
                 break;
             case JUMPING:
-                playerEntity->assign<TextureComponent>(TextureId::MARIO_JUMP);
+                playerEntity->assign<TextureComponent>(
+                        playerEntity->has<MarioComponent>() ?
+                        TextureId::MARIO_JUMP : TextureId::LUIGI_JUMP
+                        );
                 break;
             case DUCKING:
-                playerEntity->assign<TextureComponent>(TextureId::SUPER_MARIO_DUCK);
+                playerEntity->assign<TextureComponent>(
+                        playerEntity->has<MarioComponent>() ?
+                        TextureId::MARIO_DUCK : TextureId::LUIGI_DUCK
+                        );
                 break;
             case INVINCIBLE:
                 break;

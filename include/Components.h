@@ -103,6 +103,10 @@ struct PlayerComponent {
     int right = 0;
 };
 
+struct MarioComponent {};
+
+struct LuigiComponent {};
+
 struct GravityComponent {};
 
 struct SolidComponent {};
@@ -174,7 +178,7 @@ enum Command {
     JUMP,
     MOVE_LEFT,
     MOVE_RIGHT,
-    CROUCH_DOWN,
+    DUCK,
     SPRINT,
     SPECIAL
 };
@@ -190,6 +194,7 @@ struct CommandComponent {
     void setNullCommand() { currentCommand_ = NONE_COMMAND; }
 
     void setCurrentCommand(int key) {
+        std::cout << "Key: " << key << std::endl;
         auto it = keyCommandTable_.find(key);
         if (it != keyCommandTable_.end()) {
             currentCommand_ = it->second;
@@ -204,12 +209,6 @@ struct CommandComponent {
     }
 
     void unsetCurrentCommand(int key) {
-        switch (currentCommand_) {
-            case JUMP:
-                std::cout << "Jump" << std::endl;
-            case NONE_COMMAND:
-                std::cout << "None" << std::endl;
-        }
         auto it = keyCommandTable_.find(key);
         if (it != keyCommandTable_.end()) {
             if (currentCommand_ == it->second) {

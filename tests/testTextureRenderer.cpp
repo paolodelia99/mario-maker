@@ -59,3 +59,35 @@ TEST(textureManagerTest, testLoadTextures) {
 
     EXPECT_TRUE(true);
 }
+
+TEST(textureManagerTest, testOthersTextures) {
+    InitWindow(250, 250, "Test texture Loader");
+    SetTargetFPS(60);
+    int c = 0;
+
+    const char* filepath = "../../assets/imgs/players-tileset.png";
+
+    Image image = LoadImage(filepath);
+    ImageCrop(&image, Rectangle {18, 9, 16, 16});
+    ImageResize(&image, 32, 32);
+
+    Texture2D texture2D = LoadTextureFromImage(image);
+    UnloadImage(image);
+
+    while(++c < 360) {
+        BeginDrawing();
+
+        ClearBackground(RAYWHITE);
+
+        DrawTexture(texture2D,
+                       250 / 2, 250 / 2, WHITE);
+
+        EndDrawing();
+    }
+
+    UnloadTexture(texture2D);
+
+    CloseWindow();
+
+    EXPECT_TRUE(true);
+}

@@ -20,6 +20,7 @@ enum TextureId {
     MARIO_DEAD,
     MARIO_SIT_1,
     MARIO_SIT_2,
+    MARIO_DUCK,
     MARIO_GROWING,
     SUPER_MARIO_STAND,
     SUPER_MARIO_RUN_1,
@@ -37,6 +38,7 @@ enum TextureId {
     LUIGI_DEAD,
     LUIGI_SIT_1,
     LUIGI_SIT_2,
+    LUIGI_DUCK
 };
 
 class TextureRenderer {

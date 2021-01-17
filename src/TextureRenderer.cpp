@@ -11,26 +11,28 @@ TextureRenderer::TextureRenderer(std::string filepath)
 : filepath_(std::move(filepath))
 {
     // Mario Textures
-    texturePositions_.insert({MARIO_STAND, new Rectangle{275, 44, 16, 16}});
-    texturePositions_.insert({MARIO_RUN_1, new Rectangle{290, 44, 16, 16}});
-    texturePositions_.insert({MARIO_RUN_2, new Rectangle{304, 44, 16, 16}});
-    texturePositions_.insert({MARIO_RUN_3, new Rectangle{320, 44, 16, 16}});
-    texturePositions_.insert({MARIO_DRIFT, new Rectangle{337, 44, 16, 16}});
-    texturePositions_.insert({MARIO_JUMP, new Rectangle{355, 44, 16, 16}});
-    texturePositions_.insert({MARIO_SIT_1, new Rectangle{372, 44, 16, 16}});
-    texturePositions_.insert({MARIO_SIT_2, new Rectangle{387, 44, 16, 16}});
-    texturePositions_.insert({MARIO_DEAD, new Rectangle{485, 45, 16, 16}});
+    texturePositions_.insert({MARIO_STAND, new Rectangle{1, 9, 16, 16}});
+    texturePositions_.insert({MARIO_RUN_1, new Rectangle{35, 9, 16, 16}});
+    texturePositions_.insert({MARIO_RUN_2, new Rectangle{52, 9, 16, 16}});
+    texturePositions_.insert({MARIO_RUN_3, new Rectangle{69, 9, 16, 16}});
+    texturePositions_.insert({MARIO_DRIFT, new Rectangle{86, 9, 16, 16}});
+    texturePositions_.insert({MARIO_JUMP, new Rectangle{103, 9, 16, 16}});
+    texturePositions_.insert({MARIO_SIT_1, new Rectangle{222, 9, 16, 16}});
+    texturePositions_.insert({MARIO_SIT_2, new Rectangle{239, 9, 16, 16}});
+    texturePositions_.insert({MARIO_DUCK, new Rectangle{18, 9, 16, 16}});
+    texturePositions_.insert({MARIO_DEAD, new Rectangle{256, 9, 16, 16}});
 
     // Luigi Textures
-    texturePositions_.insert({LUIGI_STAND, new Rectangle{275, 106, 16, 16}});
-    texturePositions_.insert({LUIGI_RUN_1, new Rectangle{290, 106, 16, 16}});
-    texturePositions_.insert({LUIGI_RUN_2, new Rectangle{304, 106, 16, 16}});
-    texturePositions_.insert({LUIGI_RUN_3, new Rectangle{320, 106, 16, 16}});
-    texturePositions_.insert({LUIGI_DRIFT, new Rectangle{337, 106, 16, 16}});
-    texturePositions_.insert({LUIGI_JUMP, new Rectangle{355, 106, 16, 16}});
-    texturePositions_.insert({LUIGI_SIT_1, new Rectangle{372, 106, 16, 16}});
-    texturePositions_.insert({LUIGI_SIT_2, new Rectangle{387, 106, 16, 16}});
-    texturePositions_.insert({LUIGI_DEAD, new Rectangle{485, 106, 16, 16}});
+    texturePositions_.insert({LUIGI_STAND, new Rectangle{1, 157, 16, 16}});
+    texturePositions_.insert({LUIGI_RUN_1, new Rectangle{35, 157, 16, 16}});
+    texturePositions_.insert({LUIGI_RUN_2, new Rectangle{52, 157, 16, 16}});
+    texturePositions_.insert({LUIGI_RUN_3, new Rectangle{69, 157, 16, 16}});
+    texturePositions_.insert({LUIGI_DRIFT, new Rectangle{86, 157, 16, 16}});
+    texturePositions_.insert({LUIGI_JUMP, new Rectangle{103, 157, 16, 16}});
+    texturePositions_.insert({LUIGI_SIT_1, new Rectangle{222, 157, 16, 16}});
+    texturePositions_.insert({LUIGI_SIT_2, new Rectangle{239, 157, 16, 16}});
+    texturePositions_.insert({LUIGI_DUCK, new Rectangle{18, 157, 16, 16}});
+    texturePositions_.insert({LUIGI_DEAD, new Rectangle{256, 157, 16, 16}});
 
     // fill texture map
     loadTextures();
