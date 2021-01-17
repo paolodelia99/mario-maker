@@ -33,28 +33,38 @@ void PhysicSystem::tick(World *world, float delta) {
 
             Rectangle newCollisionBox = Rectangle{
                     aabb->collisionBox_.x + kinetic->speedX_,
-                    aabb->collisionBox_.y + kinetic->speedY_ + 1, //fixme: try the right height
+                    aabb->collisionBox_.y + kinetic->speedY_, //fixme: try the right height
                     aabb->collisionBox_.width + kinetic->speedX_,
-                    aabb->collisionBox_.height + kinetic->speedY_
+                    aabb->collisionBox_.height + kinetic->speedY_ + 1
             };
 
             Rectangle collisionRect = GetCollisionRec(newCollisionBox, objCollisionBox);
 
-             std::cout << "Bottom: " << aabb->bottom() << std::endl;
+             std::cout << "Bottom: " << aabb->bottom() << ", Top:" << aabb->top() <<  std::endl;
              std::cout << "collision height: " << collisionRect.height << std::endl;
 
             // Check y collision
             if (collisionRect.height != 0) {
+                float distanceTop = std::abs(objCollisionBox.y - (aabb->bottom() + kinetic->speedY_));
+                float distanceBottom = std::abs((aabb->top() + kinetic->speedY_) - (objCollisionBox.y + objCollisionBox.height));
                 if (collisionRect.y > newCollisionBox.y + newCollisionBox.height / 2 ) {
                     // Bottom collision
-                    kinetic->accY_ = std::min(0.0f, kinetic->accY_);
-                    kinetic->speedY_ = std::min(0.0f, kinetic->speedY_);
-                    ent->assign<BottomCollisionComponent>();
+                    if (distanceTop < distanceBottom) {
+                        aabb->setBottom(objCollisionBox.y);
+                        object->assign<TopCollisionComponent>();
+                        kinetic->accY_ = std::min(0.0f, kinetic->accY_);
+                        kinetic->speedY_ = std::min(0.0f, kinetic->speedY_);
+                        ent->assign<BottomCollisionComponent>();
+                    }
                 } else if (collisionRect.y <= newCollisionBox.y + newCollisionBox.height / 2) {
                     // Top collision
-                    kinetic->accY_ = std::max(0.0f, kinetic->accY_);
-                    kinetic->speedY_ = std::max(0.0f, kinetic->speedY_);
-                    ent->assign<TopCollisionComponent>();
+                    if (distanceTop > distanceBottom) {
+                        aabb->setTop(objCollisionBox.y);
+                        object->assign<BottomCollisionComponent>();
+                        kinetic->accY_ = std::max(0.0f, kinetic->accY_);
+                        kinetic->speedY_ = std::max(0.0f, kinetic->speedY_);
+                        ent->assign<TopCollisionComponent>();
+                    }
                 }
             }
 

@@ -56,6 +56,8 @@ public:
 
     void renderTextureEntities(ECS::World* world);
 
+    void renderCollisionRect(ECS::World* world);
+
     std::unordered_map<TextureId, Texture2D>::iterator returnTexturesIt();
 
 private:

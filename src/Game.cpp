@@ -53,6 +53,7 @@ void Game::mainLoop() {
 
         pMapRenderer_->render();
         pTextureRenderer_->renderTextureEntities(world_);
+        pTextureRenderer_->renderCollisionRect(world_);
 
         // just for showing the center of the camera
         DrawLine(camera->camera.target.x, - screenHeight_ * 10, camera->camera.target.x, screenHeight_ * 10, GREEN);

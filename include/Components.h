@@ -47,6 +47,14 @@ struct AABBComponent {
 
     float getCenterY() const { return collisionBox_.y + collisionBox_.height / 2.0f; }
 
+    void setBottom(float value) {
+        collisionBox_.y = value - collisionBox_.height;
+    }
+
+    void setTop(float value) {
+        collisionBox_.y = value;
+    }
+
     Rectangle collisionBox_;
 };
 
