@@ -55,6 +55,14 @@ struct AABBComponent {
         collisionBox_.y = value;
     }
 
+    void setLeft(float value) {
+        collisionBox_.x = value;
+    }
+
+    void setRight(float value) {
+        collisionBox_.x = value - collisionBox_.width;
+    }
+
     Rectangle collisionBox_;
 };
 
@@ -255,9 +263,29 @@ struct CameraComponent {
     Camera2D camera;
 };
 
-struct MapObjectsComponent {
+struct ObjectMapComponent {
 
+    explicit ObjectMapComponent(int width, int height)
+    :width_(width), height_(height)
+    {
+        idsMatrix_ = std::vector<int>(width * height);
+        std::fill(idsMatrix_.begin(), idsMatrix_.end(), -1);;
+    }
+
+    int get(int x, int y) {
+        if (x < 0 || y < 0) return -1;
+        if (x >= width_ || y >= height_) return -1;
+        return idsMatrix_.at(x + y * width_);
+    }
+
+    void set(size_t entId, int x, int y) {
+        idsMatrix_.at(x + y * width_) =  entId;
+    }
+
+    ~ObjectMapComponent() {}
 
 private:
-    ECS::Entity** tiles;
+    std::vector<int> idsMatrix_;
+    unsigned int width_;
+    unsigned int height_;
 };

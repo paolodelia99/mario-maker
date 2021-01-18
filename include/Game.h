@@ -33,6 +33,8 @@ private:
 
     void handleInput();
 
+    void initObjectMap();
+
 private:
     bool run;
     bool pause;

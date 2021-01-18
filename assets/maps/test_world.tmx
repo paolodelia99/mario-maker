@@ -48,36 +48,36 @@
  </objectgroup>
  <objectgroup id="5" name="bricks">
   <object id="13" x="368" y="128" width="16" height="16"/>
-  <object id="32" x="223.455" y="127.636" width="16" height="16.4545"/>
-  <object id="33" x="239.636" y="127.727" width="16.4545" height="15.5455"/>
-  <object id="34" x="288.455" y="128.273" width="16" height="15"/>
-  <object id="37" x="319.727" y="128.182" width="16.2727" height="15.3636"/>
-  <object id="39" x="336.273" y="128.455" width="16" height="15"/>
-  <object id="48" x="1008" y="128" width="15" height="16"/>
-  <object id="49" x="1023.45" y="127.545" width="16.8182" height="16.1818"/>
-  <object id="50" x="1040.09" y="128.091" width="16" height="16"/>
-  <object id="51" x="1055.73" y="128.182" width="15.7273" height="15.7273"/>
+  <object id="32" x="223.955" y="128.011" width="16" height="16"/>
+  <object id="33" x="240.073" y="128.04" width="16" height="16"/>
+  <object id="34" x="287.892" y="128.273" width="15.9375" height="15"/>
+  <object id="37" x="320.091" y="128.364" width="16.2727" height="15.3636"/>
+  <object id="39" x="336.091" y="128.182" width="16" height="16"/>
+  <object id="48" x="1008" y="128" width="15.8438" height="16"/>
+  <object id="49" x="1023.95" y="128.108" width="16.3182" height="16.0255"/>
+  <object id="50" x="1040.09" y="128.091" width="15.7188" height="16"/>
+  <object id="51" x="1055.89" y="128.151" width="16.1648" height="15.7273"/>
   <object id="52" x="1088.18" y="128.182" width="15.9091" height="15.7273"/>
-  <object id="53" x="1103.82" y="128.273" width="15.7273" height="15.7273"/>
-  <object id="54" x="1120.18" y="128.273" width="16" height="15.9091"/>
-  <object id="55" x="1135.82" y="128.364" width="15.8182" height="15.3636"/>
+  <object id="53" x="1104.16" y="128.054" width="15.7273" height="15.8835"/>
+  <object id="54" x="1120.02" y="128.054" width="16" height="15.9091"/>
+  <object id="55" x="1136.1" y="127.989" width="15.8182" height="15.9886"/>
   <object id="56" x="1007.45" y="63.8182" width="16.2727" height="15.8182"/>
   <object id="57" x="1023.27" y="63.9091" width="17" height="15.3636"/>
   <object id="58" x="1040" y="64.2727" width="15.7273" height="15.3636"/>
   <object id="59" x="1055.18" y="63.7273" width="17" height="16"/>
-  <object id="60" x="1087" y="64" width="17.2727" height="15"/>
+  <object id="60" x="1088.13" y="64" width="16" height="16"/>
   <object id="68" x="1104.36" y="63.9091" width="15.5455" height="16"/>
   <object id="69" x="1120.36" y="64.1818" width="15.3636" height="16"/>
   <object id="70" x="1136.55" y="64.2727" width="15.4545" height="15.4545"/>
  </objectgroup>
  <objectgroup id="6" name="coins">
-  <object id="41" x="320" y="80.2727" width="15" height="14.7273"/>
-  <object id="42" x="336" y="81" width="16" height="15"/>
-  <object id="43" x="305" y="128" width="14" height="15"/>
+  <object id="41" x="320" y="80.2727" width="15.8125" height="15.6023"/>
+  <object id="42" x="336" y="80.0625" width="16" height="15.9375"/>
+  <object id="43" x="304.37" y="128.273" width="16" height="16"/>
   <object id="44" x="349" y="129" width="1"/>
-  <object id="45" x="353" y="127.727" width="14" height="16"/>
-  <object id="71" x="1071.82" y="64.2727" width="15.5455" height="15"/>
-  <object id="72" x="1071.64" y="128.182" width="15.9091" height="15"/>
+  <object id="45" x="352.273" y="128" width="16" height="16"/>
+  <object id="71" x="1072.44" y="63.9602" width="16" height="16"/>
+  <object id="72" x="1072.08" y="128.088" width="15.8154" height="15.8438"/>
  </objectgroup>
  <objectgroup id="4" name="ground">
   <object id="4" x="0" y="192" width="1600" height="16"/>

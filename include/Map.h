@@ -31,7 +31,7 @@ public:
     void loadMap(ECS::World* world);
 
     [[nodiscard]] bool isMapLoaded() {
-        return loaded;
+        return loaded_;
     }
 
     const Vector2 &getSpawnPositionP1() const;
@@ -62,14 +62,14 @@ private:
 
 private:
     std::string name;
-    int height;
-    int width;
-    bool loaded;
-    unsigned int** graphicsLayer;
-    unsigned int** backgroundLayer;
-    Vector2 spawnPositionP1;
-    Vector2 spawnPostionP2;
-    std::map<unsigned int, TileTexture> mapTextureTable;
+    int height_;
+    int width_;
+    bool loaded_;
+    unsigned int** graphicsLayer_;
+    unsigned int** backgroundLayer_;
+    Vector2 spawnPositionP1_;
+    Vector2 spawnPostionP2_;
+    std::map<unsigned int, TileTexture> mapTextureTable_;
 };
 
 

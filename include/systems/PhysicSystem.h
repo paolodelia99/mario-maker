@@ -25,6 +25,14 @@ public:
 
     virtual ~PhysicSystem();
 
+private:
+
+    void checkYCollision(Entity* ent, Entity* object);
+
+    void checkXCollision(Entity* ent1, Entity* object);
+
+    bool checkRecCollision(Rectangle rec1, Rectangle rec2);
+
 };
 
 

@@ -29,23 +29,6 @@ void PlayerSystem::tick(World *world, float delta) {
         ComponentHandle<PlayerComponent> playerComponent = ent->get<PlayerComponent>();
 
         switch (currentCommand) {
-            case JUMP:
-                std::cout << "Jump" << std::endl;
-                break;
-            case NONE_COMMAND:
-                std::cout << "None" << std::endl;
-                break;
-            case MOVE_LEFT:
-                std::cout << "Left" << std::endl;
-                break;
-            case MOVE_RIGHT:
-                std::cout << "Right" << std::endl;
-                break;
-            default:
-                break;
-        }
-
-        switch (currentCommand) {
             case NONE_COMMAND:
                 kinetic->accX_ = 0;
                 kinetic->accY_ = 0;

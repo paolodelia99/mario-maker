@@ -86,6 +86,8 @@ void Game::initWorld() {
             );
     cameraId_ = camera->getEntityId();
 
+    initObjectMap();
+
     registerSystems();
 }
 
@@ -164,5 +166,33 @@ void Game::handleInput() {
         else if (IsKeyDown(KEY_A)) it->setCurrentCommand(KEY_A);
         else if (IsKeyDown(KEY_S)) it->setCurrentCommand(KEY_S);
         else it->setNullCommand();
+    }
+}
+
+void Game::initObjectMap() {
+    int mapWidth, mapHeight;
+    mapWidth = pMap_->getWidth();
+    mapHeight = pMap_->getHeight();
+    auto objectMapEnt = world_->create();
+    auto objMapComponent = objectMapEnt->assign<ObjectMapComponent>(mapWidth, mapHeight);
+
+    for (ECS::Entity* object : world_->each<TileComponent, AABBComponent, SolidComponent>())
+    {
+        auto aabb = object->get<AABBComponent>();
+
+        if (round(aabb->collisionBox_.width) <= GAME_TILE_SIZE && round(aabb->collisionBox_.height) <= GAME_TILE_SIZE)
+        {
+            unsigned int x = (int)round(aabb->left() / 32);
+            unsigned int y = (int)round(aabb->top() / 32);
+            objMapComponent->set(object->getEntityId(), x, y);
+        } else {
+            for (int j = (int)(round(aabb->top() / 32)); j < (int)(aabb->bottom() / 32); j++)
+            {
+                for (int i = (int)(round(aabb->left() / 32)); i < (int)(aabb->right() / 32); i++)
+                {
+                    objMapComponent->set(object->getEntityId(), i, j);
+                }
+            }
+        }
     }
 }
