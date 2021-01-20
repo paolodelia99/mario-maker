@@ -2,6 +2,8 @@
 
 Making super mario maker with c++
 
+![img1](assets/readme/mario-maker-cpp.png)
+
 # Libraries used
 
 - Raylib
