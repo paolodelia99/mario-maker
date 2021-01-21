@@ -3,7 +3,10 @@
 //
 #pragma once
 
-constexpr bool DEBUG = true;
+constexpr const char* SBM1_PLAYER_TILESET_PATH = "../assets/imgs/players-tileset.png";
+constexpr const char* SMB1_TILESET_PATH = "../assets/tilesets/tiles-2.png";
+
+constexpr bool DEBUG = false;
 constexpr bool SECOND_PLAYER = true;
 
 constexpr int GAME_TILE_SIZE = 32;

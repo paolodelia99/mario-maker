@@ -2,7 +2,7 @@
 // Created by paolo on 13/01/21.
 //
 #include <gtest/gtest.h>
-#include "TextureRenderer.h"
+#include "renderers/TextureRenderer.h"
 
 TEST(textureManagerTest, testRenderTexture) {
     InitWindow(250, 250, "Test texture Loader");

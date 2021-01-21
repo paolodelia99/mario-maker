@@ -115,6 +115,23 @@ std::set<unsigned int> Map::loadLayers(const std::vector<tmx::Layer::Ptr>& layer
                 else if (layerName == "bricks") ent->assign<BrickComponent>();
                 else if (layerName == "ground") ent->assign<GroundComponent>();
                 else if (layerName == "coins") ent->assign<CoinBoxComponent>();
+
+                if (layerName == "bricks" || layerName == "coins") {
+                    if (ent->has<BrickComponent>()) {
+                        ent->assign<TextureComponent>(TextureId::BRICK);
+                    } else {
+                        ent->assign<TextureComponent>(TextureId::QUESTION_BLOCK_1);
+                        ent->assign<AnimationComponent>(std::vector<TextureId>{
+                            TextureId::QUESTION_BLOCK_1,
+                            TextureId::QUESTION_BLOCK_1,
+                            TextureId::QUESTION_BLOCK_1,
+                            TextureId::QUESTION_BLOCK_2,
+                            TextureId::QUESTION_BLOCK_3,
+                            TextureId::QUESTION_BLOCK_2,
+                            }, 10);
+                    }
+                    ent->assign<BounceComponent>();
+                }
             }
         }
         else if(layer->getType() == tmx::Layer::Type::Tile)

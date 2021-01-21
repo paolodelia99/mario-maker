@@ -8,12 +8,13 @@
 #include <iostream>
 #include "ECS.h"
 #include "Constants.h"
-#include "MapRenderer.h"
-#include "TextureRenderer.h"
+#include "renderers/MapRenderer.h"
+#include "renderers/TextureRenderer.h"
 #include "CameraSystem.h"
 #include "PlayerSystem.h"
 #include "PhysicSystem.h"
 #include "AnimationSystem.h"
+#include "TileSystem.h"
 
 class Game {
 public:

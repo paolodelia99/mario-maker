@@ -42,7 +42,7 @@ set(CMAKE_CXX_STANDARD 11)
 file(GLOB src
         "src/*.cpp"
         "src/systems/*.cpp"
-        )
+        "src/renderers/*.cpp")
 add_executable(mario_maker ${src})
 add_library(mario_maker_lib STATIC ${src})
 
@@ -51,6 +51,7 @@ find_package(TMXLITE REQUIRED)
 include_directories(
         include
         include/systems
+        include/renderers
         ${TMXLITE_INCLUDE_DIR})
 
 target_link_libraries(mario_maker raylib ${TMXLITE_LIBRARIES} gtest gtest_main)

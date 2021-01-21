@@ -12,8 +12,8 @@ Game::Game(const char *mapName, const int screenWidth, const int screenHeight, b
     world_ = ECS::World::createWorld();
     pMap_ = new Map(mapName);
     pMap_->loadMap(world_);
-    pMapRenderer_ = new MapRenderer(pMap_);
-    pTextureRenderer_ = new TextureRenderer("../assets/imgs/players-tileset.png");
+    pMapRenderer_ = new MapRenderer(pMap_, SMB1_TILESET_PATH);
+    pTextureRenderer_ = new TextureRenderer(SBM1_PLAYER_TILESET_PATH);
 }
 
 void Game::mainLoop() {
@@ -51,13 +51,15 @@ void Game::mainLoop() {
 
         BeginMode2D(camera.get().camera);
 
-        pMapRenderer_->render();
+        pMapRenderer_->render(world_);
         pTextureRenderer_->renderTextureEntities(world_);
         pTextureRenderer_->renderCollisionRect(world_);
 
         // just for showing the center of the camera
-        DrawLine(camera->camera.target.x, - screenHeight_ * 10, camera->camera.target.x, screenHeight_ * 10, GREEN);
-        DrawLine(- screenWidth_ * 5, camera->camera.target.y, screenWidth_ * 5, camera->camera.target.y, GREEN);
+        if (DEBUG) {
+            DrawLine(camera->camera.target.x, - screenHeight_ * 10, camera->camera.target.x, screenHeight_ * 10, GREEN);
+            DrawLine(- screenWidth_ * 5, camera->camera.target.y, screenWidth_ * 5, camera->camera.target.y, GREEN);
+        }
 
         EndMode2D();
 
@@ -151,6 +153,7 @@ void Game::registerSystems() {
     world_->registerSystem(new PlayerSystem());
     animationSystem_ = world_->registerSystem(new AnimationSystem());
     world_->registerSystem(new PhysicSystem());
+    world_->registerSystem(new TileSystem());
 }
 
 void Game::handleInput() {

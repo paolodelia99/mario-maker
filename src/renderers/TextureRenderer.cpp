@@ -2,15 +2,15 @@
 // Created by paolo on 13/01/21.
 //
 
-#include "TextureRenderer.h"
+#include "renderers/TextureRenderer.h"
 
 #include <utility>
 #include <Components.h>
 #include <Constants.h>
 
-TextureRenderer::TextureRenderer(std::string filepath)
-: filepath_(std::move(filepath))
+TextureRenderer::TextureRenderer(const char* filepath)
 {
+    setFilePath(filepath);
     // Mario Textures
     texturePositions_.insert({MARIO_STAND, new Rectangle{1, 9, 16, 16}});
     texturePositions_.insert({MARIO_RUN_1, new Rectangle{35, 9, 16, 16}});
@@ -59,31 +59,6 @@ void TextureRenderer::renderTexture(TextureId textureId, Rectangle dstRect, bool
                        Rectangle{0, 0, (flipH ? -1 : 1) * dstRect.width, dstRect.height } ,
                        Vector2{dstRect.x, dstRect.y},
                        WHITE);
-    }
-}
-
-Texture2D TextureRenderer::loadTexture(TextureId textureId) {
-
-    auto it = texturePositions_.find(textureId);
-
-    Rectangle rectangle = *it->second;
-
-    Image image = LoadImage(filepath_.c_str());
-    ImageCrop(&image, rectangle);
-    ImageResize(&image, 32, 32);
-
-    Texture2D texture2D = LoadTextureFromImage(image);
-    UnloadImage(image);
-
-    return texture2D;
-}
-
-void TextureRenderer::loadTextures() {
-    auto it = texturePositions_.begin();
-
-    for (; it != texturePositions_.end(); it++)
-    {
-        textures_.insert({it->first, loadTexture(it->first)});
     }
 }
 

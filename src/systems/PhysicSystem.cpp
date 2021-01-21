@@ -2,7 +2,6 @@
 // Created by paolo on 15/01/21.
 //
 
-#include <iostream>
 #include <cmath>
 #include <unordered_set>
 #include "PhysicSystem.h"

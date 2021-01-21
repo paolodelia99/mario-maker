@@ -5,7 +5,7 @@
 
 #include <cstdio>
 #include <raylib.h>
-#include "TextureRenderer.h"
+#include "renderers/TextureRenderer.h"
 #include <map>
 #include <utility>
 #include <iostream>
@@ -136,6 +136,29 @@ struct TopCollisionComponent {};
 struct RightCollisionComponent {};
 
 struct LeftCollisionComponent {};
+
+struct BounceComponent {
+
+    int getHeight() {
+        frames--;
+        return height[frames];
+    }
+
+    [[nodiscard]] bool finished() const {
+        return frames == 0;
+    }
+
+    void reset() {
+        frames = 13;
+    }
+
+public:
+    bool hit = false;
+
+private:
+    int frames = 13;
+    int height[13] = {-2, 1, 3, 2, 1, 1, 1, 0, 0, -1, -1, -4, -1};;
+};
 
 struct AnimationComponent {
     explicit AnimationComponent(
