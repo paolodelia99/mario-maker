@@ -27,12 +27,9 @@ public:
 
 private:
 
-    void checkYCollision(Entity* ent, Entity* object);
+    void checkYCollision(Entity* ent1, Entity* ent2);
 
-    void checkXCollision(Entity* ent1, Entity* object);
-
-    bool checkRecCollision(Rectangle rec1, Rectangle rec2);
-
+    void checkXCollision(Entity* ent1, Entity* ent2);
 };
 
 

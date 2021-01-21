@@ -112,9 +112,9 @@ std::set<unsigned int> Map::loadLayers(const std::vector<tmx::Layer::Ptr>& layer
                 ent->assign<SolidComponent>();
                 ent->assign<TileComponent>();
                 if (layerName == "pipes") ent->assign<PipeComponent>();
-                else if (layerName == "coins") ent->assign<CoinBoxComponent>();
                 else if (layerName == "bricks") ent->assign<BrickComponent>();
                 else if (layerName == "ground") ent->assign<GroundComponent>();
+                else if (layerName == "coins") ent->assign<CoinBoxComponent>();
             }
         }
         else if(layer->getType() == tmx::Layer::Type::Tile)
