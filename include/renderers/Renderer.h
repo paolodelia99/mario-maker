@@ -25,18 +25,20 @@ protected:
 
         for (; it != texturePositions_.end(); it++)
         {
-            textures_.insert({it->first, loadTexture(it->first)});
+            auto rect = it->second;
+            float width = rect->width, height = rect->height;
+            textures_.insert({it->first, loadTexture(it->first, width, height)});
         }
     }
 
-    Texture2D loadTexture(TextureId textureId) {
+    Texture2D loadTexture(TextureId textureId, float width, float height) {
         auto it = texturePositions_.find(textureId);
 
         Rectangle rectangle = *it->second;
 
         Image image = LoadImage(filepath_);
         ImageCrop(&image, rectangle);
-        ImageResize(&image, 32, 32);
+        ImageResize(&image, (int) width * 2, (int) height * 2);
 
         Texture2D texture2D = LoadTextureFromImage(image);
         UnloadImage(image);

@@ -96,14 +96,13 @@ void TileSystem::createCoin(World* world, Entity* ent) {
 void TileSystem::spawnSuperMarioMushroom(World* world, Entity* ent) {
     auto mushroom = world->create();
     auto entAABB = ent->get<AABBComponent>();
-    mushroom->assign<SuperMushroomComponent>();
     mushroom->assign<TextureComponent>(TextureId::SUPER_MUSHROOM);
 
     mushroom->assign<GrowComponent>();
-    mushroom->assign<CollectibleComponent>();
+    mushroom->assign<CollectibleComponent>(Collectible::CollectibleType::SUPER_MARIO_MUSHROOM);
     mushroom->assign<AABBComponent>(Rectangle{
         entAABB->left() + 4,
-        entAABB->top(),
+        entAABB->top() - entAABB->collisionBox_.width / 2,
         GAME_TILE_SIZE,
         GAME_TILE_SIZE
     });

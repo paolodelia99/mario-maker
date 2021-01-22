@@ -13,89 +13,17 @@ PhysicSystem::PhysicSystem() {
 void PhysicSystem::tick(World *world, float delta) {
     EntitySystem::tick(world, delta);
 
-    for (auto ent : world->each<GravityComponent, KineticComponent>())
-    {
-        ent->get<KineticComponent>()->accY_ += GRAVITY;
-    }
+    applyGravity(world);
 
     auto camera = world->findFirst<CameraComponent>()->get<CameraComponent>();
 
-    //Kinetic-Kinetic Collsions
-    for (auto ent : world->each<AABBComponent, KineticComponent, SolidComponent>())
-    {
-        for (auto ent2 : world->each<AABBComponent, KineticComponent, SolidComponent>())
-        {
-            if (ent == ent2) continue;
+   checkKineticKineticCollisions(world);
 
-            checkYCollision(ent, ent2);
-
-            checkXCollision(ent, ent2);
-        }
-    }
-
-    // Kinetic-Tiles Collisions
-    auto objMapEntity = world->findFirst<ObjectMapComponent>();
-    if (objMapEntity) {
-        auto map = objMapEntity->get<ObjectMapComponent>();
-
-        for (auto ent : world->each<KineticComponent, AABBComponent, SolidComponent>())
-        {
-            auto aabb = ent->get<AABBComponent>();
-            int x = (int) round(aabb->left() / 32);
-            int y = (int) round(aabb->top() / 32);
-            std::unordered_set<int> neighbors = {
-                    map->get(x + 1, y),
-                    map->get(x - 1, y),
-                    map->get(x, y + 1),
-                    map->get(x, y - 1),
-                    map->get(x + 1, y + 1),
-                    map->get(x + 1, y - 1),
-                    map->get(x - 1, y + 1),
-                    map->get(x - 1, y - 1)
-            };
-
-            for (auto id : neighbors) {
-                if (id == ent->getEntityId()) continue;
-                if (id == -1) continue;
-
-                auto object = world->getById(id);
-                if (!object) continue;
-                if (!object->has<AABBComponent, SolidComponent, TileComponent>()) continue;
-
-                checkYCollision(ent, object);
-
-                checkXCollision(ent, object);
-            }
-        }
-    } else {
-        throw std::invalid_argument("There isn't any objMapEntity!");
-    }
+    checkKineticTileCollisions(world);
 
     moveWalkComponents(world);
 
-    // Apply Forces
-    for (auto ent : world->each<AABBComponent, KineticComponent>())
-    {
-        if (ent->has<FrozenComponent>()) continue;
-        auto aabb = ent->get<AABBComponent>();
-        auto kinetic = ent->get<KineticComponent>();
-
-        aabb->collisionBox_.x += kinetic->speedX_;
-        aabb->collisionBox_.y += kinetic->speedY_;
-        kinetic->speedX_ += kinetic->accX_;
-        kinetic->speedY_ += kinetic->accY_;
-
-        if (std::abs(kinetic->speedY_) < MARIO_ACCELERATION_X) kinetic->speedY_ = 0;
-        if (std::abs(kinetic->speedX_) < MARIO_ACCELERATION_X) kinetic->speedX_ = 0;
-        kinetic->speedY_ *= FRICTION;
-        kinetic->speedX_ *= FRICTION;
-
-        if (kinetic->speedY_ > MAX_SPEED_Y) kinetic->speedY_ = MAX_SPEED_Y;
-        if (kinetic->speedX_ > MAX_SPEED_X) kinetic->speedX_ = MAX_SPEED_X;
-
-        if (kinetic->speedY_ < -MAX_SPEED_Y) kinetic->speedY_ = -MAX_SPEED_Y;
-        if (kinetic->speedX_ < -MAX_SPEED_X) kinetic->speedX_ = -MAX_SPEED_X;
-    }
+    applyForces(world);
 }
 
 void PhysicSystem::unconfigure(World *world) {
@@ -236,8 +164,91 @@ void PhysicSystem::moveWalkComponents(World *world) {
             }
         }
 
-        std::cout << "speed: " << walkComponent->speed << std::endl;
-
         kinetic->speedX_ = walkComponent->speed;
     });
+}
+
+void PhysicSystem::checkKineticTileCollisions(World *world) {
+    auto objMapEntity = world->findFirst<ObjectMapComponent>();
+    if (objMapEntity) {
+        auto map = objMapEntity->get<ObjectMapComponent>();
+
+        for (auto ent : world->each<KineticComponent, AABBComponent, SolidComponent>())
+        {
+            auto aabb = ent->get<AABBComponent>();
+            int x = (int) round(aabb->left() / 32);
+            int y = (int) round(aabb->top() / 32);
+            std::unordered_set<int> neighbors = {
+                    map->get(x + 1, y),
+                    map->get(x - 1, y),
+                    map->get(x, y + 1),
+                    map->get(x, y - 1),
+                    map->get(x + 1, y + 1),
+                    map->get(x + 1, y - 1),
+                    map->get(x - 1, y + 1),
+                    map->get(x - 1, y - 1)
+            };
+
+            for (auto id : neighbors) {
+                if (id == ent->getEntityId()) continue;
+                if (id == -1) continue;
+
+                auto object = world->getById(id);
+                if (!object) continue;
+                if (!object->has<AABBComponent, SolidComponent, TileComponent>()) continue;
+
+                checkYCollision(ent, object);
+
+                checkXCollision(ent, object);
+            }
+        }
+    } else {
+        throw std::invalid_argument("There isn't any objMapEntity!");
+    }
+}
+
+void PhysicSystem::applyForces(World *world) {
+    for (auto ent : world->each<AABBComponent, KineticComponent>())
+    {
+        if (ent->has<FrozenComponent>()) continue;
+        auto aabb = ent->get<AABBComponent>();
+        auto kinetic = ent->get<KineticComponent>();
+
+        aabb->collisionBox_.x += kinetic->speedX_;
+        aabb->collisionBox_.y += kinetic->speedY_;
+        kinetic->speedX_ += kinetic->accX_;
+        kinetic->speedY_ += kinetic->accY_;
+
+        if (std::abs(kinetic->speedY_) < MARIO_ACCELERATION_X) kinetic->speedY_ = 0;
+        if (std::abs(kinetic->speedX_) < MARIO_ACCELERATION_X) kinetic->speedX_ = 0;
+        kinetic->speedY_ *= FRICTION;
+        kinetic->speedX_ *= FRICTION;
+
+        if (kinetic->speedY_ > MAX_SPEED_Y) kinetic->speedY_ = MAX_SPEED_Y;
+        if (kinetic->speedX_ > MAX_SPEED_X) kinetic->speedX_ = MAX_SPEED_X;
+
+        if (kinetic->speedY_ < -MAX_SPEED_Y) kinetic->speedY_ = -MAX_SPEED_Y;
+        if (kinetic->speedX_ < -MAX_SPEED_X) kinetic->speedX_ = -MAX_SPEED_X;
+    }
+}
+
+void PhysicSystem::checkKineticKineticCollisions(World* world) {
+    for (auto ent : world->each<AABBComponent, KineticComponent, SolidComponent>())
+    {
+        for (auto ent2 : world->each<AABBComponent, KineticComponent, SolidComponent>())
+        {
+            if (ent == ent2) continue;
+
+            checkYCollision(ent, ent2);
+
+            checkXCollision(ent, ent2);
+        }
+    }
+}
+
+void PhysicSystem::applyGravity(World* world) {
+    for (auto ent : world->each<GravityComponent, KineticComponent>())
+    {
+        ent->get<KineticComponent>()->accY_ += GRAVITY;
+    }
 }

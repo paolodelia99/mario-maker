@@ -21,6 +21,13 @@ public:
 
     void setAnimation(Entity* playerEntity, PlayerState state);
 
+private:
+
+    void collectCollectible(World* world, Entity* player);
+
+    void eatMushroom(Entity *pEntity, Collectible::CollectibleType type);
+
+    void handleFrozenTransform(Entity* entity);
 };
 
 

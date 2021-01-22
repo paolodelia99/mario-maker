@@ -12,28 +12,35 @@ TextureRenderer::TextureRenderer(const char* filepath)
 {
     setFilePath(filepath);
     // Mario Textures
-    texturePositions_.insert({MARIO_STAND, new Rectangle{1, 9, 16, 16}});
-    texturePositions_.insert({MARIO_RUN_1, new Rectangle{35, 9, 16, 16}});
-    texturePositions_.insert({MARIO_RUN_2, new Rectangle{52, 9, 16, 16}});
-    texturePositions_.insert({MARIO_RUN_3, new Rectangle{69, 9, 16, 16}});
-    texturePositions_.insert({MARIO_DRIFT, new Rectangle{86, 9, 16, 16}});
-    texturePositions_.insert({MARIO_JUMP, new Rectangle{103, 9, 16, 16}});
-    texturePositions_.insert({MARIO_SIT_1, new Rectangle{222, 9, 16, 16}});
-    texturePositions_.insert({MARIO_SIT_2, new Rectangle{239, 9, 16, 16}});
-    texturePositions_.insert({MARIO_DUCK, new Rectangle{18, 9, 16, 16}});
-    texturePositions_.insert({MARIO_DEAD, new Rectangle{256, 9, 16, 16}});
+    texturePositions_.insert({MARIO_STAND, new Rectangle{1, 9, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({MARIO_RUN_1, new Rectangle{35, 9, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({MARIO_RUN_2, new Rectangle{52, 9, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({MARIO_RUN_3, new Rectangle{69, 9, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({MARIO_DRIFT, new Rectangle{86, 9, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({MARIO_JUMP, new Rectangle{103, 9, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({MARIO_SIT_1, new Rectangle{222, 9, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({MARIO_SIT_2, new Rectangle{239, 9, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({MARIO_DUCK, new Rectangle{18, 9, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({MARIO_DEAD, new Rectangle{256, 9, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({SUPER_MARIO_STAND, new Rectangle{1, 43, TILE_SIZE, TILE_SIZE * 2}});
+    texturePositions_.insert({SUPER_MARIO_DUCK, new Rectangle{18, 43, TILE_SIZE, TILE_SIZE * 2}});
+    texturePositions_.insert({SUPER_MARIO_RUN_1, new Rectangle{35, 43, TILE_SIZE, TILE_SIZE * 2}});
+    texturePositions_.insert({SUPER_MARIO_RUN_2, new Rectangle{52, 43, TILE_SIZE, TILE_SIZE * 2}});
+    texturePositions_.insert({SUPER_MARIO_RUN_3, new Rectangle{69, 43, TILE_SIZE, TILE_SIZE * 2}});
+    texturePositions_.insert({SUPER_MARIO_DRIFT, new Rectangle{86, 43, TILE_SIZE, TILE_SIZE * 2}});
+    texturePositions_.insert({SUPER_MARIO_JUMP, new Rectangle{103, 43, TILE_SIZE, TILE_SIZE * 2}});
 
     // Luigi Textures
-    texturePositions_.insert({LUIGI_STAND, new Rectangle{1, 157, 16, 16}});
-    texturePositions_.insert({LUIGI_RUN_1, new Rectangle{35, 157, 16, 16}});
-    texturePositions_.insert({LUIGI_RUN_2, new Rectangle{52, 157, 16, 16}});
-    texturePositions_.insert({LUIGI_RUN_3, new Rectangle{69, 157, 16, 16}});
-    texturePositions_.insert({LUIGI_DRIFT, new Rectangle{86, 157, 16, 16}});
-    texturePositions_.insert({LUIGI_JUMP, new Rectangle{103, 157, 16, 16}});
-    texturePositions_.insert({LUIGI_SIT_1, new Rectangle{222, 157, 16, 16}});
-    texturePositions_.insert({LUIGI_SIT_2, new Rectangle{239, 157, 16, 16}});
-    texturePositions_.insert({LUIGI_DUCK, new Rectangle{18, 157, 16, 16}});
-    texturePositions_.insert({LUIGI_DEAD, new Rectangle{256, 157, 16, 16}});
+    texturePositions_.insert({LUIGI_STAND, new Rectangle{1, 157, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({LUIGI_RUN_1, new Rectangle{35, 157, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({LUIGI_RUN_2, new Rectangle{52, 157, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({LUIGI_RUN_3, new Rectangle{69, 157, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({LUIGI_DRIFT, new Rectangle{86, 157, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({LUIGI_JUMP, new Rectangle{103, 157, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({LUIGI_SIT_1, new Rectangle{222, 157, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({LUIGI_SIT_2, new Rectangle{239, 157, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({LUIGI_DUCK, new Rectangle{18, 157, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({LUIGI_DEAD, new Rectangle{256, 157, TILE_SIZE, TILE_SIZE}});
 
     texturePositions_.insert({SUPER_MUSHROOM, new Rectangle{1, 597, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({ONE_UP_MUSHROOM, new Rectangle{18, 597, TILE_SIZE, TILE_SIZE}});

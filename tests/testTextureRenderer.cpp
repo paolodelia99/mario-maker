@@ -9,14 +9,14 @@ TEST(textureManagerTest, testRenderTexture) {
     SetTargetFPS(60);
     int c = 0;
 
-    TextureRenderer* textureLoader = new TextureRenderer("../../assets/imgs/characters.gif");
+    TextureRenderer* textureLoader = new TextureRenderer("../../assets/imgs/players-tileset.png");
 
     while(++c < 100) {
         BeginDrawing();
 
         ClearBackground(RAYWHITE);
 
-        textureLoader->renderTexture(MARIO_STAND, (Rectangle) {250.f / 2, 250.f / 2, 16, 16}, true);
+        textureLoader->renderTexture(SUPER_MARIO_JUMP, (Rectangle) {250.f / 2, 250.f / 2, 32, 64}, false);
 
         DrawText("this IS a texture loaded_ from an image!", 300, 370, 10, GRAY);
 

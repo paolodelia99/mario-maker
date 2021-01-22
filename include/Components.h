@@ -14,7 +14,7 @@ ECS_TYPE_IMPLEMENTATION;
 
 struct AABBComponent {
 
-    AABBComponent(const Rectangle box) : collisionBox_(box) {}
+    AABBComponent(Rectangle box) : collisionBox_(box) {}
 
     AABBComponent operator+(const Vector2 &offset)
     {
@@ -186,10 +186,24 @@ struct GrowComponent {
     }
 
 private:
-    int frames = 128;
+    int frames = 64;
 };
 
-struct CollectibleComponent {};
+namespace Collectible {
+    enum CollectibleType {
+        SUPER_MARIO_MUSHROOM,
+        MEGA_MUSHROOM,
+        FLAME_MUSHROOM,
+    };
+}
+
+struct CollectibleComponent {
+
+    CollectibleComponent(Collectible::CollectibleType type)
+    : type(type) {}
+
+    Collectible::CollectibleType type;
+};
 
 struct AnimationComponent {
     explicit AnimationComponent(

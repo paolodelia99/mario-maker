@@ -32,6 +32,14 @@ private:
     void checkXCollision(Entity* ent1, Entity* ent2);
 
     void moveWalkComponents(World* world);
+
+    void checkKineticKineticCollisions(World* world);
+
+    void checkKineticTileCollisions(World* world);
+
+    void applyForces(World* world);
+
+    void applyGravity(World* world);
 };
 
 
