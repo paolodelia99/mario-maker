@@ -36,5 +36,8 @@ enum TextureId {
     QUESTION_BLOCK_2,
     QUESTION_BLOCK_3,
     QUESTION_BLOCK_OFF,
-    BRICK
+    BRICK,
+    COIN_1,
+    COIN_2,
+    COIN_3
 };

@@ -88,50 +88,11 @@ std::set<unsigned int> Map::loadLayers(const std::vector<tmx::Layer::Ptr>& layer
 
             for (const auto& object : objects)
             {
+                std::vector<tmx::Property> properties = object.getProperties();
                 tmx::FloatRect AABB = object.getAABB();
                 ECS::Entity* ent = world->create();
-                // Adjust coordinates
-                float x = std::round((AABB.left * 2) / 32) * 32;
-                float y = std::round((AABB.top * 2) / 32) * 32;
-                float width, height;
-                if (std::round(AABB.width) <= TILE_SIZE + 2) {
-                    width = GAME_TILE_SIZE;
-                } else {
-                    int n = (int) std::round(AABB.width / 16);
-                    width = GAME_TILE_SIZE * n;
-                }
 
-                if (std::round(AABB.width) <= TILE_SIZE + 2) {
-                    height = GAME_TILE_SIZE;
-                } else {
-                    int n = (int) std::round(AABB.height / 16);
-                    height = GAME_TILE_SIZE * n;
-                }
-
-                ent->assign<AABBComponent>(Rectangle{x , y, width, height});
-                ent->assign<SolidComponent>();
-                ent->assign<TileComponent>();
-                if (layerName == "pipes") ent->assign<PipeComponent>();
-                else if (layerName == "bricks") ent->assign<BrickComponent>();
-                else if (layerName == "ground") ent->assign<GroundComponent>();
-                else if (layerName == "coins") ent->assign<CoinBoxComponent>();
-
-                if (layerName == "bricks" || layerName == "coins") {
-                    if (ent->has<BrickComponent>()) {
-                        ent->assign<TextureComponent>(TextureId::BRICK);
-                    } else {
-                        ent->assign<TextureComponent>(TextureId::QUESTION_BLOCK_1);
-                        ent->assign<AnimationComponent>(std::vector<TextureId>{
-                            TextureId::QUESTION_BLOCK_1,
-                            TextureId::QUESTION_BLOCK_1,
-                            TextureId::QUESTION_BLOCK_1,
-                            TextureId::QUESTION_BLOCK_2,
-                            TextureId::QUESTION_BLOCK_3,
-                            TextureId::QUESTION_BLOCK_2,
-                            }, 10);
-                    }
-                    ent->assign<BounceComponent>();
-                }
+                loadTileEntity(ent, AABB, properties, layerName);
             }
         }
         else if(layer->getType() == tmx::Layer::Type::Tile)
@@ -244,4 +205,63 @@ int Map::getPixelHeight() const {
 
 int Map::getPixelWidth() const {
     return width_ * 32;
+}
+
+void Map::loadTileEntity(
+        ECS::Entity* ent,
+        tmx::FloatRect AABB,
+        std::vector<tmx::Property> properties,
+        std::string layerName) {
+    // Adjust coordinates
+    float x = std::round((AABB.left * 2) / 32) * 32;
+    float y = std::round((AABB.top * 2) / 32) * 32;
+    float width, height;
+    if (std::round(AABB.width) <= TILE_SIZE + 2) {
+        width = GAME_TILE_SIZE;
+    } else {
+        int n = (int) std::round(AABB.width / 16);
+        width = GAME_TILE_SIZE * n;
+    }
+
+    if (std::round(AABB.width) <= TILE_SIZE + 2) {
+        height = GAME_TILE_SIZE;
+    } else {
+        int n = (int) std::round(AABB.height / 16);
+        height = GAME_TILE_SIZE * n;
+    }
+
+    ent->assign<AABBComponent>(Rectangle{x , y, width, height});
+    ent->assign<SolidComponent>();
+    ent->assign<TileComponent>();
+    if (layerName == "pipes") ent->assign<PipeComponent>();
+    else if (layerName == "bricks") ent->assign<BrickComponent>();
+    else if (layerName == "ground") ent->assign<GroundComponent>();
+    else if (layerName == "coins") ent->assign<QuestionBlockComponent>();
+
+    if (layerName == "bricks" || layerName == "coins") {
+        if (ent->has<BrickComponent>()) {
+            ent->assign<TextureComponent>(TextureId::BRICK);
+        } else {
+            ent->assign<TextureComponent>(TextureId::QUESTION_BLOCK_1);
+            ent->assign<AnimationComponent>(std::vector<TextureId>{
+                    TextureId::QUESTION_BLOCK_1,
+                    TextureId::QUESTION_BLOCK_1,
+                    TextureId::QUESTION_BLOCK_1,
+                    TextureId::QUESTION_BLOCK_2,
+                    TextureId::QUESTION_BLOCK_3,
+                    TextureId::QUESTION_BLOCK_2,
+            }, 10);
+            if (!properties.empty()) {
+                auto questionComponent = ent->get<QuestionBlockComponent>();
+                for (auto property : properties) {
+                    if (property.getName() == "coins" && property.getBoolValue()) {
+                        questionComponent->coin = true;
+                    } else if (property.getName() == "super_mario_mushroom" && property.getBoolValue()) {
+                        questionComponent->superMarioMushroom = true;
+                    }
+                }
+            }
+        }
+        ent->assign<BounceComponent>();
+    }
 }

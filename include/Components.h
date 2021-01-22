@@ -89,7 +89,16 @@ struct BrickComponent {};
 
 struct PipeComponent {};
 
-struct CoinBoxComponent {};
+struct QuestionBlockComponent {
+
+    QuestionBlockComponent() = default;
+
+    bool coin = false;
+    bool superMarioMushroom = false;
+    bool megaMushroom = false;
+    bool flameMushroom = false;
+    bool oneUpMushroom = false;
+};
 
 struct GroundComponent {};
 
@@ -311,4 +320,14 @@ private:
     std::vector<int> idsMatrix_;
     unsigned int width_;
     unsigned int height_;
+};
+
+struct TimerComponent {
+
+    TimerComponent(std::function<void(void)> callback, int time)
+    : time(time), callback(std::move(callback)) {}
+
+    int time;
+    std::function<void(void)> callback;
+
 };

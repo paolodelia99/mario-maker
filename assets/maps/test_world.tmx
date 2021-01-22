@@ -71,11 +71,27 @@
   <object id="70" x="1136.55" y="64.2727" width="15.4545" height="15.4545"/>
  </objectgroup>
  <objectgroup id="6" name="coins">
-  <object id="41" x="320" y="80.2727" width="15.8125" height="15.6023"/>
-  <object id="42" x="336" y="80.0625" width="16" height="15.9375"/>
-  <object id="43" x="304.37" y="128.273" width="16" height="16"/>
+  <object id="41" x="320" y="80.2727" width="15.8125" height="15.6023">
+   <properties>
+    <property name="coins" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="42" x="336" y="80.0625" width="16" height="15.9375">
+   <properties>
+    <property name="coins" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="43" x="304.37" y="128.273" width="16" height="16">
+   <properties>
+    <property name="coins" type="bool" value="true"/>
+   </properties>
+  </object>
   <object id="44" x="349" y="129" width="1"/>
-  <object id="45" x="352.273" y="128" width="16" height="16"/>
+  <object id="45" x="352.273" y="128" width="16" height="16">
+   <properties>
+    <property name="super_mario_mushroom" type="bool" value="true"/>
+   </properties>
+  </object>
   <object id="71" x="1072.44" y="63.9602" width="16" height="16"/>
   <object id="72" x="1072.08" y="128.088" width="15.8154" height="15.8438"/>
  </objectgroup>

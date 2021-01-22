@@ -26,6 +26,8 @@ private:
 
 private:
     Map map_;
+
+    void renderOtherEntities(ECS::World *pWorld);
 };
 
 

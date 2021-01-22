@@ -22,6 +22,17 @@ public:
 
     void unconfigure(World* world) override;
 
+private:
+
+    void createCoin(World *world, Entity *ent);
+
+    void spawnSuperMarioMushroom(World *world, Entity *ent);
+
+    void spawnMegaMushroom(World *world, Entity *ent);
+
+    void spawnFlameMushroom(World *world, Entity *ent);
+
+    void spawnOneUpMushroom(World *world, Entity *ent);
 };
 
 

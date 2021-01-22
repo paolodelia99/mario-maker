@@ -20,12 +20,17 @@ MapRenderer::MapRenderer(Map *map, const char* filepath)
     texturePositions_.insert({QUESTION_BLOCK_OFF, new Rectangle{416, 0, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({BRICK, new Rectangle{32, 0, TILE_SIZE, TILE_SIZE}});
 
+    texturePositions_.insert({COIN_1, new Rectangle{368, 16, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({COIN_2, new Rectangle{384, 16, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({COIN_3, new Rectangle{400, 16, TILE_SIZE, TILE_SIZE}});
+
     loadTextures();
 }
 
 void MapRenderer::render(ECS::World* world) {
     drawGraphicsLayer(map_.getBackgroundLayer(), world, false);
     drawGraphicsLayer(map_.getGraphicsLayer(), world, true);
+    renderOtherEntities(world);
 }
 
 void MapRenderer::drawGraphicsLayer(unsigned int **mapToRender, ECS::World* world, bool graphics) {
@@ -71,6 +76,14 @@ void MapRenderer::renderTexture(TextureId textureId, int x, int y) {
     {
         Texture2D texture2D = it->second;
         DrawTexture(texture2D, x, y, WHITE);
+    }
+}
+
+void MapRenderer::renderOtherEntities(ECS::World *world) {
+    for (auto ent : world->each<TextureComponent, TileComponent, AABBComponent>()) {
+        auto aabb = ent->get<AABBComponent>();
+        auto textureComponent = ent->get<TextureComponent>();
+        renderTexture(textureComponent->textureId_, (int) aabb->left(), (int) aabb->top());
     }
 }
 

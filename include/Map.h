@@ -59,6 +59,12 @@ private:
 
     Texture2D getTexture(const std::string& path, tmx::Vector2u tilePosition, tmx::Vector2u tileSize);
 
+    void loadTileEntity(
+            ECS::Entity* ent,
+            tmx::FloatRect AABB,
+            std::vector<tmx::Property> properties,
+            std::string layerName);
+
 
 private:
     std::string name;

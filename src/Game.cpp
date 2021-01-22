@@ -154,6 +154,7 @@ void Game::registerSystems() {
     animationSystem_ = world_->registerSystem(new AnimationSystem());
     world_->registerSystem(new PhysicSystem());
     world_->registerSystem(new TileSystem());
+    world_->registerSystem(new TimerSystem());
 }
 
 void Game::handleInput() {
