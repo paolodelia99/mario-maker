@@ -16,14 +16,27 @@ TileSystem::TileSystem() {
 void TileSystem::tick(World *world, float delta) {
     EntitySystem::tick(world, delta);
 
-    for (auto ent : world->each<TileComponent, BounceComponent, BottomCollisionComponent>())
-    {
+    for (auto ent : world->each<TileComponent, BounceComponent, BottomCollisionComponent>()) {
         // Play sound
         ent->get<BounceComponent>()->hit = true;
     }
 
-    for (auto ent : world->each<BounceComponent>())
-    {
+    for (auto ent : world->each<GrowComponent, AABBComponent>()) {
+        auto grow = ent->get<GrowComponent>();
+        if (!grow->finished()) {
+            ent->get<AABBComponent>()->collisionBox_.y -= MUSHROOM_GROW_SPEED;
+        } else {
+            ent->remove<GrowComponent>();
+
+            ent->assign<WalkComponent>(MUSHROOM_MOVE_SPEED);
+            ent->assign<GravityComponent>();
+            ent->assign<SolidComponent>();
+            ent->assign<TileComponent>();
+            ent->assign<KineticComponent>();
+        }
+    }
+
+    for (auto ent : world->each<BounceComponent>()) {
         auto bounceComponent = ent->get<BounceComponent>();
         if (!bounceComponent->hit) continue;
 
@@ -59,7 +72,6 @@ void TileSystem::tick(World *world, float delta) {
 }
 
 void TileSystem::createCoin(World* world, Entity* ent) {
-    std::cout << "Coin created" << std::endl;
     auto coin = world->create();
     auto entAABBComponent = ent->get<AABBComponent>();
     coin->assign<TextureComponent>(TextureId::COIN_1);
@@ -82,7 +94,19 @@ void TileSystem::createCoin(World* world, Entity* ent) {
 }
 
 void TileSystem::spawnSuperMarioMushroom(World* world, Entity* ent) {
+    auto mushroom = world->create();
+    auto entAABB = ent->get<AABBComponent>();
+    mushroom->assign<SuperMushroomComponent>();
+    mushroom->assign<TextureComponent>(TextureId::SUPER_MUSHROOM);
 
+    mushroom->assign<GrowComponent>();
+    mushroom->assign<CollectibleComponent>();
+    mushroom->assign<AABBComponent>(Rectangle{
+        entAABB->left() + 4,
+        entAABB->top(),
+        GAME_TILE_SIZE,
+        GAME_TILE_SIZE
+    });
 }
 
 void TileSystem::spawnMegaMushroom(World *world, Entity *ent) {

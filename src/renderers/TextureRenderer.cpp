@@ -35,6 +35,10 @@ TextureRenderer::TextureRenderer(const char* filepath)
     texturePositions_.insert({LUIGI_DUCK, new Rectangle{18, 157, 16, 16}});
     texturePositions_.insert({LUIGI_DEAD, new Rectangle{256, 157, 16, 16}});
 
+    texturePositions_.insert({SUPER_MUSHROOM, new Rectangle{1, 597, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({ONE_UP_MUSHROOM, new Rectangle{18, 597, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({MEGA_MUSHROOM, new Rectangle{1, 614, 32, 32}});
+
     // fill texture map
     loadTextures();
 }

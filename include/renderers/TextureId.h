@@ -39,5 +39,8 @@ enum TextureId {
     BRICK,
     COIN_1,
     COIN_2,
-    COIN_3
+    COIN_3,
+    SUPER_MUSHROOM,
+    ONE_UP_MUSHROOM,
+    MEGA_MUSHROOM
 };

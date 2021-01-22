@@ -145,9 +145,10 @@ void PlayerSystem::setAnimation(Entity *playerEntity, PlayerState state) {
         }
 
         playerEntity->get<TextureComponent>()->h = GAME_TILE_SIZE;
-        playerEntity->get<TextureComponent>()->offSetY = -1;
         playerEntity->get<TextureComponent>()->w = GAME_TILE_SIZE;
-        playerEntity->get<TextureComponent>()->offSetX = -2;
+        //todo: to remove
+        // playerEntity->get<TextureComponent>()->offSetY = -1;
+        // playerEntity->get<TextureComponent>()->offSetX = -2;
         playerComponent->current_state_ = state;
     }
 }

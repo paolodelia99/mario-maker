@@ -71,6 +71,8 @@ void PhysicSystem::tick(World *world, float delta) {
         throw std::invalid_argument("There isn't any objMapEntity!");
     }
 
+    moveWalkComponents(world);
+
     // Apply Forces
     for (auto ent : world->each<AABBComponent, KineticComponent>())
     {
@@ -214,4 +216,28 @@ void PhysicSystem::checkXCollision(Entity *ent1, Entity *ent2) {
             ent1->assign<RightCollisionComponent>();
         }
     }
+}
+
+void PhysicSystem::moveWalkComponents(World *world) {
+    world->each<WalkComponent, AABBComponent, KineticComponent>([&](
+                    Entity* entity,
+                    ComponentHandle<WalkComponent> walkComponent,
+                    ComponentHandle<AABBComponent> aabb,
+                    ComponentHandle<KineticComponent> kinetic) {
+        if (entity->has<LeftCollisionComponent>()) {
+            walkComponent->speed = std::abs(walkComponent->speed);
+            if (entity->has<TextureComponent, EnemyComponent>()) {
+                entity->get<TextureComponent>()->flipH = true;
+            }
+        } else if (entity->has<RightCollisionComponent>()) {
+            walkComponent->speed = -std::abs(walkComponent->speed);
+            if (entity->has<TextureComponent, EnemyComponent>()) {
+                entity->get<TextureComponent>()->flipH = false;
+            }
+        }
+
+        std::cout << "speed: " << walkComponent->speed << std::endl;
+
+        kinetic->speedX_ = walkComponent->speed;
+    });
 }

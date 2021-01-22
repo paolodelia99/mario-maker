@@ -30,6 +30,8 @@ private:
     void checkYCollision(Entity* ent1, Entity* ent2);
 
     void checkXCollision(Entity* ent1, Entity* ent2);
+
+    void moveWalkComponents(World* world);
 };
 
 

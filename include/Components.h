@@ -12,15 +12,6 @@
 
 ECS_TYPE_IMPLEMENTATION;
 
-struct IntPosition
-{
-    IntPosition(int x, int y): x(x), y(y) {}
-    IntPosition(): x(0), y(0) {}
-
-    int8_t x;
-    int8_t y;
-};
-
 struct AABBComponent {
 
     AABBComponent(const Rectangle box) : collisionBox_(box) {}
@@ -70,6 +61,8 @@ ECS_DEFINE_TYPE(AABBComponent);
 
 struct KineticComponent {
 
+    KineticComponent() = default;
+
     KineticComponent(
             float speedX,
             float speedY,
@@ -84,6 +77,15 @@ struct KineticComponent {
 };
 
 ECS_DEFINE_TYPE(KineticComponent);
+
+struct WalkComponent {
+
+    WalkComponent() = default;
+
+    WalkComponent(float speed) : speed(speed) {}
+
+    float speed = -0.6f;
+};
 
 struct BrickComponent {};
 
@@ -128,9 +130,17 @@ struct PlayerComponent {
     int right = 0;
 };
 
+struct SuperMushroomComponent {};
+
 struct MarioComponent {};
 
 struct LuigiComponent {};
+
+struct SuperComponent {};
+
+struct MegaComponent {};
+
+struct SuperFlameComponent {};
 
 struct GravityComponent {};
 
@@ -168,6 +178,18 @@ private:
     int frames = 13;
     int height[13] = {-2, 1, 3, 2, 1, 1, 1, 0, 0, -1, -1, -4, -1};;
 };
+
+struct GrowComponent {
+    [[nodiscard]] bool finished() {
+        frames--;
+        return frames <= 0;
+    }
+
+private:
+    int frames = 128;
+};
+
+struct CollectibleComponent {};
 
 struct AnimationComponent {
     explicit AnimationComponent(
@@ -331,3 +353,5 @@ struct TimerComponent {
     std::function<void(void)> callback;
 
 };
+
+struct EnemyComponent {};
