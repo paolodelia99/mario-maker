@@ -109,7 +109,18 @@ void TileSystem::spawnSuperMarioMushroom(World* world, Entity* ent) {
 }
 
 void TileSystem::spawnMegaMushroom(World *world, Entity *ent) {
+    auto mushroom = world->create();
+    auto entAABB = ent->get<AABBComponent>();
+    mushroom->assign<TextureComponent>(TextureId::MEGA_MUSHROOM);
 
+    mushroom->assign<GrowComponent>(64);
+    mushroom->assign<CollectibleComponent>(Collectible::CollectibleType::MEGA_MUSHROOM);
+    mushroom->assign<AABBComponent>(Rectangle{
+            entAABB->left() + 4,
+            entAABB->top() - entAABB->collisionBox_.width / 4,
+            GAME_TILE_SIZE * 2,
+            GAME_TILE_SIZE * 2
+    });
 }
 
 void TileSystem::spawnFlameMushroom(World* world, Entity* ent) {

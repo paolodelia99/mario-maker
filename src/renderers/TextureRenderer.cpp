@@ -29,6 +29,16 @@ TextureRenderer::TextureRenderer(const char* filepath)
     texturePositions_.insert({SUPER_MARIO_RUN_3, new Rectangle{69, 43, TILE_SIZE, TILE_SIZE * 2}});
     texturePositions_.insert({SUPER_MARIO_DRIFT, new Rectangle{86, 43, TILE_SIZE, TILE_SIZE * 2}});
     texturePositions_.insert({SUPER_MARIO_JUMP, new Rectangle{103, 43, TILE_SIZE, TILE_SIZE * 2}});
+    texturePositions_.insert({MARIO_MEGA_STAND, new Rectangle{1, 26, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({MARIO_MEGA_RUN_1, new Rectangle{35, 26, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({MARIO_MEGA_RUN_2, new Rectangle{52, 26, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({MARIO_MEGA_RUN_3, new Rectangle{69, 26, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({MARIO_MEGA_DRIFT, new Rectangle{86, 26, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({MARIO_MEGA_JUMP, new Rectangle{103, 26, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({MARIO_MEGA_SIT_1, new Rectangle{222, 26, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({MARIO_MEGA_SIT_2, new Rectangle{239, 26, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({MARIO_MEGA_DUCK, new Rectangle{18, 26, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({MARIO_MEGA_DEAD, new Rectangle{256, 26, TILE_SIZE, TILE_SIZE}});
 
     // Luigi Textures
     texturePositions_.insert({LUIGI_STAND, new Rectangle{1, 157, TILE_SIZE, TILE_SIZE}});

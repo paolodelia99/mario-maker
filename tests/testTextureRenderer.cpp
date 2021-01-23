@@ -91,3 +91,29 @@ TEST(textureManagerTest, testOthersTextures) {
 
     EXPECT_TRUE(true);
 }
+
+TEST(textureManagerTest, testRenredingMegaComponent) {
+    InitWindow(250, 250, "Test texture Loader");
+    SetTargetFPS(60);
+    int c = 0;
+
+    TextureRenderer* textureLoader = new TextureRenderer("../../assets/imgs/players-tileset.png");
+
+    while(++c < 100) {
+        BeginDrawing();
+
+        ClearBackground(RAYWHITE);
+
+        textureLoader->renderTexture(MARIO_MEGA_STAND, (Rectangle) {250.f / 2, 250.f / 2, 64, 64}, false);
+
+        DrawText("this IS a texture loaded_ from an image!", 300, 370, 10, GRAY);
+
+        EndDrawing();
+    }
+
+    delete textureLoader;
+
+    CloseWindow();
+
+    EXPECT_TRUE(true);
+}

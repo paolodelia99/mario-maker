@@ -113,8 +113,14 @@ void PlayerSystem::setAnimation(Entity *playerEntity, PlayerState state) {
                                         TextureId::SUPER_MARIO_RUN_1,
                                         TextureId::SUPER_MARIO_RUN_2,
                                         TextureId::SUPER_MARIO_RUN_3},
-                                RUNNING_ANIMATION_SPEED
-                        );
+                                RUNNING_ANIMATION_SPEED);
+                    } else if (playerEntity->has<MegaComponent>()) {
+                        playerEntity->assign<AnimationComponent>(
+                                std::vector<TextureId>{
+                                        TextureId::MARIO_MEGA_RUN_1,
+                                        TextureId::MARIO_MEGA_RUN_2,
+                                        TextureId::MARIO_MEGA_RUN_3},
+                                RUNNING_ANIMATION_SPEED);
                     } else {
                         playerEntity->assign<AnimationComponent>(
                                 std::vector<TextureId>{
@@ -137,6 +143,8 @@ void PlayerSystem::setAnimation(Entity *playerEntity, PlayerState state) {
             case STANDING:
                 if (playerEntity->has<SuperComponent>()) {
                     playerEntity->assign<TextureComponent>(TextureId::SUPER_MARIO_STAND);
+                } else if (playerEntity->has<MegaComponent>()) {
+                  playerEntity->assign<TextureComponent>(TextureId::MARIO_MEGA_STAND);
                 } else {
                     playerEntity->assign<TextureComponent>(
                             playerEntity->has<MarioComponent>() ?
@@ -147,6 +155,8 @@ void PlayerSystem::setAnimation(Entity *playerEntity, PlayerState state) {
         case DRIFTING:
                 if (playerEntity->has<SuperComponent>()) {
                     playerEntity->assign<TextureComponent>(TextureId::SUPER_MARIO_DRIFT);
+                } else if (playerEntity->has<MegaComponent>()) {
+                    playerEntity->assign<TextureComponent>(TextureId::MARIO_MEGA_DRIFT);
                 } else {
                     playerEntity->assign<TextureComponent>(
                             playerEntity->has<MarioComponent>() ?
@@ -157,6 +167,8 @@ void PlayerSystem::setAnimation(Entity *playerEntity, PlayerState state) {
             case JUMPING:
                 if (playerEntity->has<SuperComponent>()) {
                     playerEntity->assign<TextureComponent>(TextureId::SUPER_MARIO_JUMP);
+                } else if (playerEntity->has<MegaComponent>()) {
+                    playerEntity->assign<TextureComponent>(TextureId::MARIO_MEGA_JUMP);
                 } else {
                     playerEntity->assign<TextureComponent>(
                             playerEntity->has<MarioComponent>() ?
@@ -167,6 +179,8 @@ void PlayerSystem::setAnimation(Entity *playerEntity, PlayerState state) {
             case DUCKING:
                 if (playerEntity->has<SuperComponent>()) {
                     playerEntity->assign<TextureComponent>(TextureId::SUPER_MARIO_DUCK);
+                } else if (playerEntity->has<MegaComponent>()) {
+                    playerEntity->assign<TextureComponent>(TextureId::MARIO_MEGA_DUCK);
                 } else {
                     playerEntity->assign<TextureComponent>(
                             playerEntity->has<MarioComponent>() ?
@@ -183,11 +197,15 @@ void PlayerSystem::setAnimation(Entity *playerEntity, PlayerState state) {
 
         if (playerEntity->has<SuperComponent>()) {
             playerEntity->get<TextureComponent>()->h = GAME_TILE_SIZE * 2;
+            playerEntity->get<TextureComponent>()->w = GAME_TILE_SIZE;
+        } else if (playerEntity->has<MegaComponent>()) {
+            playerEntity->get<TextureComponent>()->h = GAME_TILE_SIZE * 2;
+            playerEntity->get<TextureComponent>()->w = GAME_TILE_SIZE * 2;
         } else {
             playerEntity->get<TextureComponent>()->h = GAME_TILE_SIZE;
+            playerEntity->get<TextureComponent>()->w = GAME_TILE_SIZE;
         }
 
-        playerEntity->get<TextureComponent>()->w = GAME_TILE_SIZE;
         playerComponent->current_state_ = state;
     }
 }
@@ -244,6 +262,29 @@ void PlayerSystem::eatMushroom(Entity *entity, Collectible::CollectibleType type
             }
             break;
         case Collectible::MEGA_MUSHROOM:
+            if (!entity->has<MegaComponent>()) {
+                entity->assign<MegaComponent>();
+                entity->assign<AnimationComponent>(std::vector<TextureId>{
+                        TextureId::MARIO_STAND,
+                        TextureId::MARIO_MEGA_STAND,
+                        TextureId::MARIO_STAND,
+                        TextureId::MARIO_STAND,
+                        TextureId::MARIO_MEGA_STAND,
+                        TextureId::MARIO_MEGA_STAND,
+                        TextureId::MARIO_STAND,
+                        TextureId::MARIO_STAND,
+                        TextureId::MARIO_MEGA_STAND,
+                        TextureId::MARIO_MEGA_STAND,
+                }, 8, false, false, false);
+                entity->assign<FrozenComponent>();
+                entity->assign<TimerComponent>([entity]() {
+                    auto aabb = entity->get<AABBComponent>();
+                    entity->remove<FrozenComponent>();
+                    entity->remove<AnimationComponent>();
+                    aabb->collisionBox_.height = GAME_TILE_SIZE * 2;
+                    aabb->collisionBox_.width = GAME_TILE_SIZE * 2;
+                }, 80);
+            }
             break;
         case Collectible::FLAME_MUSHROOM:
             break;

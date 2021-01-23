@@ -180,6 +180,11 @@ private:
 };
 
 struct GrowComponent {
+
+    GrowComponent(int frames) : frames(frames) {}
+
+    GrowComponent() = default;
+
     [[nodiscard]] bool finished() {
         frames--;
         return frames <= 0;

@@ -253,11 +253,13 @@ void Map::loadTileEntity(
             }, 10);
             if (!properties.empty()) {
                 auto questionComponent = ent->get<QuestionBlockComponent>();
-                for (auto property : properties) {
+                for (const auto& property : properties) {
                     if (property.getName() == "coins" && property.getBoolValue()) {
                         questionComponent->coin = true;
                     } else if (property.getName() == "super_mario_mushroom" && property.getBoolValue()) {
                         questionComponent->superMarioMushroom = true;
+                    } else if (property.getName() == "mega_mushroom" && property.getBoolValue()) {
+                        questionComponent->megaMushroom = true;
                     }
                 }
             }

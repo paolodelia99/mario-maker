@@ -35,15 +35,44 @@ protected:
         auto it = texturePositions_.find(textureId);
 
         Rectangle rectangle = *it->second;
+        std::pair<int, int> newDims = getTextureDimensions(textureId, (int) width, (int) height);
 
         Image image = LoadImage(filepath_);
         ImageCrop(&image, rectangle);
-        ImageResize(&image, (int) width * 2, (int) height * 2);
+        ImageResize(&image, newDims.first, newDims.second);
 
         Texture2D texture2D = LoadTextureFromImage(image);
         UnloadImage(image);
 
         return texture2D;
+    }
+
+private:
+
+    std::pair<int, int> getTextureDimensions(TextureId textureId, int width, int height) {
+        std::pair<int, int> dims;
+
+        switch (textureId) {
+            case MARIO_MEGA_DEAD:
+            case MARIO_MEGA_DRIFT:
+            case MARIO_MEGA_DUCK:
+            case MARIO_MEGA_JUMP:
+            case MARIO_MEGA_RUN_1:
+            case MARIO_MEGA_RUN_2:
+            case MARIO_MEGA_RUN_3:
+            case MARIO_MEGA_STAND:
+            case MARIO_MEGA_SIT_1:
+            case MARIO_MEGA_SIT_2:
+                dims.first = width * 4;
+                dims.second = height * 4;
+                break;
+            default:
+                dims.first = width * 2;
+                dims.second = height * 2;
+                break;
+        }
+
+        return dims;
     }
 
 protected:
