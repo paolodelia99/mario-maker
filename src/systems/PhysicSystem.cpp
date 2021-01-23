@@ -17,7 +17,7 @@ void PhysicSystem::tick(World *world, float delta) {
 
     auto camera = world->findFirst<CameraComponent>()->get<CameraComponent>();
 
-   checkKineticKineticCollisions(world);
+    checkKineticKineticCollisions(world);
 
     checkKineticTileCollisions(world);
 
@@ -171,23 +171,12 @@ void PhysicSystem::moveWalkComponents(World *world) {
 void PhysicSystem::checkKineticTileCollisions(World *world) {
     auto objMapEntity = world->findFirst<ObjectMapComponent>();
     if (objMapEntity) {
-        auto map = objMapEntity->get<ObjectMapComponent>();
+        ComponentHandle<ObjectMapComponent> map = objMapEntity->get<ObjectMapComponent>();
 
         for (auto ent : world->each<KineticComponent, AABBComponent, SolidComponent>())
         {
-            auto aabb = ent->get<AABBComponent>();
-            int x = (int) round(aabb->left() / 32);
-            int y = (int) round(aabb->top() / 32);
-            std::unordered_set<int> neighbors = {
-                    map->get(x + 1, y),
-                    map->get(x - 1, y),
-                    map->get(x, y + 1),
-                    map->get(x, y - 1),
-                    map->get(x + 1, y + 1),
-                    map->get(x + 1, y - 1),
-                    map->get(x - 1, y + 1),
-                    map->get(x - 1, y - 1)
-            };
+            ComponentHandle<AABBComponent> aabb = ent->get<AABBComponent>();
+            std::unordered_set<int> neighbors = getNeighborIds(map, aabb);
 
             for (auto id : neighbors) {
                 if (id == ent->getEntityId()) continue;
@@ -251,4 +240,56 @@ void PhysicSystem::applyGravity(World* world) {
     {
         ent->get<KineticComponent>()->accY_ += GRAVITY;
     }
+}
+
+std::unordered_set<int> PhysicSystem::getNeighborIds(ComponentHandle<ObjectMapComponent> map, ComponentHandle<AABBComponent> aabb) {
+    int height = (int) std::round(aabb->collisionBox_.height / 32);
+    int width = (int) std::round(aabb->collisionBox_.width / 32);
+    std::unordered_set<int> neighbors;
+    int x = (int) std::round(aabb->left() / 32);
+    int y = (int) std::round(aabb->top() / 32);
+
+    //todo change this hardcoded stuff
+    if (height == 1 && width == 1) {
+        neighbors = {
+                map->get(x + 1, y),
+                map->get(x - 1, y),
+                map->get(x, y + 1),
+                map->get(x, y - 1),
+                map->get(x + 1, y + 1),
+                map->get(x + 1, y - 1),
+                map->get(x - 1, y + 1),
+                map->get(x - 1, y - 1)
+        };
+    } else if (height == 2 && width == 1) {
+        neighbors = {
+                map->get(x - 1, y - 1),
+                map->get(x, y - 1),
+                map->get(x + 1, y - 1),
+                map->get(x - 1, y),
+                map->get(x + 1, y),
+                map->get(x - 1, y + 1),
+                map->get(x + 1, y + 1),
+                map->get(x - 1, y + 2),
+                map->get(x, y + 2),
+                map->get(x + 1, y +2)
+        };
+    } else if (height == 2 && width == 2) {
+        neighbors = {
+                map->get(x - 1, y - 1),
+                map->get(x, y - 1),
+                map->get(x + 1, y - 1),
+                map->get(x + 2, y - 1),
+                map->get(x - 1, y),
+                map->get(x + 2, y),
+                map->get(x - 1, y + 1),
+                map->get(x + 2, y + 1),
+                map->get(x - 1, y + 2),
+                map->get(x, y + 2),
+                map->get(x + 1, y + 2),
+                map->get(x + 2, y + 2),
+        };
+    }
+
+    return neighbors;
 }

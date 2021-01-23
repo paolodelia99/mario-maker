@@ -5,6 +5,7 @@
 #ifndef MARIO_MAKER_PHYSICSYSTEM_H
 #define MARIO_MAKER_PHYSICSYSTEM_H
 #include <raylib.h>
+#include <unordered_set>
 #include "ECS.h"
 #include "Components.h"
 #include "Constants.h"
@@ -40,6 +41,8 @@ private:
     void applyForces(World* world);
 
     void applyGravity(World* world);
+
+    std::unordered_set<int> getNeighborIds(ComponentHandle<ObjectMapComponent> map, ComponentHandle<AABBComponent> handle);
 };
 
 

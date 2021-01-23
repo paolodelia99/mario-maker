@@ -29,7 +29,9 @@ void PlayerSystem::tick(World *world, float delta) {
         Command currentCommand = player->get<CommandComponent>()->currentCommand_;
         ComponentHandle<PlayerComponent> playerComponent = player->get<PlayerComponent>();
 
-        handleFrozenTransform(player);
+        if (player->has<FrozenComponent>()) {
+            handleFrozenTransform(player);
+        }
 
         switch (currentCommand) {
             case NONE_COMMAND:
@@ -87,10 +89,12 @@ void PlayerSystem::tick(World *world, float delta) {
         int lookingLeft = 0;
         if (playerComponent->left || playerComponent->right) lookingLeft = playerComponent->left;
         player->get<TextureComponent>()->flipH = lookingLeft;
-        player->remove<BottomCollisionComponent>();
-        player->remove<LeftCollisionComponent>();
-        player->remove<RightCollisionComponent>();
-        player->remove<TopCollisionComponent>();
+        if (!player->has<FrozenComponent>()) {
+            player->remove<BottomCollisionComponent>();
+            player->remove<LeftCollisionComponent>();
+            player->remove<RightCollisionComponent>();
+            player->remove<TopCollisionComponent>();
+        }
     }
 }
 
@@ -216,7 +220,6 @@ void PlayerSystem::collectCollectible(World *world, Entity *player) {
 }
 
 void PlayerSystem::eatMushroom(Entity *entity, Collectible::CollectibleType type) {
-    auto aabb = entity->get<AABBComponent>();
 
     switch (type) {
         case Collectible::SUPER_MARIO_MUSHROOM:
@@ -232,8 +235,10 @@ void PlayerSystem::eatMushroom(Entity *entity, Collectible::CollectibleType type
                     TextureId::SUPER_MARIO_STAND,
                 }, 4, false, false, false);
                 entity->assign<FrozenComponent>();
-                entity->assign<TimerComponent>([=]() {
+                entity->assign<TimerComponent>([entity]() {
+                    auto aabb = entity->get<AABBComponent>();
                     entity->remove<FrozenComponent>();
+                    entity->remove<AnimationComponent>();
                     aabb->collisionBox_.height = GAME_TILE_SIZE * 2;
                     }, 40);
             }
