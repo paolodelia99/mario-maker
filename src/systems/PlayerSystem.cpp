@@ -99,14 +99,16 @@ void PlayerSystem::tick(World *world, float delta) {
 }
 
 void PlayerSystem::setAnimation(Entity *playerEntity, PlayerState state) {
+    bool isMario = playerEntity->has<MarioComponent>();
     ComponentHandle<PlayerComponent> playerComponent = playerEntity->get<PlayerComponent>();
+
     if (playerComponent) {
         if (playerComponent->current_state_ == state) return;
         playerEntity->remove<AnimationComponent>();
 
         switch (state) {
             case RUNNING:
-                if (playerEntity->has<MarioComponent>()) {
+                if (isMario) {
                     if (playerEntity->has<SuperComponent>()) {
                         playerEntity->assign<AnimationComponent>(
                                 std::vector<TextureId>{
@@ -131,62 +133,94 @@ void PlayerSystem::setAnimation(Entity *playerEntity, PlayerState state) {
                         );
                     }
                 } else {
-                    playerEntity->assign<AnimationComponent>(
-                            std::vector<TextureId>{
-                                    TextureId::LUIGI_RUN_1,
-                                    TextureId::LUIGI_RUN_2,
-                                    TextureId::LUIGI_RUN_3},
-                            RUNNING_ANIMATION_SPEED
-                    );
+                    if (playerEntity->has<SuperComponent>()) {
+                        playerEntity->assign<AnimationComponent>(
+                                std::vector<TextureId>{
+                                        TextureId::SUPER_LUIGI_RUN_1,
+                                        TextureId::SUPER_LUIGI_RUN_2,
+                                        TextureId::SUPER_LUIGI_RUN_3},
+                                RUNNING_ANIMATION_SPEED
+                        );
+                    } else if (playerEntity->has<MegaComponent>()) {
+                        playerEntity->assign<AnimationComponent>(
+                                std::vector<TextureId>{
+                                        TextureId::LUIGI_MEGA_RUN_1,
+                                        TextureId::LUIGI_MEGA_RUN_2,
+                                        TextureId::LUIGI_MEGA_RUN_3},
+                                RUNNING_ANIMATION_SPEED
+                        );
+                    } else {
+                        playerEntity->assign<AnimationComponent>(
+                                std::vector<TextureId>{
+                                        TextureId::LUIGI_RUN_1,
+                                        TextureId::LUIGI_RUN_2,
+                                        TextureId::LUIGI_RUN_3},
+                                RUNNING_ANIMATION_SPEED
+                        );
+                    }
                 }
                 break;
             case STANDING:
                 if (playerEntity->has<SuperComponent>()) {
-                    playerEntity->assign<TextureComponent>(TextureId::SUPER_MARIO_STAND);
+                    playerEntity->assign<TextureComponent>(
+                            isMario ?
+                            TextureId::SUPER_MARIO_STAND : TextureId::SUPER_LUIGI_STAND);
                 } else if (playerEntity->has<MegaComponent>()) {
-                  playerEntity->assign<TextureComponent>(TextureId::MARIO_MEGA_STAND);
+                  playerEntity->assign<TextureComponent>(
+                          isMario ?
+                          TextureId::MARIO_MEGA_STAND : TextureId::LUIGI_MEGA_STAND);
                 } else {
                     playerEntity->assign<TextureComponent>(
-                            playerEntity->has<MarioComponent>() ?
+                            isMario ?
                             TextureId::MARIO_STAND : TextureId::LUIGI_STAND
                     );
                 }
                 break;
         case DRIFTING:
                 if (playerEntity->has<SuperComponent>()) {
-                    playerEntity->assign<TextureComponent>(TextureId::SUPER_MARIO_DRIFT);
+                    playerEntity->assign<TextureComponent>(
+                            isMario ?
+                            TextureId::SUPER_MARIO_DRIFT : TextureId::SUPER_LUIGI_DRIFT);
                 } else if (playerEntity->has<MegaComponent>()) {
-                    playerEntity->assign<TextureComponent>(TextureId::MARIO_MEGA_DRIFT);
+                    playerEntity->assign<TextureComponent>(
+                            isMario ?
+                            TextureId::MARIO_MEGA_DRIFT : TextureId::LUIGI_MEGA_DRIFT);
                 } else {
                     playerEntity->assign<TextureComponent>(
-                            playerEntity->has<MarioComponent>() ?
+                            isMario ?
                             TextureId::MARIO_DRIFT : TextureId::LUIGI_DRIFT
                     );
                 }
                 break;
             case JUMPING:
                 if (playerEntity->has<SuperComponent>()) {
-                    playerEntity->assign<TextureComponent>(TextureId::SUPER_MARIO_JUMP);
+                    playerEntity->assign<TextureComponent>(
+                            isMario ?
+                            TextureId::SUPER_MARIO_JUMP : TextureId::SUPER_LUIGI_JUMP);
                 } else if (playerEntity->has<MegaComponent>()) {
-                    playerEntity->assign<TextureComponent>(TextureId::MARIO_MEGA_JUMP);
+                    playerEntity->assign<TextureComponent>(
+                            isMario ?
+                            TextureId::MARIO_MEGA_JUMP : TextureId::LUIGI_MEGA_JUMP);
                 } else {
                     playerEntity->assign<TextureComponent>(
-                            playerEntity->has<MarioComponent>() ?
-                            TextureId::MARIO_JUMP : TextureId::LUIGI_JUMP
-                    );
+                            isMario ?
+                            TextureId::MARIO_JUMP : TextureId::LUIGI_JUMP);
                 }
                 break;
             case DUCKING:
                 if (playerEntity->has<SuperComponent>()) {
-                    playerEntity->assign<TextureComponent>(TextureId::SUPER_MARIO_DUCK);
+                    playerEntity->assign<TextureComponent>(
+                            isMario ?
+                            TextureId::SUPER_MARIO_DUCK : TextureId::SUPER_LUIGI_DUCK);
                 } else if (playerEntity->has<MegaComponent>()) {
-                    playerEntity->assign<TextureComponent>(TextureId::MARIO_MEGA_DUCK);
+                    playerEntity->assign<TextureComponent>(
+                            isMario ?
+                            TextureId::MARIO_MEGA_DUCK : TextureId::LUIGI_MEGA_DUCK);
                 } else {
                     playerEntity->assign<TextureComponent>(
-                            playerEntity->has<MarioComponent>() ?
+                            isMario ?
                             TextureId::MARIO_DUCK : TextureId::LUIGI_DUCK
                     );
-
                 }
                 break;
             case INVINCIBLE:
@@ -239,19 +273,33 @@ void PlayerSystem::collectCollectible(World *world, Entity *player) {
 
 void PlayerSystem::eatMushroom(Entity *entity, Collectible::CollectibleType type) {
 
+    bool isMario = entity->has<MarioComponent>();
+    TextureId currentTexture = entity->get<TextureComponent>()->textureId_;
+
     switch (type) {
         case Collectible::SUPER_MARIO_MUSHROOM:
             if (!(entity->has<SuperComponent>() || entity->has<SuperFlameComponent>()
                     || entity->has<MegaComponent>())) {
                 entity->assign<SuperComponent>();
-                entity->assign<AnimationComponent>(std::vector<TextureId>{
-                    TextureId::MARIO_STAND,
-                    TextureId::SUPER_MARIO_STAND,
-                    TextureId::MARIO_STAND,
-                    TextureId::MARIO_STAND,
-                    TextureId::SUPER_MARIO_STAND,
-                    TextureId::SUPER_MARIO_STAND,
-                }, 4, false, false, false);
+                if (isMario) {
+                    entity->assign<AnimationComponent>(std::vector<TextureId>{
+                            TextureId::MARIO_STAND,
+                            TextureId::SUPER_MARIO_STAND,
+                            TextureId::MARIO_STAND,
+                            TextureId::MARIO_STAND,
+                            TextureId::SUPER_MARIO_STAND,
+                            TextureId::SUPER_MARIO_STAND,
+                    }, 4, false, false, false);
+                } else {
+                    entity->assign<AnimationComponent>(std::vector<TextureId>{
+                            TextureId::LUIGI_STAND,
+                            TextureId::SUPER_LUIGI_STAND,
+                            TextureId::LUIGI_STAND,
+                            TextureId::LUIGI_STAND,
+                            TextureId::SUPER_LUIGI_STAND,
+                            TextureId::SUPER_LUIGI_STAND,
+                    }, 4, false, false, false);
+                }
                 entity->assign<FrozenComponent>();
                 entity->assign<TimerComponent>([entity]() {
                     auto aabb = entity->get<AABBComponent>();
@@ -264,23 +312,40 @@ void PlayerSystem::eatMushroom(Entity *entity, Collectible::CollectibleType type
         case Collectible::MEGA_MUSHROOM:
             if (!entity->has<MegaComponent>()) {
                 entity->assign<MegaComponent>();
-                entity->assign<AnimationComponent>(std::vector<TextureId>{
-                        TextureId::MARIO_STAND,
-                        TextureId::MARIO_MEGA_STAND,
-                        TextureId::MARIO_STAND,
-                        TextureId::MARIO_STAND,
-                        TextureId::MARIO_MEGA_STAND,
-                        TextureId::MARIO_MEGA_STAND,
-                        TextureId::MARIO_STAND,
-                        TextureId::MARIO_STAND,
-                        TextureId::MARIO_MEGA_STAND,
-                        TextureId::MARIO_MEGA_STAND,
-                }, 8, false, false, false);
+                if (isMario) {
+                    entity->assign<AnimationComponent>(std::vector<TextureId>{
+                            currentTexture,
+                            TextureId::MARIO_MEGA_STAND,
+                            currentTexture,
+                            currentTexture,
+                            TextureId::MARIO_MEGA_STAND,
+                            TextureId::MARIO_MEGA_STAND,
+                            currentTexture,
+                            currentTexture,
+                            TextureId::MARIO_MEGA_STAND,
+                            TextureId::MARIO_MEGA_STAND,
+                    }, 8, false, false, false);
+                } else {
+                    entity->assign<AnimationComponent>(std::vector<TextureId>{
+                            currentTexture,
+                            TextureId::LUIGI_MEGA_STAND,
+                            currentTexture,
+                            currentTexture,
+                            TextureId::LUIGI_MEGA_STAND,
+                            TextureId::LUIGI_MEGA_STAND,
+                            currentTexture,
+                            currentTexture,
+                            TextureId::LUIGI_MEGA_STAND,
+                            TextureId::LUIGI_MEGA_STAND,
+                    }, 8, false, false, false);
+                }
                 entity->assign<FrozenComponent>();
                 entity->assign<TimerComponent>([entity]() {
                     auto aabb = entity->get<AABBComponent>();
                     entity->remove<FrozenComponent>();
                     entity->remove<AnimationComponent>();
+                    if (entity->has<SuperComponent>()) entity->remove<SuperComponent>();
+                    if (entity->has<SuperFlameComponent>()) entity->remove<SuperFlameComponent>();
                     aabb->collisionBox_.height = GAME_TILE_SIZE * 2;
                     aabb->collisionBox_.width = GAME_TILE_SIZE * 2;
                 }, 80);
@@ -297,9 +362,12 @@ void PlayerSystem::handleFrozenTransform(Entity *entity) {
     auto texture = entity->get<TextureComponent>();
     auto aabb = entity->get<AABBComponent>();
 
+    //fixme: the animation aren't working properly
+
     if (texture) {
         if (entity->has<SuperComponent>()) {
-            if (texture->textureId_ == TextureId::SUPER_MARIO_STAND) {
+            if (texture->textureId_ == TextureId::SUPER_MARIO_STAND
+                || texture->textureId_ == TextureId::SUPER_LUIGI_STAND) {
                 if (aabb->collisionBox_.height == GAME_TILE_SIZE) {
                     aabb->collisionBox_.y -= 32;
                 }
@@ -315,7 +383,28 @@ void PlayerSystem::handleFrozenTransform(Entity *entity) {
         } else if (entity->has<SuperFlameComponent>()) {
 
         } else if (entity->has<MegaComponent>()) {
-
+            if (texture->textureId_ == TextureId::MARIO_MEGA_STAND
+                || texture->textureId_ == TextureId::LUIGI_MEGA_STAND) {
+                if (aabb->collisionBox_.height == GAME_TILE_SIZE) aabb->collisionBox_.y -= 32;
+                aabb->collisionBox_.height = GAME_TILE_SIZE * 2;
+                aabb->collisionBox_.width = GAME_TILE_SIZE * 2;
+                texture->h = GAME_TILE_SIZE * 2;
+                texture->w = GAME_TILE_SIZE * 2;
+            } else if ((texture->textureId_ == TextureId::SUPER_MARIO_STAND
+                        || texture->textureId_ == TextureId::MARIO_FLAME_STAND) ||
+                    (texture->textureId_ == TextureId::SUPER_LUIGI_STAND
+                     || texture->textureId_ == TextureId::LUIGI_FLAME_STAND)) {
+                texture->h = GAME_TILE_SIZE * 2;
+                texture->w = GAME_TILE_SIZE;
+                aabb->collisionBox_.height = GAME_TILE_SIZE * 2;
+                aabb->collisionBox_.width = GAME_TILE_SIZE;
+            } else {
+                if (aabb->collisionBox_.height == GAME_TILE_SIZE * 2) aabb->collisionBox_.y += 32;
+                texture->h = GAME_TILE_SIZE;
+                texture->w = GAME_TILE_SIZE;
+                aabb->collisionBox_.height = GAME_TILE_SIZE;
+                aabb->collisionBox_.width = GAME_TILE_SIZE;
+            }
         }
     }
 }
