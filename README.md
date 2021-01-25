@@ -29,9 +29,11 @@ Then execute the following command in order to build the library:
 
     cd tmxlite && cd tmxlite && mkdir build && cd build
     
-    cd build && cmake .. -G "MinGW Makefile" 
+    # in the build folder run:
     
-Run as an admin the following command:
+    cmake .. -G "MinGW Makefiles" 
+    
+After that, run as an admin the following command:
 
     mingw32-make clean && mingw32-make install
 
