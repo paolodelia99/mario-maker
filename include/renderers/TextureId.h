@@ -4,6 +4,7 @@
 #pragma once
 
 enum TextureId {
+    EMPTY,
     MARIO_STAND,
     MARIO_RUN_1,
     MARIO_RUN_2,
@@ -83,5 +84,9 @@ enum TextureId {
     COIN_3,
     SUPER_MUSHROOM,
     ONE_UP_MUSHROOM,
-    MEGA_MUSHROOM
+    MEGA_MUSHROOM,
+    FLAME_FLOWER_1,
+    FLAME_FLOWER_2,
+    FLAME_FLOWER_3,
+    FLAME_FLOWER_4,
 };

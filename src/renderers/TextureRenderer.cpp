@@ -65,6 +65,13 @@ TextureRenderer::TextureRenderer(const char* filepath)
     texturePositions_.insert({SUPER_LUIGI_RUN_3, new Rectangle{69, 191, TILE_SIZE, TILE_SIZE * 2}});
     texturePositions_.insert({SUPER_LUIGI_DRIFT, new Rectangle{86, 191, TILE_SIZE, TILE_SIZE * 2}});
     texturePositions_.insert({SUPER_LUIGI_JUMP, new Rectangle{103, 191, TILE_SIZE, TILE_SIZE * 2}});
+    texturePositions_.insert({LUIGI_FLAME_STAND, new Rectangle{1, 224, TILE_SIZE, TILE_SIZE * 2}});
+    texturePositions_.insert({LUIGI_FLAME_DUCK, new Rectangle{18, 224, TILE_SIZE, TILE_SIZE * 2}});
+    texturePositions_.insert({LUIGI_FLAME_RUN_1, new Rectangle{35, 224, TILE_SIZE, TILE_SIZE * 2}});
+    texturePositions_.insert({LUIGI_FLAME_RUN_2, new Rectangle{52, 224, TILE_SIZE, TILE_SIZE * 2}});
+    texturePositions_.insert({LUIGI_FLAME_RUN_3, new Rectangle{69, 224, TILE_SIZE, TILE_SIZE * 2}});
+    texturePositions_.insert({LUIGI_FLAME_DRIFT, new Rectangle{86, 224, TILE_SIZE, TILE_SIZE * 2}});
+    texturePositions_.insert({LUIGI_FLAME_JUMP, new Rectangle{103, 224, TILE_SIZE, TILE_SIZE * 2}});
     texturePositions_.insert({LUIGI_MEGA_STAND, new Rectangle{1, 174, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({LUIGI_MEGA_RUN_1, new Rectangle{35, 174, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({LUIGI_MEGA_RUN_2, new Rectangle{52, 174, TILE_SIZE, TILE_SIZE}});
@@ -76,9 +83,14 @@ TextureRenderer::TextureRenderer(const char* filepath)
     texturePositions_.insert({LUIGI_MEGA_DUCK, new Rectangle{18, 174, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({LUIGI_MEGA_DEAD, new Rectangle{256, 174, TILE_SIZE, TILE_SIZE}});
 
+    // Power ups
     texturePositions_.insert({SUPER_MUSHROOM, new Rectangle{1, 597, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({ONE_UP_MUSHROOM, new Rectangle{18, 597, TILE_SIZE, TILE_SIZE}});
-    texturePositions_.insert({MEGA_MUSHROOM, new Rectangle{1, 614, 32, 32}});
+    texturePositions_.insert({MEGA_MUSHROOM, new Rectangle{1, 614, TILE_SIZE * 2, TILE_SIZE * 2}});
+    texturePositions_.insert({FLAME_FLOWER_1, new Rectangle{69, 597, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({FLAME_FLOWER_2, new Rectangle{86, 597, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({FLAME_FLOWER_3, new Rectangle{103, 597, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({FLAME_FLOWER_4, new Rectangle{120, 597, TILE_SIZE, TILE_SIZE}});
 
     // fill texture map
     loadTextures();

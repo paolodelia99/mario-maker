@@ -28,6 +28,16 @@ private:
     void eatMushroom(Entity *pEntity, Collectible::CollectibleType type);
 
     void handleFrozenTransform(Entity* entity);
+
+    void setRightAnimation(Entity* player);
+
+    TextureId getRightTransitionAnimation(Entity* entity, Collectible::CollectibleType mushroom, bool isMario);
+
+    bool isSuperTexture(TextureId textureId);
+
+    bool isFlameTexture(TextureId textureId);
+
+    bool isMegaTexture(TextureId textureId);
 };
 
 

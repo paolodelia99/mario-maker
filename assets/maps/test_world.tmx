@@ -84,7 +84,8 @@
   </object>
   <object id="43" x="304.37" y="128.273" width="16" height="16">
    <properties>
-    <property name="coins" type="bool" value="true"/>
+    <property name="coins" type="bool" value="false"/>
+    <property name="flame_mushroom" type="bool" value="true"/>
    </properties>
   </object>
   <object id="44" x="349" y="129" width="1"/>
@@ -100,7 +101,8 @@
   </object>
   <object id="72" x="1072.08" y="128.088" width="15.8154" height="15.8438">
    <properties>
-    <property name="mega_mushroom" type="bool" value="true"/>
+    <property name="mega_mushroom" type="bool" value="false"/>
+    <property name="one_up_mushroom" type="bool" value="true"/>
    </properties>
   </object>
  </objectgroup>

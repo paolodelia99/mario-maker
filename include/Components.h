@@ -199,6 +199,7 @@ namespace Collectible {
         SUPER_MARIO_MUSHROOM,
         MEGA_MUSHROOM,
         FLAME_MUSHROOM,
+        ONE_UP_MUSHROOM
     };
 }
 

@@ -28,11 +28,13 @@ void TileSystem::tick(World *world, float delta) {
         } else {
             ent->remove<GrowComponent>();
 
-            ent->assign<WalkComponent>(MUSHROOM_MOVE_SPEED);
+            if (ent->get<CollectibleComponent>()->type != Collectible::FLAME_MUSHROOM) {
+                ent->assign<WalkComponent>(MUSHROOM_MOVE_SPEED);
+                ent->assign<KineticComponent>();
+            }
             ent->assign<GravityComponent>();
             ent->assign<SolidComponent>();
             ent->assign<TileComponent>();
-            ent->assign<KineticComponent>();
         }
     }
 
@@ -111,24 +113,61 @@ void TileSystem::spawnSuperMarioMushroom(World* world, Entity* ent) {
 void TileSystem::spawnMegaMushroom(World *world, Entity *ent) {
     auto mushroom = world->create();
     auto entAABB = ent->get<AABBComponent>();
+    int mushroomSize = GAME_TILE_SIZE * 2;
     mushroom->assign<TextureComponent>(TextureId::MEGA_MUSHROOM);
 
-    mushroom->assign<GrowComponent>(64);
     mushroom->assign<CollectibleComponent>(Collectible::CollectibleType::MEGA_MUSHROOM);
     mushroom->assign<AABBComponent>(Rectangle{
-            entAABB->left() + 4,
-            entAABB->top() - entAABB->collisionBox_.width / 4,
-            GAME_TILE_SIZE * 2,
-            GAME_TILE_SIZE * 2
+            entAABB->left(),
+            entAABB->top() - mushroomSize,
+            static_cast<float>(mushroomSize),
+            static_cast<float>(mushroomSize)
     });
+    mushroom->assign<WalkComponent>(MUSHROOM_MOVE_SPEED);
+    mushroom->assign<GravityComponent>();
+    mushroom->assign<SolidComponent>();
+    mushroom->assign<TileComponent>();
+    mushroom->assign<KineticComponent>(0.0f, 0.0f, +0.5f, -1.0f);
 }
 
 void TileSystem::spawnFlameMushroom(World* world, Entity* ent) {
+    auto mushroom = world->create();
+    auto entAABB = ent->get<AABBComponent>();
+    int mushroomSize = GAME_TILE_SIZE;
+    mushroom->assign<TextureComponent>(TextureId::FLAME_FLOWER_1);
+    mushroom->assign<AnimationComponent>(std::vector<TextureId>{
+        TextureId::FLAME_FLOWER_1,
+        TextureId::FLAME_FLOWER_2,
+        TextureId::FLAME_FLOWER_3,
+        TextureId::FLAME_FLOWER_4,
+    }, 4);
 
+    mushroom->assign<GrowComponent>();
+    mushroom->assign<CollectibleComponent>(Collectible::CollectibleType::FLAME_MUSHROOM);
+    mushroom->assign<AABBComponent>(Rectangle{
+            entAABB->left(),
+            entAABB->top() - entAABB->collisionBox_.width / 2,
+            static_cast<float>(mushroomSize),
+            static_cast<float>(mushroomSize)
+    });
+    mushroom->assign<GravityComponent>();
+    mushroom->assign<SolidComponent>();
+    mushroom->assign<TileComponent>();
 }
 
 void TileSystem::spawnOneUpMushroom(World* world, Entity* ent) {
+    auto mushroom = world->create();
+    auto entAABB = ent->get<AABBComponent>();
+    mushroom->assign<TextureComponent>(TextureId::ONE_UP_MUSHROOM);
 
+    mushroom->assign<GrowComponent>();
+    mushroom->assign<CollectibleComponent>(Collectible::CollectibleType::ONE_UP_MUSHROOM);
+    mushroom->assign<AABBComponent>(Rectangle{
+            entAABB->left() + 4,
+            entAABB->top() - entAABB->collisionBox_.width / 2,
+            GAME_TILE_SIZE,
+            GAME_TILE_SIZE
+    });
 }
 
 void TileSystem::unconfigure(World *world) {

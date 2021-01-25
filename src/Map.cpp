@@ -260,6 +260,10 @@ void Map::loadTileEntity(
                         questionComponent->superMarioMushroom = true;
                     } else if (property.getName() == "mega_mushroom" && property.getBoolValue()) {
                         questionComponent->megaMushroom = true;
+                    } else if (property.getName() == "one_up_mushroom" && property.getBoolValue()) {
+                        questionComponent->oneUpMushroom = true;
+                    } else if (property.getName() == "flame_mushroom" && property.getBoolValue()) {
+                        questionComponent->flameMushroom = true;
                     }
                 }
             }
