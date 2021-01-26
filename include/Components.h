@@ -358,10 +358,11 @@ struct ObjectMapComponent {
 
     ~ObjectMapComponent() {}
 
-private:
-    std::vector<int> idsMatrix_;
+public:
     unsigned int width_;
     unsigned int height_;
+private:
+    std::vector<int> idsMatrix_;
 };
 
 struct TimerComponent {

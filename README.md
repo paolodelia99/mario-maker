@@ -1,21 +1,41 @@
 # Mario Maker
 
-Making super mario maker with c++
+Trying to replicate super mario maker with c++ and raylib.
 
-![img1](assets/readme/mario-maker-cpp.png)
+![img1](assets/readme/readme-mario-maker-preview.png)
+
+# Table of contents
+
+- [Quick Start](#quick-start)
+- [Creating your own map](#creating-your-own-map)
+- [Todos](#todos)
 
 # Quick start 
 
-Cmake args needed 
+In order to compile and build the game, the project is provided with a `CMakeList.txt` file, so 
+you just need to run:
+    
+    mkdir build && cd build
+    cmake .. 
 
-    -DTMXLITE_INCLUDE_DIR=<your_path_to_txmlib_include>
+Additional args could be:
+
+- `-G <Type_of_generator>`
+
+- `-DTMXLITE_INCLUDE_DIR=<your_path_to_txmlib_include>`, the path to the txmlite library, that I've used to parse
+the tmx files which contains the structure of the map. 
+  
+If you're using **CLion** I've included the `./idea` folder, which can help you setting up and build the project.
 
 # Libraries used
 
-- [Raylib](https://github.com/raysan5/raylib) - as a framework to build the game
-- [Gtest](https://github.com/google/googletest) - used for testing
+- [Raylib](https://github.com/raysan5/raylib) -  used as a framework to build the game
+- [Gtest](https://github.com/google/googletest) - used for testing (is install when running the `cmake`)
 - [tmxlite](https://github.com/fallahn/tmxlite) - for parsing the txm file used for the map
-- [rededev/ECS](https://github.com/redxdev/ECS) - an header only entity component system library
+- [rededev/ECS](https://github.com/redxdev/ECS) - an header only entity component system library (already included)
+
+Since `rededev/ECS` is already included and `Google test` is installed with cmake,
+the only two libraries you need to install are Raylib and tmxlite.
 
 ## Installing txmlite
 
@@ -50,6 +70,21 @@ After you download the repo, using the command listed above run
     
 After that you should be done.
 
+# Creating your own map
+
+**Todo**: Explain how to create a map with tiled
+
+# Todos 
+
+- [ ] Implement enemies
+- [ ] Makes Bricks breakable
+- [ ] Improve collision system
+- [ ] Sounds and music
+
 # Author
 
 Paolo D'Elia
+
+# License
+
+MIT

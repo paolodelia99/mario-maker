@@ -13,9 +13,9 @@ PhysicSystem::PhysicSystem() {
 void PhysicSystem::tick(World *world, float delta) {
     EntitySystem::tick(world, delta);
 
-    applyGravity(world);
+    checkIfOutsideWorld(world);
 
-    auto camera = world->findFirst<CameraComponent>()->get<CameraComponent>();
+    applyGravity(world);
 
     checkKineticKineticCollisions(world);
 
@@ -47,7 +47,7 @@ void PhysicSystem::checkYCollision(Entity *ent1, Entity *ent2) {
     Rectangle kineticEntityCollBox = Rectangle{
             aabb->collisionBox_.x + kinetic->speedX_,
             aabb->collisionBox_.y + kinetic->speedY_,
-            aabb->collisionBox_.width,
+            aabb->collisionBox_.width - TILE_ROUNDNESS / 2,
             aabb->collisionBox_.height + 1
     };
 
@@ -292,4 +292,17 @@ std::unordered_set<int> PhysicSystem::getNeighborIds(ComponentHandle<ObjectMapCo
     }
 
     return neighbors;
+}
+
+void PhysicSystem::checkIfOutsideWorld(World *world) {
+    auto objMap = world->findFirst<ObjectMapComponent>()->get<ObjectMapComponent>();
+
+    world->each<AABBComponent>([&](
+            Entity* entity,
+            ComponentHandle<AABBComponent> aabb) {
+       if ((aabb->right() < 0 || aabb->left() > static_cast<float> (objMap->width_ * GAME_TILE_SIZE))
+            || (aabb->top() < 0)) {
+           world->destroy(entity);
+       }
+    });
 }
