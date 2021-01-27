@@ -2,8 +2,8 @@
 // Created by paolo on 08/01/21.
 //
 
-#ifndef MARIO_MAKER_MAP_H
-#define MARIO_MAKER_MAP_H
+#ifndef MARIO_MAKER_GAMEMAP_H
+#define MARIO_MAKER_GAMEMAP_H
 #include <string>
 #include <set>
 #include <raylib.h>
@@ -14,11 +14,11 @@
 #include "Components.h"
 #include "ECS.h"
 
-class Map {
+class GameMap {
 public:
-    Map(std::string filename);
+    GameMap(std::string filename);
 
-    virtual ~Map();
+    virtual ~GameMap();
 
     int getHeight() const;
 
@@ -79,4 +79,4 @@ private:
 };
 
 
-#endif //MARIO_MAKER_MAP_H
+#endif //MARIO_MAKER_GAMEMAP_H

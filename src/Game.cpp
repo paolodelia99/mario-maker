@@ -10,7 +10,7 @@ Game::Game(const char *mapName, const int screenWidth, const int screenHeight, b
     run = true;
     pause = false;
     world_ = ECS::World::createWorld();
-    pMap_ = new Map(mapName);
+    pMap_ = new GameMap(mapName);
     pMap_->loadMap(world_);
     pMapRenderer_ = new MapRenderer(pMap_, SMB1_TILESET_PATH);
     pTextureRenderer_ = new TextureRenderer(SBM1_PLAYER_TILESET_PATH);

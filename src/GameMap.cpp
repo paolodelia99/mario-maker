@@ -5,9 +5,9 @@
 #include <cmath>
 #include <iostream>
 #include <Constants.h>
-#include "../include/Map.h"
+#include "../include/GameMap.h"
 
-Map::Map(std::string filename)
+GameMap::GameMap(std::string filename)
 :name(filename)
 {
     loaded_ = false;
@@ -15,7 +15,7 @@ Map::Map(std::string filename)
     height_ = 0;
 }
 
-Map::~Map() {
+GameMap::~GameMap() {
     for (int i = 0; i < width_; i++)
     {
         delete[] graphicsLayer_[i];
@@ -23,7 +23,7 @@ Map::~Map() {
     }
 }
 
-void Map::loadMap(ECS::World* world) {
+void GameMap::loadMap(ECS::World* world) {
     tmx::Map map;
     if(map.load(name))
     {
@@ -45,7 +45,7 @@ void Map::loadMap(ECS::World* world) {
     this->loaded_ = true;
 }
 
-void Map::loadMapBasicInfo(const tmx::Vector2u &orientation) {
+void GameMap::loadMapBasicInfo(const tmx::Vector2u &orientation) {
     width_ = orientation.x;
     height_ = orientation.y;
 
@@ -58,7 +58,7 @@ void Map::loadMapBasicInfo(const tmx::Vector2u &orientation) {
     }
 }
 
-void Map::loadProperties(const std::vector<tmx::Property> properties) {
+void GameMap::loadProperties(const std::vector<tmx::Property> properties) {
     Vector2 marioSpawn;
     for (const tmx::Property& property : properties)
     {
@@ -75,7 +75,7 @@ void Map::loadProperties(const std::vector<tmx::Property> properties) {
     spawnPostionP2_ = Vector2{marioSpawn.x - 2, marioSpawn.y};
 }
 
-std::set<unsigned int> Map::loadLayers(const std::vector<tmx::Layer::Ptr>& layers, ECS::World* world) {
+std::set<unsigned int> GameMap::loadLayers(const std::vector<tmx::Layer::Ptr>& layers, ECS::World* world) {
     std::set<unsigned int> usedTilesSet;
 
     for (const auto& layer : layers)
@@ -123,7 +123,7 @@ std::set<unsigned int> Map::loadLayers(const std::vector<tmx::Layer::Ptr>& layer
     return usedTilesSet;
 }
 
-Texture2D Map::getTexture(const std::string& path, tmx::Vector2u tilePosition, tmx::Vector2u tileSize) {
+Texture2D GameMap::getTexture(const std::string& path, tmx::Vector2u tilePosition, tmx::Vector2u tileSize) {
     Image image = LoadImage(path.c_str());
     ImageCrop(&image, (Rectangle){
         static_cast<float>(tilePosition.x - 16.f),
@@ -138,7 +138,7 @@ Texture2D Map::getTexture(const std::string& path, tmx::Vector2u tilePosition, t
     return texture2D;
 }
 
-void Map::loadMapTiles(std::vector<tmx::Tileset> &tileset, const std::set<unsigned int>& usedTiles) {
+void GameMap::loadMapTiles(std::vector<tmx::Tileset> &tileset, const std::set<unsigned int>& usedTiles) {
     const auto& tiles = tileset.at(0).getTiles();
     for(const auto& tile : tiles)
     {
@@ -153,7 +153,7 @@ void Map::loadMapTiles(std::vector<tmx::Tileset> &tileset, const std::set<unsign
     }
 }
 
-Texture2D Map::getTexture(unsigned int id)
+Texture2D GameMap::getTexture(unsigned int id)
 {
     auto it = mapTextureTable_.find(id);
     if (it != mapTextureTable_.end()){
@@ -163,7 +163,7 @@ Texture2D Map::getTexture(unsigned int id)
     }
 }
 
-void Map::unloadTextures()
+void GameMap::unloadTextures()
 {
     for (const auto &p : mapTextureTable_)
     {
@@ -171,43 +171,43 @@ void Map::unloadTextures()
     }
 }
 
-int Map::getHeight() const {
+int GameMap::getHeight() const {
     return height_;
 }
 
-int Map::getWidth() const {
+int GameMap::getWidth() const {
     return width_;
 }
 
-const Vector2 &Map::getSpawnPositionP1() const {
+const Vector2 &GameMap::getSpawnPositionP1() const {
     return spawnPositionP1_;
 }
 
-const Vector2 &Map::getSpawnPositionP2() const {
+const Vector2 &GameMap::getSpawnPositionP2() const {
     return spawnPostionP2_;
 }
 
-unsigned int **Map::getGraphicsLayer() const {
+unsigned int **GameMap::getGraphicsLayer() const {
     return graphicsLayer_;
 }
 
-unsigned int **Map::getBackgroundLayer() const {
+unsigned int **GameMap::getBackgroundLayer() const {
     return backgroundLayer_;
 }
 
-const std::map<unsigned int, TileTexture> &Map::getTextureTable() const {
+const std::map<unsigned int, TileTexture> &GameMap::getTextureTable() const {
     return mapTextureTable_;
 }
 
-int Map::getPixelHeight() const {
+int GameMap::getPixelHeight() const {
     return height_ * 32;
 }
 
-int Map::getPixelWidth() const {
+int GameMap::getPixelWidth() const {
     return width_ * 32;
 }
 
-void Map::loadTileEntity(
+void GameMap::loadTileEntity(
         ECS::Entity* ent,
         tmx::FloatRect AABB,
         std::vector<tmx::Property> properties,

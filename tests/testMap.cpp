@@ -3,12 +3,12 @@
 //
 #include <gtest/gtest.h>
 #include <tmxlite/Layer.hpp>
-#include "Map.h"
+#include "GameMap.h"
 #include "ECS.h"
 
 TEST(mapTest, TestInitMap)
 {
-    Map map("../../assets/maps/test_world.tmx");
+    GameMap map("../../assets/maps/test_world.tmx");
     EXPECT_FALSE(map.isMapLoaded());
 }
 
@@ -20,7 +20,7 @@ TEST(mapTest, TestLoadMap)
 
     ECS::World* world = ECS::World::createWorld();
 
-    Map map("../../assets/maps/test_world.tmx");
+    GameMap map("../../assets/maps/test_world.tmx");
     map.loadMap(world);
     EXPECT_EQ(map.getWidth(), 100);
     EXPECT_EQ(map.getHeight(), 13);
@@ -39,7 +39,7 @@ TEST(mapTest, TestMapTilesLoading)
 
     ECS::World* world = ECS::World::createWorld();
 
-    Map map("../../assets/maps/test_world.tmx");
+    GameMap map("../../assets/maps/test_world.tmx");
     map.loadMap(world);
     EXPECT_TRUE(map.isMapLoaded());
     std::map<unsigned int, TileTexture> mapTiles = map.getTextureTable();

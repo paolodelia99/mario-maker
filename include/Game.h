@@ -43,7 +43,7 @@ private:
     bool secondPlayer;
     ECS::World* world_;
     Camera2D * pCamera_;
-    Map* pMap_;
+    GameMap* pMap_;
     MapRenderer* pMapRenderer_;
     TextureRenderer* pTextureRenderer_;
     size_t cameraId_;

@@ -5,14 +5,14 @@
 #ifndef MARIO_MAKER_MAPRENDERER_H
 #define MARIO_MAKER_MAPRENDERER_H
 #include <raylib.h>
-#include "Map.h"
+#include "GameMap.h"
 #include "ECS.h"
 #include "Renderer.h"
 
 class MapRenderer : public Renderer {
 public:
 
-    MapRenderer(Map *map, const char* filepath);
+    MapRenderer(GameMap *map, const char* filepath);
 
     void render(ECS::World* world);
 
@@ -25,7 +25,7 @@ private:
     void renderTexture(TextureId textureId, int x, int y);
 
 private:
-    Map map_;
+    GameMap map_;
 
     void renderOtherEntities(ECS::World *pWorld);
 };

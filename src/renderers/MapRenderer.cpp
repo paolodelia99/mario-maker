@@ -9,7 +9,7 @@ MapRenderer::~MapRenderer() {
     map_.unloadTextures();
 }
 
-MapRenderer::MapRenderer(Map *map, const char* filepath)
+MapRenderer::MapRenderer(GameMap *map, const char* filepath)
 :map_(*map)
 {
     setFilePath(filepath);
