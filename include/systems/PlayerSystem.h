@@ -38,6 +38,8 @@ private:
     bool isFlameTexture(TextureId textureId);
 
     bool isMegaTexture(TextureId textureId);
+
+    void movePlayer(Entity* player, ComponentHandle<PlayerComponent> playerComponent, Command command);
 };
 
 

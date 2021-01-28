@@ -6,10 +6,16 @@
 #define MARIO_MAKER_TILESYSTEM_H
 #include "ECS.h"
 #include "Components.h"
+#include "Constants.h"
 
 using namespace ECS;
 
-class TileSystem : public EntitySystem {
+struct BreakEvent {
+    float x;
+    float y;
+};
+
+class TileSystem : public EntitySystem, public EventSubscriber<BreakEvent> {
 public:
 
     TileSystem();
@@ -33,6 +39,16 @@ private:
     void spawnFlameMushroom(World *world, Entity *ent);
 
     void spawnOneUpMushroom(World *world, Entity *ent);
+
+    void manageGrowComponents(World *world);
+
+    void removeCollisionComponents(World* world);
+
+    void manageBounceComponents(World* world);
+
+    virtual void receive(World* world, const BreakEvent& breakEvent) override;
+
+    void createDebris(World *world, float xf, float yf);
 };
 
 

@@ -89,4 +89,8 @@ enum TextureId {
     FLAME_FLOWER_2,
     FLAME_FLOWER_3,
     FLAME_FLOWER_4,
+    BRICK_DEBRIS_1,
+    BRICK_DEBRIS_2,
+    BRICK_DEBRIS_3,
+    BRICK_DEBRIS_4
 };

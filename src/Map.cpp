@@ -245,6 +245,7 @@ void Map::loadTileEntity(
     if (layerName == "bricks" || layerName == "coins") {
         if (ent->has<BrickComponent>()) {
             ent->assign<TextureComponent>(TextureId::BRICK);
+            ent->assign<BreakableComponent>();
         } else {
             ent->assign<TextureComponent>(TextureId::QUESTION_BLOCK_1);
             ent->assign<AnimationComponent>(std::vector<TextureId>{

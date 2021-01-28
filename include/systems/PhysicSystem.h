@@ -9,7 +9,7 @@
 #include "ECS.h"
 #include "Components.h"
 #include "Constants.h"
-
+#include "TileSystem.h"
 
 using namespace ECS;
 
@@ -45,6 +45,8 @@ private:
     void applyGravity(World* world);
 
     std::unordered_set<int> getNeighborIds(ComponentHandle<ObjectMapComponent> map, ComponentHandle<AABBComponent> handle);
+
+    void checkIfBreakComponent(Entity *ent1, Entity *ent2);
 };
 
 

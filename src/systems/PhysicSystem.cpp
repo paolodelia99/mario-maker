@@ -74,6 +74,7 @@ void PhysicSystem::checkYCollision(Entity *ent1, Entity *ent2) {
                 kinetic->accY_ = std::max(0.0f, kinetic->accY_);
                 kinetic->speedY_ = std::max(0.0f, kinetic->speedY_);
                 ent1->assign<TopCollisionComponent>();
+                checkIfBreakComponent(ent1, ent2);
             }
         }
     }
@@ -199,7 +200,7 @@ void PhysicSystem::checkKineticTileCollisions(World *world) {
 void PhysicSystem::applyForces(World *world) {
     for (auto ent : world->each<AABBComponent, KineticComponent>())
     {
-        if (ent->has<FrozenComponent>()) continue;
+        // if (ent->has<FrozenComponent>()) continue;
         auto aabb = ent->get<AABBComponent>();
         auto kinetic = ent->get<KineticComponent>();
 
@@ -301,8 +302,24 @@ void PhysicSystem::checkIfOutsideWorld(World *world) {
             Entity* entity,
             ComponentHandle<AABBComponent> aabb) {
        if ((aabb->right() < 0 || aabb->left() > static_cast<float> (objMap->width_ * GAME_TILE_SIZE))
-            || (aabb->top() < 0)) {
+            || (aabb->top() > objMap->height_ * GAME_TILE_SIZE)) {
            world->destroy(entity);
        }
     });
+}
+
+void PhysicSystem::checkIfBreakComponent(Entity *ent1, Entity *ent2) {
+    World* world = ent1->getWorld();
+    ComponentHandle<ObjectMapComponent> objMap = world->findFirst<ObjectMapComponent>()->get<ObjectMapComponent>();
+
+    if (ent1->has<PlayerComponent>() && ent2->has<BreakableComponent, AABBComponent>()) {
+        if (ent1->has<SuperComponent>() || ent1->has<SuperFlameComponent>() || ent1->has<MegaComponent>()) {
+            auto aabbBreakable = ent2->get<AABBComponent>();
+            int x = (int) std::round(aabbBreakable->left() / GAME_TILE_SIZE);
+            int y = (int) std::round(aabbBreakable->top() / GAME_TILE_SIZE);
+            world->destroy(ent2);
+            objMap->set(-1, x, y);
+            world->emit<BreakEvent>({aabbBreakable->left(), aabbBreakable->top()});
+        }
+    }
 }

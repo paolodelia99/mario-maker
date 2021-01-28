@@ -62,6 +62,7 @@ set the `-DTMXLITE_INCLUDE_DIR` variable when running the CMake file.
 
 ### Linux
 
+
 After you download the repo, using the command listed above run
 
     cd tmxlite && mkdir build && cd build
@@ -77,7 +78,7 @@ After that you should be done.
 # Todos 
 
 - [ ] Implement enemies
-- [ ] Makes Bricks breakable
+- [ ] fix animation of brick breaking
 - [ ] Improve collision system
 - [ ] Sounds and music
 

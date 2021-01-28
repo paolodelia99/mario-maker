@@ -18,7 +18,20 @@ MapRenderer::MapRenderer(Map *map, const char* filepath)
     texturePositions_.insert({QUESTION_BLOCK_2, new Rectangle{384, 0, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({QUESTION_BLOCK_3, new Rectangle{400, 0, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({QUESTION_BLOCK_OFF, new Rectangle{416, 0, TILE_SIZE, TILE_SIZE}});
+
     texturePositions_.insert({BRICK, new Rectangle{32, 0, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({BRICK_DEBRIS_1, new Rectangle{32, 0,
+                                                                (int) (TILE_SIZE / 2),
+                                                                (int) (TILE_SIZE / 2)}});
+    texturePositions_.insert({BRICK_DEBRIS_2, new Rectangle{40, 0,
+                                                            (int) (TILE_SIZE / 2),
+                                                            (int) (TILE_SIZE / 2)}});
+    texturePositions_.insert({BRICK_DEBRIS_3, new Rectangle{32, 8,
+                                                            (int) (TILE_SIZE / 2),
+                                                            (int) (TILE_SIZE / 2)}});
+    texturePositions_.insert({BRICK_DEBRIS_4, new Rectangle{40, 8,
+                                                            (int) (TILE_SIZE / 2),
+                                                            (int) (TILE_SIZE / 2)}});
 
     texturePositions_.insert({COIN_1, new Rectangle{368, 16, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({COIN_2, new Rectangle{384, 16, TILE_SIZE, TILE_SIZE}});

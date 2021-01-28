@@ -57,8 +57,6 @@ struct AABBComponent {
     Rectangle collisionBox_;
 };
 
-ECS_DEFINE_TYPE(AABBComponent);
-
 struct KineticComponent {
 
     KineticComponent() = default;
@@ -178,6 +176,8 @@ private:
     int frames = 13;
     int height[13] = {-2, 1, 3, 2, 1, 1, 1, 0, 0, -1, -1, -4, -1};;
 };
+
+struct BreakableComponent {};
 
 struct GrowComponent {
 

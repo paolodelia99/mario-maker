@@ -155,6 +155,8 @@ void Game::registerSystems() {
     world_->registerSystem(new PhysicSystem());
     world_->registerSystem(new TileSystem());
     world_->registerSystem(new TimerSystem());
+
+    // world_->subscribe<BreakEvent>(new DebrisEventSubscriber());
 }
 
 void Game::handleInput() {

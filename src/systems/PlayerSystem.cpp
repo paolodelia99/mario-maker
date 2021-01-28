@@ -25,7 +25,6 @@ void PlayerSystem::tick(World *world, float delta) {
 
 
     for (auto player : world->each<PlayerComponent, CommandComponent, KineticComponent>()) {
-        auto kinetic = player->get<KineticComponent>();
         Command currentCommand = player->get<CommandComponent>()->currentCommand_;
         ComponentHandle<PlayerComponent> playerComponent = player->get<PlayerComponent>();
 
@@ -33,36 +32,7 @@ void PlayerSystem::tick(World *world, float delta) {
             handleFrozenTransform(player);
         }
 
-        switch (currentCommand) {
-            case NONE_COMMAND:
-                kinetic->accX_ = 0;
-                kinetic->accY_ = 0;
-                playerComponent->duck = false;
-                break;
-            case JUMP:
-                if (player->has<BottomCollisionComponent>()) {
-                    kinetic->accY_ = -MARIO_JUMP_ACCELERATION;
-                }
-                break;
-            case MOVE_RIGHT:
-                kinetic->accX_ = (float) (MARIO_ACCELERATION_X) * 1.7f;
-                playerComponent->right = true;
-                playerComponent->left = false;
-                break;
-            case MOVE_LEFT:
-                kinetic->accX_ = (float) -1 * (MARIO_ACCELERATION_X) * 1.7f;
-                playerComponent->right = false;
-                playerComponent->left = true;
-                break;
-            case DUCK:
-                kinetic->accX_ = 0;
-                playerComponent->duck = true;
-                break;
-            case SPRINT:
-                break;
-            case SPECIAL:
-                break;
-        }
+        movePlayer(player, playerComponent, currentCommand);
 
         setRightAnimation(player);
 
@@ -71,12 +41,10 @@ void PlayerSystem::tick(World *world, float delta) {
         int lookingLeft = 0;
         if (playerComponent->left || playerComponent->right) lookingLeft = playerComponent->left;
         player->get<TextureComponent>()->flipH = lookingLeft;
-        if (!player->has<FrozenComponent>()) {
-            player->remove<BottomCollisionComponent>();
-            player->remove<LeftCollisionComponent>();
-            player->remove<RightCollisionComponent>();
-            player->remove<TopCollisionComponent>();
-        }
+        player->remove<BottomCollisionComponent>();
+        player->remove<LeftCollisionComponent>();
+        player->remove<RightCollisionComponent>();
+        player->remove<TopCollisionComponent>();
     }
 }
 
@@ -368,27 +336,28 @@ void PlayerSystem::handleFrozenTransform(Entity *entity) {
     auto aabb = entity->get<AABBComponent>();
 
     if (texture) {
-        if (entity->has<SuperComponent>()) {
+        if (entity->has<SuperComponent>() && !entity->has<SuperFlameComponent>() && !entity->has<MegaComponent>()) {
             if (isSuperTexture(texture->textureId_)) {
-                if (aabb->collisionBox_.height == GAME_TILE_SIZE) aabb->collisionBox_.y -= 32;
+                if (aabb->collisionBox_.height == GAME_TILE_SIZE) aabb->collisionBox_.y -= GAME_TILE_SIZE;
                 aabb->collisionBox_.height = GAME_TILE_SIZE * 2;
                 texture->h = GAME_TILE_SIZE * 2;
             } else {
-                if (aabb->collisionBox_.height == GAME_TILE_SIZE * 2) aabb->collisionBox_.y += 32;
+                if (aabb->collisionBox_.height == GAME_TILE_SIZE * 2) aabb->collisionBox_.y += GAME_TILE_SIZE;
                 texture->h = GAME_TILE_SIZE;
                 aabb->collisionBox_.height = GAME_TILE_SIZE;
             }
-        } else if (entity->has<SuperFlameComponent>()) {
+        } else if (entity->has<SuperFlameComponent>() && !entity->has<MegaComponent>()) {
             if (isSuperTexture(texture->textureId_) || isFlameTexture(texture->textureId_)) {
-                if (aabb->collisionBox_.height == GAME_TILE_SIZE) aabb->collisionBox_.y -= 32;
+                if (aabb->collisionBox_.height == GAME_TILE_SIZE) aabb->collisionBox_.y -= GAME_TILE_SIZE;
                 aabb->collisionBox_.height = GAME_TILE_SIZE * 2;
                 texture->h = GAME_TILE_SIZE * 2;
             } else {
-                if (aabb->collisionBox_.height == GAME_TILE_SIZE * 2) aabb->collisionBox_.y += 32;
+                if (aabb->collisionBox_.height == GAME_TILE_SIZE * 2) aabb->collisionBox_.y += GAME_TILE_SIZE;
                 texture->h = GAME_TILE_SIZE;
                 aabb->collisionBox_.height = GAME_TILE_SIZE;
             }
         } else if (entity->has<MegaComponent>()) {
+            std::cout << aabb->bottom() << std::endl;
             if (isMegaTexture(texture->textureId_)) {
                 if (aabb->collisionBox_.height == GAME_TILE_SIZE) aabb->collisionBox_.y -= GAME_TILE_SIZE;
                 aabb->collisionBox_.height = GAME_TILE_SIZE * 2;
@@ -396,16 +365,16 @@ void PlayerSystem::handleFrozenTransform(Entity *entity) {
                 texture->h = GAME_TILE_SIZE * 2;
                 texture->w = GAME_TILE_SIZE * 2;
             } else if (isFlameTexture(texture->textureId_) || isSuperTexture(texture->textureId_)) {
-                texture->h = GAME_TILE_SIZE * 2;
-                texture->w = GAME_TILE_SIZE;
                 aabb->collisionBox_.height = GAME_TILE_SIZE * 2;
                 aabb->collisionBox_.width = GAME_TILE_SIZE;
+                texture->h = GAME_TILE_SIZE * 2;
+                texture->w = GAME_TILE_SIZE;
             } else {
                 if (aabb->collisionBox_.height == GAME_TILE_SIZE * 2) aabb->collisionBox_.y += GAME_TILE_SIZE;
-                texture->h = GAME_TILE_SIZE;
-                texture->w = GAME_TILE_SIZE;
                 aabb->collisionBox_.height = GAME_TILE_SIZE;
                 aabb->collisionBox_.width = GAME_TILE_SIZE;
+                texture->h = GAME_TILE_SIZE;
+                texture->w = GAME_TILE_SIZE;
             }
         }
     }
@@ -544,5 +513,40 @@ bool PlayerSystem::isMegaTexture(TextureId textureId) {
             return true;
         default:
             return false;
+    }
+}
+
+void PlayerSystem::movePlayer(Entity *player, ComponentHandle<PlayerComponent> playerComponent, Command command) {
+    auto kinetic = player->get<KineticComponent>();
+
+    switch (command) {
+        case NONE_COMMAND:
+            kinetic->accX_ = 0;
+            kinetic->accY_ = 0;
+            playerComponent->duck = false;
+            break;
+        case JUMP:
+            if (player->has<BottomCollisionComponent>()) {
+                kinetic->accY_ = -MARIO_JUMP_ACCELERATION;
+            }
+            break;
+        case MOVE_RIGHT:
+            kinetic->accX_ = (float) (MARIO_ACCELERATION_X) * 1.7f;
+            playerComponent->right = true;
+            playerComponent->left = false;
+            break;
+        case MOVE_LEFT:
+            kinetic->accX_ = (float) -1 * (MARIO_ACCELERATION_X) * 1.7f;
+            playerComponent->right = false;
+            playerComponent->left = true;
+            break;
+        case DUCK:
+            kinetic->accX_ = 0;
+            playerComponent->duck = true;
+            break;
+        case SPRINT:
+            break;
+        case SPECIAL:
+            break;
     }
 }
