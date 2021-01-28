@@ -10,6 +10,7 @@
 #include "Components.h"
 #include "Constants.h"
 #include "TileSystem.h"
+#include "EnemySystem.h"
 
 using namespace ECS;
 
@@ -47,6 +48,8 @@ private:
     std::unordered_set<int> getNeighborIds(ComponentHandle<ObjectMapComponent> map, ComponentHandle<AABBComponent> handle);
 
     void checkIfBreakComponent(Entity *ent1, Entity *ent2);
+
+    void checkKillEnemy(Entity *ent1, Entity *ent2);
 };
 
 

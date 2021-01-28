@@ -4,13 +4,12 @@
 
 #include "renderers/TextureRenderer.h"
 
-#include <utility>
 #include <Components.h>
 #include <Constants.h>
 
 TextureRenderer::TextureRenderer(const char* filepath)
+:Renderer(filepath)
 {
-    setFilePath(filepath);
     // Mario Textures
     texturePositions_.insert({MARIO_STAND, new Rectangle{1, 9, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({MARIO_RUN_1, new Rectangle{35, 9, TILE_SIZE, TILE_SIZE}});
@@ -103,20 +102,8 @@ TextureRenderer::~TextureRenderer() {
     }
 }
 
-void TextureRenderer::renderTexture(TextureId textureId, Rectangle dstRect, bool flipH, bool flip) {
-    auto it = textures_.find(textureId);
-    auto it1 = texturePositions_.find(textureId);
-    if (it != textures_.end())
-    {
-        if (dstRect.width == 0) dstRect.width = it1->second->width;
-        if (dstRect.height == 0) dstRect.height = it1->second->height;
-        Texture2D texture2D = it->second;
-        if (DEBUG) DrawRectangleLinesEx(dstRect, 2, RED);
-        DrawTextureRec(texture2D,
-                       Rectangle{0, 0, (flipH ? -1 : 1) * dstRect.width, dstRect.height } ,
-                       Vector2{dstRect.x, dstRect.y},
-                       WHITE);
-    }
+void TextureRenderer::renderTexture(TextureId textureId, Rectangle dstRect, bool flipH, bool flipV) {
+    Renderer::renderEntityTexture(textureId, dstRect, flipH, flipV);
 }
 
 std::unordered_map<TextureId, Texture2D>::iterator TextureRenderer::returnTexturesIt() {
@@ -141,7 +128,7 @@ void TextureRenderer::renderEntity(ECS::Entity *pEntity) {
         texture->h > 0 ? texture->h : aabb->collisionBox_.height
     };
 
-    renderTexture(texture->textureId_, rect, texture->flipH, texture->flipV);
+    Renderer::renderEntityTexture(texture->textureId_, rect, texture->flipH, texture->flipV);
 }
 
 void TextureRenderer::renderCollisionRect(ECS::World* world) {

@@ -64,6 +64,7 @@ void PhysicSystem::checkYCollision(Entity *ent1, Entity *ent2) {
                 kinetic->accY_ = std::min(0.0f, kinetic->accY_);
                 kinetic->speedY_ = std::min(0.0f, kinetic->speedY_);
                 ent1->assign<BottomCollisionComponent>();
+                checkKillEnemy(ent1, ent2);
             }
         } else if (kineticEntityCollBox.y <= objectBottom
                    && kineticEntityCollBox.y > objectYCenter) {
@@ -105,7 +106,7 @@ void PhysicSystem::checkXCollision(Entity *ent1, Entity *ent2) {
                 aabb->setLeft(objectRight);
             }
 
-            if (!ent2->has<KineticComponent, PlayerComponent>()) {
+            if (!ent2->has<PlayerComponent>()) {
                 kinetic->accX_ = std::max(0.0f, kinetic->accX_);
                 kinetic->speedX_ = std::max(0.0f, kinetic->speedX_);
             } else {
@@ -128,7 +129,7 @@ void PhysicSystem::checkXCollision(Entity *ent1, Entity *ent2) {
                 aabb->setRight(objCollisionBox.x);
             }
 
-            if (!ent2->has<KineticComponent, PlayerComponent>()) {
+            if (!ent2->has<PlayerComponent>()) {
                 kinetic->accX_ = std::min(0.0f, kinetic->accX_);
                 kinetic->speedX_ = std::min(0.0f, kinetic->speedX_);
             } else {
@@ -321,5 +322,16 @@ void PhysicSystem::checkIfBreakComponent(Entity *ent1, Entity *ent2) {
             objMap->set(-1, x, y);
             world->emit<BreakEvent>({aabbBreakable->left(), aabbBreakable->top()});
         }
+    }
+}
+
+void PhysicSystem::checkKillEnemy(Entity *ent1, Entity *ent2) {
+    if (ent2->has<EnemyComponent>() && ent1->has<PlayerComponent>()) {
+        World* world = ent1->getWorld();
+        world->emit<KillEnemyEvent>(KillEnemyEvent(ent2));
+        // Make the player bounce
+        auto playerKinetic = ent1->get<KineticComponent>();
+        playerKinetic->accY_ = -0.4f;
+        playerKinetic->speedY_ = -MARIO_BOUNCE;
     }
 }

@@ -54,6 +54,18 @@ struct AABBComponent {
         collisionBox_.x = value - collisionBox_.width;
     }
 
+    void setWidth(float value) {
+        if (value >= 0) {
+            collisionBox_.width = value;
+        }
+    }
+
+    void setHeight(float value) {
+        if (value >= 0) {
+            collisionBox_.height = value;
+        }
+    }
+
     Rectangle collisionBox_;
 };
 
@@ -73,8 +85,6 @@ struct KineticComponent {
     float accX_ = 0;
     float accY_ = 0;
 };
-
-ECS_DEFINE_TYPE(KineticComponent);
 
 struct WalkComponent {
 
@@ -375,4 +385,44 @@ struct TimerComponent {
 
 };
 
-struct EnemyComponent {};
+namespace Enemy {
+    enum Type {
+        GOOMBA,
+        GREEN_TURTLE,
+        RED_TURTLE,
+        GREEN_TURTLE_SHELL,
+        RED_TURTLE_SHELL,
+    };
+}
+
+struct EnemyComponent {
+
+    EnemyComponent(Enemy::Type type) : type_(type) {}
+
+    Enemy::Type type_;
+};
+
+
+struct TurtleShellComponent {
+
+    TurtleShellComponent() = default;
+
+    TurtleShellComponent(bool isMoving) : isMoving_(isMoving) {}
+
+    bool isMoving_ = false;
+};
+
+struct DestroyDelayedComponent {
+
+    DestroyDelayedComponent(int timer) : timer_(timer) {
+        if (timer <= 0) this->timer_ = 10;
+    }
+
+    bool shouldDestroy() {
+        timer_--;
+        return timer_ < 0;
+    }
+
+private:
+    int timer_;
+};

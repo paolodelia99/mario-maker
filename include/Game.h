@@ -6,6 +6,7 @@
 #define MARIO_MAKER_GAME_H
 #include <raylib.h>
 #include <iostream>
+#include <EnemiesRenderer.h>
 #include "ECS.h"
 #include "Constants.h"
 #include "renderers/MapRenderer.h"
@@ -16,6 +17,7 @@
 #include "AnimationSystem.h"
 #include "TileSystem.h"
 #include "TimerSystem.h"
+#include "EnemySystem.h"
 
 class Game {
 public:
@@ -37,6 +39,8 @@ private:
 
     void initObjectMap();
 
+    void render();
+
 private:
     bool run;
     bool pause;
@@ -44,13 +48,14 @@ private:
     ECS::World* world_;
     Camera2D * pCamera_;
     Map* pMap_;
-    MapRenderer* pMapRenderer_;
-    TextureRenderer* pTextureRenderer_;
     size_t cameraId_;
     size_t player1Id_;
     const int screenWidth_;
     const int screenHeight_;
     ECS::EntitySystem* animationSystem_;
+    MapRenderer* pMapRenderer_;
+    TextureRenderer* pTextureRenderer_;
+    EnemiesRenderer *pEnemiesRenderer_;
 };
 
 

@@ -5,6 +5,7 @@
 
 constexpr const char* SBM1_PLAYER_TILESET_PATH = "../assets/imgs/players-tileset.png";
 constexpr const char* SMB1_TILESET_PATH = "../assets/tilesets/tiles-2.png";
+constexpr const char* SMB1_ENEMIES_TILESET_PATH = "../assets/tilesets/enemies-tileset.png";
 
 constexpr bool DEBUG = true;
 constexpr bool SECOND_PLAYER = false;
@@ -22,6 +23,7 @@ constexpr float MAX_SPEED_Y = 2;
 
 constexpr float MARIO_ACCELERATION_X = .08f;
 constexpr float MARIO_JUMP_ACCELERATION = 6.5f;
+constexpr float MARIO_BOUNCE = 8.0f;
 
 constexpr float MUSHROOM_GROW_SPEED = .25f;
 constexpr float MUSHROOM_MOVE_SPEED = 0.8f;

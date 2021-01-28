@@ -18,7 +18,7 @@ public:
 
     ~TextureRenderer();
 
-    void renderTexture(TextureId textureId, Rectangle dstRect, bool flipH = false, bool flip = false);
+    void renderTexture(TextureId textureId, Rectangle dstRect, bool flipH = false, bool flipV = false);
 
     void renderTextureEntities(ECS::World* world);
 

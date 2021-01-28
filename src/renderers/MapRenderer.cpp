@@ -10,10 +10,8 @@ MapRenderer::~MapRenderer() {
 }
 
 MapRenderer::MapRenderer(Map *map, const char* filepath)
-:map_(*map)
+:map_(*map), Renderer(filepath)
 {
-    setFilePath(filepath);
-
     texturePositions_.insert({QUESTION_BLOCK_1, new Rectangle{368, 0, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({QUESTION_BLOCK_2, new Rectangle{384, 0, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({QUESTION_BLOCK_3, new Rectangle{400, 0, TILE_SIZE, TILE_SIZE}});

@@ -124,6 +124,8 @@ void TileSystem::spawnOneUpMushroom(World* world, Entity* ent) {
 
 void TileSystem::unconfigure(World *world) {
     EntitySystem::unconfigure(world);
+
+    world->unsubscribeAll(this);
 }
 
 void TileSystem::configure(World *world) {

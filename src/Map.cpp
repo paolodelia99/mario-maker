@@ -240,6 +240,9 @@ void Map::loadTileEntity(
         ent->assign<QuestionBlockComponent>();
         ent->remove<AABBComponent>();
         ent->assign<AABBComponent>(Rectangle{x, y + 0.5f, width, height});
+    } else if (layerName == "enemies") {
+        ent->remove<TileComponent>();
+        createEnemy(ent, properties);
     }
 
     if (layerName == "bricks" || layerName == "coins") {
@@ -274,5 +277,42 @@ void Map::loadTileEntity(
             }
         }
         ent->assign<BounceComponent>();
+    }
+}
+
+void Map::createEnemy(ECS::Entity *ent, std::vector<tmx::Property> properties) {
+    ent->assign<GravityComponent>();
+    ent->assign<KineticComponent>();
+    if (!properties.empty()) {
+        for (const auto& property : properties) {
+            if (property.getName() == "type") {
+                setEnemyType(ent, property.getStringValue());
+            }
+        }
+    }
+}
+
+void Map::setEnemyType(ECS::Entity *ent, std::string type) {
+    if (type == "GOOMBA") {
+        ent->assign<EnemyComponent>(Enemy::Type::GOOMBA);
+        ent->assign<WalkComponent>();
+        ent->assign<TextureComponent>(TextureId::GOOMBA_1);
+        ent->assign<AnimationComponent>(std::vector<TextureId>{
+           TextureId::GOOMBA_1,
+           TextureId::GOOMBA_2
+        }, 8);
+    } else if (type == "GREEN_TURTLE") {
+        auto aabb = ent->get<AABBComponent>();
+        ent->assign<EnemyComponent>(Enemy::Type::GREEN_TURTLE);
+        ent->assign<WalkComponent>();
+        aabb->setTop(aabb->top() - 16);
+        aabb->setHeight(48);
+        ent->assign<TextureComponent>(TextureId::GREEN_TURTLE_1);
+        ent->assign<AnimationComponent>(std::vector<TextureId>{
+                TextureId::GREEN_TURTLE_1,
+                TextureId::GREEN_TURTLE_2
+        }, 8);
+    } else if (type == "RED_TURTLE") {
+        ent->assign<EnemyComponent>(Enemy::Type::RED_TURTLE);
     }
 }

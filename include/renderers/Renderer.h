@@ -6,13 +6,15 @@
 #define MARIO_MAKER_RENDERER_H
 #include <raylib.h>
 #include "TextureId.h"
+#include "Constants.h"
+#include <unordered_map>
 
 class Renderer {
 public:
 
-    void setFilePath(const char* filepath) {
-        this->filepath_ = filepath;
-    }
+    Renderer(const char* filepath)
+    : filepath_(filepath)
+    {};
 
     char* getFilePath() {
         return const_cast<char *>(filepath_);
@@ -45,6 +47,22 @@ protected:
         UnloadImage(image);
 
         return texture2D;
+    }
+
+    void renderEntityTexture(TextureId textureId, Rectangle dstRect, bool flipH, bool flipV) {
+        auto it = textures_.find(textureId);
+        auto it1 = texturePositions_.find(textureId);
+        if (it != textures_.end())
+        {
+            if (dstRect.width == 0) dstRect.width = it1->second->width;
+            if (dstRect.height == 0) dstRect.height = it1->second->height;
+            Texture2D texture2D = it->second;
+            if (DEBUG) DrawRectangleLinesEx(dstRect, 2, RED);
+            DrawTextureRec(texture2D,
+                           Rectangle{0, 0, (flipH ? -1 : 1) * dstRect.width, dstRect.height } ,
+                           Vector2{dstRect.x, dstRect.y},
+                           WHITE);
+        }
     }
 
 private:

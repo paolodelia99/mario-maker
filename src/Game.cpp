@@ -14,6 +14,7 @@ Game::Game(const char *mapName, const int screenWidth, const int screenHeight, b
     pMap_->loadMap(world_);
     pMapRenderer_ = new MapRenderer(pMap_, SMB1_TILESET_PATH);
     pTextureRenderer_ = new TextureRenderer(SBM1_PLAYER_TILESET_PATH);
+    pEnemiesRenderer_ = new EnemiesRenderer(SMB1_ENEMIES_TILESET_PATH);
 }
 
 void Game::mainLoop() {
@@ -51,9 +52,7 @@ void Game::mainLoop() {
 
         BeginMode2D(camera.get().camera);
 
-        pMapRenderer_->render(world_);
-        pTextureRenderer_->renderTextureEntities(world_);
-        pTextureRenderer_->renderCollisionRect(world_);
+        render();
 
         // just for showing the center of the camera
         if (DEBUG) {
@@ -151,12 +150,11 @@ void Game::registerSystems() {
             pMap_->getPixelWidth(),
             pMap_->getPixelHeight()));
     world_->registerSystem(new PlayerSystem());
+    world_->registerSystem(new EnemySystem());
     animationSystem_ = world_->registerSystem(new AnimationSystem());
     world_->registerSystem(new PhysicSystem());
     world_->registerSystem(new TileSystem());
     world_->registerSystem(new TimerSystem());
-
-    // world_->subscribe<BreakEvent>(new DebrisEventSubscriber());
 }
 
 void Game::handleInput() {
@@ -201,4 +199,11 @@ void Game::initObjectMap() {
             }
         }
     }
+}
+
+void Game::render() {
+    pMapRenderer_->render(world_);
+    pTextureRenderer_->renderTextureEntities(world_);
+    pTextureRenderer_->renderCollisionRect(world_);
+    pEnemiesRenderer_->renderEnemies(world_);
 }

@@ -357,7 +357,6 @@ void PlayerSystem::handleFrozenTransform(Entity *entity) {
                 aabb->collisionBox_.height = GAME_TILE_SIZE;
             }
         } else if (entity->has<MegaComponent>()) {
-            std::cout << aabb->bottom() << std::endl;
             if (isMegaTexture(texture->textureId_)) {
                 if (aabb->collisionBox_.height == GAME_TILE_SIZE) aabb->collisionBox_.y -= GAME_TILE_SIZE;
                 aabb->collisionBox_.height = GAME_TILE_SIZE * 2;

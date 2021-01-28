@@ -76,6 +76,10 @@ private:
     Vector2 spawnPositionP1_;
     Vector2 spawnPostionP2_;
     std::map<unsigned int, TileTexture> mapTextureTable_;
+
+    void createEnemy(ECS::Entity *ent, std::vector<tmx::Property> properties);
+
+    void setEnemyType(ECS::Entity *ent, std::string type);
 };
 
 
