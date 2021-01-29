@@ -11,6 +11,7 @@
 #include "Constants.h"
 #include "TileSystem.h"
 #include "EnemySystem.h"
+#include "PlayerSystem.h"
 
 using namespace ECS;
 
@@ -50,6 +51,8 @@ private:
     void checkIfBreakComponent(Entity *ent1, Entity *ent2);
 
     void checkKillEnemy(Entity *ent1, Entity *ent2);
+
+    void checkPlayerEnemyCollision(Entity *ent1, Entity *ent2);
 };
 
 

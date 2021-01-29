@@ -14,10 +14,14 @@ PlayerSystem::PlayerSystem() {
 
 void PlayerSystem::configure(World *world) {
     EntitySystem::configure(world);
+
+    world->subscribe<EnemyCollisionEvent>(this);
 }
 
 void PlayerSystem::unconfigure(World *world) {
     EntitySystem::unconfigure(world);
+
+    world->unsubscribeAll(this);
 }
 
 void PlayerSystem::tick(World *world, float delta) {
@@ -547,5 +551,46 @@ void PlayerSystem::movePlayer(Entity *player, ComponentHandle<PlayerComponent> p
             break;
         case SPECIAL:
             break;
+    }
+}
+
+void PlayerSystem::receive(World *world, const EnemyCollisionEvent &enemyCollisionEvent) {
+    Entity* player = enemyCollisionEvent.player;
+    Entity* enemy = enemyCollisionEvent.enemy;
+
+    if (player->has<SuperComponent>() || player->has<SuperFlameComponent>()
+            || player->has<MegaComponent>()) {
+
+    } else {
+        auto kinetic = player->get<KineticComponent>();
+
+        player->remove<AnimationComponent>();
+        player->get<TextureComponent>()->textureId_ = TextureId::MARIO_DEAD;
+
+        kinetic->speedY_ = 0.0f;
+        kinetic->speedX_ = 0.0f;
+        kinetic->accX_ = 0.0f;
+        kinetic->accY_ = 0.0f;
+
+        world->each<WalkComponent, KineticComponent>(
+                [=](Entity* entity,
+                    ComponentHandle<WalkComponent> walk,
+                    ComponentHandle<KineticComponent> kineticEnt) {
+                   if (entity != player) {
+                       entity->remove<WalkComponent>();
+                       entity->remove<KineticComponent>();
+                       entity->remove<AnimationComponent>();
+                       entity->remove<TimerComponent>();
+                   }
+                });
+
+        player->assign<TimerComponent>([=] {
+            player->remove<SolidComponent>();
+            player->remove<CommandComponent>();
+            kinetic->speedY_ = -60.0f;
+            kinetic->speedX_ = 0.0f;
+            kinetic->accX_ = 0.0f;
+            kinetic->accY_ = 0.0f;
+        }, 100);
     }
 }

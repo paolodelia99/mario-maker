@@ -9,7 +9,15 @@
 
 using namespace ECS;
 
-class PlayerSystem : public EntitySystem {
+struct EnemyCollisionEvent {
+    EnemyCollisionEvent(Entity* player, Entity* enemy)
+    : player(player), enemy(enemy) {}
+
+    Entity* player;
+    Entity* enemy;
+};
+
+class PlayerSystem : public EntitySystem, public EventSubscriber<EnemyCollisionEvent> {
 public:
     PlayerSystem();
 
@@ -20,6 +28,8 @@ public:
     void tick(World* world, float delta) override;
 
     void setAnimation(Entity* playerEntity, PlayerState state);
+
+    void receive(World* world, const EnemyCollisionEvent& enemyCollisionEvent) override;
 
 private:
 

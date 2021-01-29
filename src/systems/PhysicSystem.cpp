@@ -145,6 +145,7 @@ void PhysicSystem::checkXCollision(Entity *ent1, Entity *ent2) {
             ent2->assign<LeftCollisionComponent>();
             ent1->assign<RightCollisionComponent>();
         }
+        checkPlayerEnemyCollision(ent1, ent2);
     }
 }
 
@@ -331,7 +332,19 @@ void PhysicSystem::checkKillEnemy(Entity *ent1, Entity *ent2) {
         world->emit<KillEnemyEvent>(KillEnemyEvent(ent2));
         // Make the player bounce
         auto playerKinetic = ent1->get<KineticComponent>();
-        playerKinetic->accY_ = -0.4f;
+        playerKinetic->accY_ = -0.8f;
         playerKinetic->speedY_ = -MARIO_BOUNCE;
+    }
+}
+
+void PhysicSystem::checkPlayerEnemyCollision(Entity *ent1, Entity *ent2) {
+    World* world = ent1->getWorld();
+
+    if (ent1->has<PlayerComponent>() && ent2->has<EnemyComponent>()) {
+        EnemyCollisionEvent event{ent1, ent2};
+        world->emit<EnemyCollisionEvent>(event);
+    } else if (ent1->has<EnemyComponent>() && ent2->has<PlayerComponent>()) {
+        EnemyCollisionEvent event{ent2, ent1};
+        world->emit<EnemyCollisionEvent>(event);
     }
 }
