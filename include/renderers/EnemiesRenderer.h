@@ -17,9 +17,7 @@ public:
 
     ~EnemiesRenderer();
 
-    void renderEnemies(ECS::World* world);
-
-    void renderTexture(TextureId textureId, Rectangle dstRect, bool flipH, bool flipV);
+    void renderEnemies(ECS::World* world, float delta);
 };
 
 

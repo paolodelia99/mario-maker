@@ -14,7 +14,7 @@ public:
 
     MapRenderer(Map *map, const char* filepath);
 
-    void render(ECS::World* world);
+    void render(ECS::World* world, float delta);
 
     virtual ~MapRenderer();
 
@@ -27,7 +27,7 @@ private:
 private:
     Map map_;
 
-    void renderOtherEntities(ECS::World *pWorld);
+    void renderOtherEntities(ECS::World *pWorld, float d);
 };
 
 

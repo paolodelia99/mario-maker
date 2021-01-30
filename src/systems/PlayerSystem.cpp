@@ -272,7 +272,7 @@ void PlayerSystem::eatMushroom(Entity *entity, Collectible::CollectibleType type
                         currentTexture,
                         transformTexture,
                         transformTexture,
-                }, 4, false, false, false);
+                }, 8, false, false, false);
                 entity->assign<FrozenComponent>();
                 entity->assign<TimerComponent>([entity]() {
                     auto aabb = entity->get<AABBComponent>();
@@ -560,37 +560,104 @@ void PlayerSystem::receive(World *world, const EnemyCollisionEvent &enemyCollisi
 
     if (player->has<SuperComponent>() || player->has<SuperFlameComponent>()
             || player->has<MegaComponent>()) {
-
+        shrink(player);
     } else {
         auto kinetic = player->get<KineticComponent>();
 
         player->remove<AnimationComponent>();
-        player->get<TextureComponent>()->textureId_ = TextureId::MARIO_DEAD;
+        player->remove<CommandComponent>();
+        player->get<TextureComponent>()->textureId_ =
+                player->has<MarioComponent>() ? TextureId::MARIO_DEAD : TextureId::LUIGI_DEAD;
+        player->assign<DeadComponent>();
 
         kinetic->speedY_ = 0.0f;
         kinetic->speedX_ = 0.0f;
         kinetic->accX_ = 0.0f;
         kinetic->accY_ = 0.0f;
 
-        world->each<WalkComponent, KineticComponent>(
-                [=](Entity* entity,
-                    ComponentHandle<WalkComponent> walk,
-                    ComponentHandle<KineticComponent> kineticEnt) {
-                   if (entity != player) {
-                       entity->remove<WalkComponent>();
-                       entity->remove<KineticComponent>();
-                       entity->remove<AnimationComponent>();
-                       entity->remove<TimerComponent>();
-                   }
-                });
+        auto otherPlayer = world->findFirst<PlayerComponent, CommandComponent>();
+
+        if (!otherPlayer) {
+            world->each<WalkComponent, KineticComponent>(
+                    [=](Entity* entity,
+                        ComponentHandle<WalkComponent> walk,
+                        ComponentHandle<KineticComponent> kineticEnt) {
+                        if (entity != player) {
+                            entity->remove<WalkComponent>();
+                            entity->remove<KineticComponent>();
+                            entity->remove<AnimationComponent>();
+                            entity->remove<TimerComponent>();
+                        }
+                    });
+        } else {
+            if (player->has<LeadCameraComponent>()) {
+                player->remove<LeadCameraComponent>();
+                otherPlayer->assign<LeadCameraComponent>();
+            }
+
+            // freeze enemy for a little bit
+            enemy->assign<FrozenComponent>();
+            enemy->assign<TimerComponent>([=]{
+                enemy->remove<FrozenComponent>();
+            }, 100);
+        }
 
         player->assign<TimerComponent>([=] {
             player->remove<SolidComponent>();
-            player->remove<CommandComponent>();
-            kinetic->speedY_ = -60.0f;
+            kinetic->speedY_ = 0.0f;
             kinetic->speedX_ = 0.0f;
             kinetic->accX_ = 0.0f;
-            kinetic->accY_ = 0.0f;
+            kinetic->accY_ = -5.0f;
         }, 100);
     }
+}
+
+void PlayerSystem::shrink(Entity *player) {
+    bool isMario = player->has<MarioComponent>();
+    TextureId currentTexture = player->get<TextureComponent>()->textureId_;
+    TextureId transformTexture;
+
+    switch (currentTexture) {
+        case MARIO_MEGA_JUMP:
+        case LUIGI_MEGA_JUMP:
+        case MARIO_FLAME_JUMP:
+        case LUIGI_FLAME_JUMP:
+        case SUPER_MARIO_JUMP:
+        case SUPER_LUIGI_JUMP:
+            transformTexture =
+                    isMario ? MARIO_JUMP : LUIGI_JUMP;
+            break;
+        default:
+            transformTexture =
+                    isMario ? MARIO_STAND : LUIGI_STAND;
+            break;
+    }
+
+    player->assign<AnimationComponent>(std::vector<TextureId>{
+        currentTexture,
+        transformTexture,
+        transformTexture,
+        currentTexture,
+        currentTexture,
+        transformTexture,
+        transformTexture
+    }, 8);
+
+    if (player->has<SuperComponent>()) {
+        player->remove<SuperComponent>();
+    } else if (player->has<SuperFlameComponent>()) {
+        player->remove<SuperFlameComponent>();
+    } else if (player->has<MegaComponent>()) {
+        player->remove<MegaComponent>();
+    }
+
+    player->assign<FrozenComponent>();
+    player->assign<TimerComponent>([player]() {
+        auto aabb = player->get<AABBComponent>();
+        player->remove<FrozenComponent>();
+        player->remove<AnimationComponent>();
+        aabb->setTop(aabb->top() - GAME_TILE_SIZE);
+        aabb->collisionBox_.height = GAME_TILE_SIZE;
+        aabb->collisionBox_.width = GAME_TILE_SIZE;
+    }, 40);
 }

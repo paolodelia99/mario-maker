@@ -110,28 +110,41 @@ std::unordered_map<TextureId, Texture2D>::iterator TextureRenderer::returnTextur
     return textures_.begin();
 }
 
-void TextureRenderer::renderTextureEntities(ECS::World *world) {
+void TextureRenderer::renderTextureEntities(ECS::World *world, float delta) {
     for (auto entity : world->each<TextureComponent, AABBComponent>())
     {
-        renderEntity(entity);
+        renderEntity(entity, delta);
     }
 }
 
-void TextureRenderer::renderEntity(ECS::Entity *pEntity) {
+void TextureRenderer::renderEntity(ECS::Entity *pEntity, float d) {
     auto aabb = pEntity->get<AABBComponent>();
     auto texture = pEntity->get<TextureComponent>();
 
-    Rectangle rect{
-        aabb->left() + texture->offSetX,
-        aabb->top() + texture->offSetY,
-        texture->w > 0 ? texture->w : aabb->collisionBox_.width,
-        texture->h > 0 ? texture->h : aabb->collisionBox_.height
-    };
+    if (pEntity->has<KineticComponent>()) {
+        auto kinetic = pEntity->get<KineticComponent>();
 
-    Renderer::renderEntityTexture(texture->textureId_, rect, texture->flipH, texture->flipV);
+        Rectangle rect{
+                aabb->left() + texture->offSetX - kinetic->speedX_ * d,
+                aabb->top() + texture->offSetY - kinetic->speedY_ * d,
+                texture->w > 0 ? texture->w : aabb->collisionBox_.width,
+                texture->h > 0 ? texture->h : aabb->collisionBox_.height
+        };
+
+        Renderer::renderEntityTexture(texture->textureId_, rect, texture->flipH, texture->flipV);
+    } else {
+        Rectangle rect{
+                aabb->left() + texture->offSetX,
+                aabb->top() + texture->offSetY,
+                texture->w > 0 ? texture->w : aabb->collisionBox_.width,
+                texture->h > 0 ? texture->h : aabb->collisionBox_.height
+        };
+
+        Renderer::renderEntityTexture(texture->textureId_, rect, texture->flipH, texture->flipV);
+    }
 }
 
-void TextureRenderer::renderCollisionRect(ECS::World* world) {
+void TextureRenderer::renderTileCollisionRect(ECS::World* world) {
     for (auto ent : world->each<AABBComponent, TileComponent, SolidComponent>()) {
         auto aabb = ent->get<AABBComponent>();
 

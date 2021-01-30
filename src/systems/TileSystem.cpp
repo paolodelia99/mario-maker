@@ -198,29 +198,29 @@ void TileSystem::receive(World *world, const BreakEvent &breakEvent) {
 void TileSystem::createDebris(World *world, float xf, float yf) {
     auto ent1 = world->create();
     ent1->assign<TextureComponent>(TextureId::BRICK_DEBRIS_1);
-    ent1->assign<AABBComponent>(Rectangle{xf, yf, TILE_SIZE / 2, TILE_SIZE / 2});
+    ent1->assign<AABBComponent>(Rectangle{xf, yf, GAME_TILE_SIZE / 2, GAME_TILE_SIZE / 2});
     ent1->assign<TileComponent>();
     ent1->assign<GravityComponent>();
-    ent1->assign<KineticComponent>(-66.0f, -66.0f);
+    ent1->assign<KineticComponent>(-0.0f, -0.0f, -2.5f, -2.5f);
 
     auto ent2 = world->create();
     ent2->assign<TextureComponent>(TextureId::BRICK_DEBRIS_2);
-    ent2->assign<AABBComponent>(Rectangle{xf + 8, yf, TILE_SIZE / 2, TILE_SIZE / 2});
+    ent2->assign<AABBComponent>(Rectangle{xf + 8, yf, GAME_TILE_SIZE / 2, GAME_TILE_SIZE / 2});
     ent2->assign<GravityComponent>();
     ent2->assign<TileComponent>();
-    ent2->assign<KineticComponent>(66.0f, -66.0f);
+    ent2->assign<KineticComponent>(-0.0f, -0.0f, 2.5f, -2.5f);
 
     auto ent3 = world->create();
     ent3->assign<TextureComponent>(TextureId::BRICK_DEBRIS_3);
-    ent3->assign<AABBComponent>(Rectangle{xf, yf - 8, TILE_SIZE / 2, TILE_SIZE / 2});
+    ent3->assign<AABBComponent>(Rectangle{xf, yf - 8, GAME_TILE_SIZE / 2, GAME_TILE_SIZE / 2});
     ent3->assign<GravityComponent>();
-    ent3->assign<KineticComponent>(-66.0f, -20.0f);
+    ent3->assign<KineticComponent>(-0.0f, -0.0f, -2.0f, -1.5f);
     ent3->assign<TileComponent>();
 
     auto ent4 = world->create();
     ent4->assign<TextureComponent>(TextureId::BRICK_DEBRIS_4);
-    ent4->assign<AABBComponent>(Rectangle{xf + 8, yf - 8, TILE_SIZE / 2, TILE_SIZE / 2});
+    ent4->assign<AABBComponent>(Rectangle{xf + 8, yf - 8, GAME_TILE_SIZE / 2, GAME_TILE_SIZE / 2});
     ent4->assign<TileComponent>();
     ent4->assign<GravityComponent>();
-    ent4->assign<KineticComponent>(66.0f, -20.0f);
+    ent4->assign<KineticComponent>(-0.0f, -0.0f, +2.0f, -1.5f);
 }

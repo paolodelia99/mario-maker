@@ -52,7 +52,7 @@ void Game::mainLoop() {
 
         BeginMode2D(camera.get().camera);
 
-        render();
+        render(lag / MS_PER_UPDATE);
 
         // just for showing the center of the camera
         if (DEBUG) {
@@ -107,7 +107,7 @@ void Game::initPlayers() {
                     32,
                     32});
     mario->assign<TextureComponent>(MARIO_STAND);
-    mario->assign<LeadCameraPlayer>();
+    mario->assign<LeadCameraComponent>();
     mario->assign<CommandComponent>(std::map<Command, int> {
                                             {JUMP, KEY_UP},
                                             {MOVE_LEFT, KEY_LEFT},
@@ -201,9 +201,9 @@ void Game::initObjectMap() {
     }
 }
 
-void Game::render() {
-    pMapRenderer_->render(world_);
-    pTextureRenderer_->renderTextureEntities(world_);
-    pTextureRenderer_->renderCollisionRect(world_);
-    pEnemiesRenderer_->renderEnemies(world_);
+void Game::render(float d) {
+    pMapRenderer_->render(world_, d);
+    pTextureRenderer_->renderTextureEntities(world_, d);
+    pTextureRenderer_->renderTileCollisionRect(world_);
+    pEnemiesRenderer_->renderEnemies(world_, d);
 }

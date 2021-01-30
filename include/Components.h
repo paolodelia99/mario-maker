@@ -138,6 +138,8 @@ struct PlayerComponent {
     int right = 0;
 };
 
+struct DeadComponent {};
+
 struct SuperMushroomComponent {};
 
 struct MarioComponent {};
@@ -206,6 +208,7 @@ private:
 
 namespace Collectible {
     enum CollectibleType {
+        NONE,
         SUPER_MARIO_MUSHROOM,
         MEGA_MUSHROOM,
         FLAME_MUSHROOM,
@@ -271,7 +274,7 @@ struct TextureComponent {
 
 ECS_DEFINE_TYPE(TextureComponent);
 
-struct LeadCameraPlayer {};
+struct LeadCameraComponent {};
 
 enum Command {
     NONE_COMMAND,

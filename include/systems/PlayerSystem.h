@@ -50,6 +50,8 @@ private:
     bool isMegaTexture(TextureId textureId);
 
     void movePlayer(Entity* player, ComponentHandle<PlayerComponent> playerComponent, Command command);
+
+    void shrink(Entity *player);
 };
 
 

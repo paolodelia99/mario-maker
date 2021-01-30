@@ -33,13 +33,26 @@ EnemiesRenderer::~EnemiesRenderer() {
     }
 }
 
-void EnemiesRenderer::renderEnemies(ECS::World *world) {
+void EnemiesRenderer::renderEnemies(ECS::World *world, float delta) {
     for (auto ent : world->each<AABBComponent, EnemyComponent, TextureComponent>()) {
         auto aabb = ent->get<AABBComponent>();
         auto textureComponent = ent->get<TextureComponent>();
         bool flipH = textureComponent->flipH;
         bool flipV = textureComponent->flipV;
 
-        Renderer::renderEntityTexture(textureComponent->textureId_, aabb->collisionBox_, flipH, flipV);
+        if (ent->has<KineticComponent>()) {
+            auto kinetic = ent->get<KineticComponent>();
+
+            Rectangle rect{
+                aabb->left() + textureComponent->offSetX - kinetic->speedX_ * delta,
+                aabb->top() + textureComponent->offSetY - kinetic->speedY_ * delta,
+                textureComponent->w > 0 ? textureComponent->w : aabb->collisionBox_.width,
+                textureComponent->h > 0 ? textureComponent->h : aabb->collisionBox_.height
+            };
+
+            Renderer::renderEntityTexture(textureComponent->textureId_, rect, flipH, flipV);
+        } else {
+            Renderer::renderEntityTexture(textureComponent->textureId_, aabb->collisionBox_, flipH, flipV);
+        }
     }
 }

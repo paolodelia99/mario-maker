@@ -9,7 +9,7 @@
 void CameraSystem::tick(World *world, float delta) {
     EntitySystem::tick(world, delta);
 
-    Entity* leadPlayer = world->findFirst<PlayerComponent, AABBComponent, LeadCameraPlayer>();
+    Entity* leadPlayer = world->findFirst<PlayerComponent, AABBComponent, LeadCameraComponent>();
 
     if (leadPlayer) {
         AABBComponent playerAABB = leadPlayer->get<AABBComponent>().get();

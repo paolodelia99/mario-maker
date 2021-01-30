@@ -38,10 +38,10 @@ MapRenderer::MapRenderer(Map *map, const char* filepath)
     loadTextures();
 }
 
-void MapRenderer::render(ECS::World* world) {
+void MapRenderer::render(ECS::World* world, float delta) {
     drawGraphicsLayer(map_.getBackgroundLayer(), world, false);
     drawGraphicsLayer(map_.getGraphicsLayer(), world, true);
-    renderOtherEntities(world);
+    renderOtherEntities(world, delta);
 }
 
 void MapRenderer::drawGraphicsLayer(unsigned int **mapToRender, ECS::World* world, bool graphics) {
@@ -69,9 +69,9 @@ void MapRenderer::drawGraphicsLayer(unsigned int **mapToRender, ECS::World* worl
 
                     if (ent->has<TextureComponent>()) {
                         auto aabb = ent->get<AABBComponent>();
-                        auto texture = ent->get<TextureComponent>();
+                        auto textureComponent = ent->get<TextureComponent>();
 
-                        renderTexture(texture->textureId_, (int) aabb->left(), (int) aabb->top());
+                        renderTexture(textureComponent->textureId_, (int) aabb->left(), (int) aabb->top());
                     } else {
                         DrawTexture(texture2D, i * 32, j * 32, WHITE);
                     }
@@ -90,11 +90,28 @@ void MapRenderer::renderTexture(TextureId textureId, int x, int y) {
     }
 }
 
-void MapRenderer::renderOtherEntities(ECS::World *world) {
-    for (auto ent : world->each<TextureComponent, TileComponent, AABBComponent>()) {
+void MapRenderer::renderOtherEntities(ECS::World *pWorld, float d) {
+    for (auto ent : pWorld->each<TextureComponent, TileComponent, AABBComponent>()) {
         auto aabb = ent->get<AABBComponent>();
         auto textureComponent = ent->get<TextureComponent>();
-        renderTexture(textureComponent->textureId_, (int) aabb->left(), (int) aabb->top());
+        auto kinetic = ent->get<KineticComponent>();
+
+        if (kinetic) {
+            Rectangle rect{
+                    aabb->left() + textureComponent->offSetX - kinetic->speedX_ * d,
+                    aabb->top() + textureComponent->offSetY - kinetic->speedY_ * d,
+                    textureComponent->w > 0 ? textureComponent->w : aabb->collisionBox_.width,
+                    textureComponent->h > 0 ? textureComponent->h : aabb->collisionBox_.height
+            };
+
+            Renderer::renderEntityTexture(
+                    textureComponent->textureId_,
+                    rect,
+                    textureComponent->flipH,
+                    textureComponent->flipV);
+        } else {
+            renderTexture(textureComponent->textureId_, (int) aabb->left(), (int) aabb->top());
+        }
     }
 }
 

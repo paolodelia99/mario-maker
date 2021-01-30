@@ -20,15 +20,15 @@ public:
 
     void renderTexture(TextureId textureId, Rectangle dstRect, bool flipH = false, bool flipV = false);
 
-    void renderTextureEntities(ECS::World* world);
+    void renderTextureEntities(ECS::World* world, float delta);
 
-    void renderCollisionRect(ECS::World* world);
+    void renderTileCollisionRect(ECS::World* world);
 
     std::unordered_map<TextureId, Texture2D>::iterator returnTexturesIt();
 
 private:
 
-    void renderEntity(ECS::Entity *pEntity);
+    void renderEntity(ECS::Entity *pEntity, float d);
 
 };
 

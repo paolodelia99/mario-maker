@@ -39,7 +39,7 @@ private:
 
     void initObjectMap();
 
-    void render();
+    void render(float d);
 
 private:
     bool run;

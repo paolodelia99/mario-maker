@@ -342,9 +342,9 @@ void PhysicSystem::checkPlayerEnemyCollision(Entity *ent1, Entity *ent2) {
 
     if (ent1->has<PlayerComponent>() && ent2->has<EnemyComponent>()) {
         EnemyCollisionEvent event{ent1, ent2};
-        world->emit<EnemyCollisionEvent>(event);
+        if (!ent1->has<FrozenComponent>()) world->emit<EnemyCollisionEvent>(event);
     } else if (ent1->has<EnemyComponent>() && ent2->has<PlayerComponent>()) {
         EnemyCollisionEvent event{ent2, ent1};
-        world->emit<EnemyCollisionEvent>(event);
+        if (!ent2->has<FrozenComponent>()) world->emit<EnemyCollisionEvent>(event);
     }
 }
