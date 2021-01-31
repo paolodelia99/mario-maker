@@ -5,17 +5,10 @@
 #ifndef MARIO_MAKER_ENEMYSYSTEM_H
 #define MARIO_MAKER_ENEMYSYSTEM_H
 #include "ECS.h"
+#include "Events.h"
 #include "Components.h"
 
 using namespace ECS;
-
-struct KillEnemyEvent {
-
-    explicit KillEnemyEvent(Entity* enemy): enemy(enemy) {}
-
-    Entity* enemy;
-};
-
 
 class EnemySystem : public EntitySystem, public EventSubscriber<KillEnemyEvent> {
 public:
@@ -30,6 +23,10 @@ public:
     void unconfigure(World* world) override;
 
     void receive(World* world, const KillEnemyEvent& killEnemyEvent) override;
+
+    void killEnemyWithFireball(Entity *entity);
+
+    void killEnemyWithJump(Entity *entity);
 };
 
 

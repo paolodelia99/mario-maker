@@ -14,8 +14,7 @@ AnimationSystem::AnimationSystem() {
 void AnimationSystem::tick(World *world, float delta) {
     EntitySystem::tick(world, delta);
 
-    for (auto ent : world->each<AnimationComponent, TextureComponent>())
-    {
+    for (auto ent : world->each<AnimationComponent, TextureComponent>()) {
         auto animation = ent->get<AnimationComponent>();
         auto texture = ent->get<TextureComponent>();
         animation->counter++;

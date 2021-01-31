@@ -45,6 +45,49 @@ void EnemySystem::unconfigure(World *world) {
 
 void EnemySystem::receive(World *world, const KillEnemyEvent& killEnemyEvent) {
     auto enemy = killEnemyEvent.enemy;
+
+    if (killEnemyEvent.killedByFireball) {
+        killEnemyWithFireball(enemy);
+    } else {
+        killEnemyWithJump(enemy);
+    }
+}
+
+void EnemySystem::killEnemyWithFireball(Entity *enemy) {
+    auto enemyComponent = enemy->get<EnemyComponent>();
+    auto aabb = enemy->get<AABBComponent>();
+    Enemy::Type type = enemy->get<EnemyComponent>()->type_;
+    ComponentHandle<TextureComponent> textureComponent;
+
+    switch (type) {
+        case Enemy::GOOMBA:
+            enemy->removeAll();
+            textureComponent = enemy->assign<TextureComponent>(TextureId::GOOMBA_1);
+            break;
+        case Enemy::GREEN_TURTLE:
+        case Enemy::RED_TURTLE:
+            enemy->removeAll();
+             textureComponent = enemy->assign<TextureComponent>(
+                     type == Enemy::GREEN_TURTLE ?
+                     TextureId::G_TURLE_SHELL_STAND_1 : TextureId::R_TURLE_SHELL_STAND_1);
+             textureComponent->h = GAME_TILE_SIZE;
+             textureComponent->w = GAME_TILE_SIZE;
+             aabb->collisionBox_.width = GAME_TILE_SIZE;
+             aabb->collisionBox_.height = GAME_TILE_SIZE;
+            break;
+        default:
+            break;
+    }
+
+    enemy->assign<EnemyComponent>(enemyComponent->type_);
+    enemy->assign<TileComponent>();
+    textureComponent->flipV = true;
+    enemy->assign<AABBComponent>(aabb->collisionBox_);
+    enemy->assign<GravityComponent>();
+    enemy->assign<KineticComponent>(0.0f, 0.0f, 0.0f, -2.0f);
+}
+
+void EnemySystem::killEnemyWithJump(Entity *enemy) {
     auto enemyComponent = enemy->get<EnemyComponent>();
     auto aabb = enemy->get<AABBComponent>();
     Rectangle collisionRec = aabb->collisionBox_;
@@ -64,17 +107,17 @@ void EnemySystem::receive(World *world, const KillEnemyEvent& killEnemyEvent) {
         case Enemy::RED_TURTLE:
             enemy->removeAll();
             enemy->assign<EnemyComponent>(type == Enemy::GREEN_TURTLE ?
-            Enemy::GREEN_TURTLE_SHELL : Enemy::RED_TURTLE_SHELL);
+                                          Enemy::GREEN_TURTLE_SHELL : Enemy::RED_TURTLE_SHELL);
             enemy->assign<TileComponent>();
             enemy->assign<TurtleShellComponent>(false);
             enemy->assign<SolidComponent>();
             enemy->assign<TextureComponent>(TextureId::G_TURLE_SHELL_STAND_1);
             enemy->assign<KineticComponent>(kinetic->speedX_, kinetic->speedY_);
             enemy->assign<AABBComponent>(Rectangle{
-                collisionRec.x,
-                collisionRec.y + 16,
-                GAME_TILE_SIZE,
-                GAME_TILE_SIZE
+                    collisionRec.x,
+                    collisionRec.y + 16,
+                    GAME_TILE_SIZE,
+                    GAME_TILE_SIZE
             });
             break;
         case Enemy::GREEN_TURTLE_SHELL:

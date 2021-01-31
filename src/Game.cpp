@@ -112,7 +112,8 @@ void Game::initPlayers() {
                                             {JUMP, KEY_UP},
                                             {MOVE_LEFT, KEY_LEFT},
                                             {MOVE_RIGHT, KEY_RIGHT},
-                                            {DUCK, KEY_DOWN}
+                                            {DUCK, KEY_DOWN},
+                                            {SHOOT, KEY_Z}
                                     });
     mario->assign<GravityComponent>();
     mario->assign<SolidComponent>();
@@ -134,7 +135,8 @@ void Game::initPlayers() {
                 {JUMP, KEY_W},
                 {MOVE_LEFT, KEY_A},
                 {MOVE_RIGHT, KEY_D},
-                {DUCK, KEY_S}
+                {DUCK, KEY_S},
+                {SHOOT, KEY_F}
         });
         luigi->assign<GravityComponent>();
         luigi->assign<SolidComponent>();
@@ -170,6 +172,10 @@ void Game::handleInput() {
         else if (IsKeyDown(KEY_A)) it->setCurrentCommand(KEY_A);
         else if (IsKeyDown(KEY_S)) it->setCurrentCommand(KEY_S);
         else it->setNullCommand();
+
+        // Control if the player shoot
+        if (IsKeyPressed(KEY_Z)) it->setCurrentCommand(KEY_Z);
+        else if (IsKeyPressed(KEY_F)) it->setCurrentCommand(KEY_F);
     }
 }
 

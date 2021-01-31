@@ -3,7 +3,7 @@
 //
 #pragma once
 
-constexpr const char* SBM1_PLAYER_TILESET_PATH = "../assets/imgs/players-tileset.png";
+constexpr const char* SBM1_PLAYER_TILESET_PATH = "../assets/tilesets/players-tileset.png";
 constexpr const char* SMB1_TILESET_PATH = "../assets/tilesets/tiles-2.png";
 constexpr const char* SMB1_ENEMIES_TILESET_PATH = "../assets/tilesets/enemies-tileset.png";
 

@@ -118,7 +118,8 @@ enum PlayerState {
     RUNNING,
     DRIFTING,
     DUCKING,
-    INVINCIBLE
+    INVINCIBLE,
+    SHOOTING
 };
 
 struct PlayerComponent {
@@ -133,14 +134,13 @@ struct PlayerComponent {
     PlayerState current_state_;
     bool duck = false;
     bool sprint = false;
+    bool shoot = false;
     bool jump = false;
     int left = 0;
     int right = 0;
 };
 
 struct DeadComponent {};
-
-struct SuperMushroomComponent {};
 
 struct MarioComponent {};
 
@@ -151,6 +151,19 @@ struct SuperComponent {};
 struct MegaComponent {};
 
 struct SuperFlameComponent {};
+
+struct FireBulletComponent {
+
+    FireBulletComponent(float upperBound) : upperBound_(upperBound) {}
+
+    void setUpperBound(float newUpperBound) {
+        if (newUpperBound >= 0) {
+            upperBound_ = newUpperBound;
+        }
+    }
+
+    float upperBound_;
+};
 
 struct GravityComponent {};
 
@@ -190,6 +203,8 @@ private:
 };
 
 struct BreakableComponent {};
+
+struct BouncingComponent {};
 
 struct GrowComponent {
 
@@ -272,7 +287,16 @@ struct TextureComponent {
     int h = 0;
 };
 
-ECS_DEFINE_TYPE(TextureComponent);
+struct RotationComponent {
+public:
+    RotationComponent() = default;
+
+    void increment() {
+        rotation_++;
+    }
+
+    int rotation_ = 0;
+};
 
 struct LeadCameraComponent {};
 
@@ -283,7 +307,8 @@ enum Command {
     MOVE_RIGHT,
     DUCK,
     SPRINT,
-    SPECIAL
+    SPECIAL,
+    SHOOT
 };
 
 struct CommandComponent {

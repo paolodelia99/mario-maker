@@ -9,9 +9,7 @@
 #include "ECS.h"
 #include "Components.h"
 #include "Constants.h"
-#include "TileSystem.h"
-#include "EnemySystem.h"
-#include "PlayerSystem.h"
+#include "Events.h"
 
 using namespace ECS;
 
@@ -52,7 +50,13 @@ private:
 
     void checkKillEnemy(Entity *ent1, Entity *ent2);
 
-    void checkPlayerEnemyCollision(Entity *ent1, Entity *ent2);
+    void checkCollisionWithEnemy(Entity *ent1, Entity *ent2);
+
+    void handlingBouncingComponents(World *world);
+
+    bool validXCollision(Entity *ent1, Entity *ent2);
+
+    bool validYCollision(Entity *ent1, Entity *ent2);
 };
 
 

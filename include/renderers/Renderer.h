@@ -59,7 +59,7 @@ protected:
             Texture2D texture2D = it->second;
             if (DEBUG) DrawRectangleLinesEx(dstRect, 2, RED);
             DrawTextureRec(texture2D,
-                           Rectangle{0, 0, (flipH ? -1 : 1) * dstRect.width, dstRect.height } ,
+                           Rectangle{0, 0, (flipH ? -1 : 1) * dstRect.width, (flipV ? -1 : 1) * dstRect.height } ,
                            Vector2{dstRect.x, dstRect.y},
                            WHITE);
         }

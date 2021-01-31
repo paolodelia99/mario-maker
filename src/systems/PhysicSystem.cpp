@@ -6,6 +6,8 @@
 #include <unordered_set>
 #include "PhysicSystem.h"
 
+// TODO: Implement code for handling bounce components
+
 PhysicSystem::PhysicSystem() {
 
 }
@@ -22,6 +24,8 @@ void PhysicSystem::tick(World *world, float delta) {
     checkKineticTileCollisions(world);
 
     moveWalkComponents(world);
+
+    handlingBouncingComponents(world);
 
     applyForces(world);
 }
@@ -55,27 +59,29 @@ void PhysicSystem::checkYCollision(Entity *ent1, Entity *ent2) {
 
     // Check y collision
     if (collisionRect.height != 0 && collisionRect.height != aabb->collisionBox_.height) {
-        if (kineticEntityCollBox.y + kineticEntityCollBox.height >= objCollisionBox.y
-            && kineticEntityCollBox.y + kineticEntityCollBox.height < objectYCenter) {
-            // Bottom collision
-            if (aabb->bottom() + kinetic->speedY_ >= objCollisionBox.y) {
-                aabb->setBottom(objCollisionBox.y);
-                ent2->assign<TopCollisionComponent>();
-                kinetic->accY_ = std::min(0.0f, kinetic->accY_);
-                kinetic->speedY_ = std::min(0.0f, kinetic->speedY_);
-                ent1->assign<BottomCollisionComponent>();
-                checkKillEnemy(ent1, ent2);
-            }
-        } else if (kineticEntityCollBox.y <= objectBottom
-                   && kineticEntityCollBox.y > objectYCenter) {
-            // Top collision
-            if (aabb->top() + kinetic->speedY_ <= objCollisionBox.y + objCollisionBox.height) {
-                aabb->setTop(objCollisionBox.y + objCollisionBox.height);
-                ent2->assign<BottomCollisionComponent>();
-                kinetic->accY_ = std::max(0.0f, kinetic->accY_);
-                kinetic->speedY_ = std::max(0.0f, kinetic->speedY_);
-                ent1->assign<TopCollisionComponent>();
-                checkIfBreakComponent(ent1, ent2);
+        if (validYCollision(ent1, ent2)) {
+            if (kineticEntityCollBox.y + kineticEntityCollBox.height >= objCollisionBox.y
+                && kineticEntityCollBox.y + kineticEntityCollBox.height < objectYCenter) {
+                // Bottom collision
+                if (aabb->bottom() + kinetic->speedY_ >= objCollisionBox.y) {
+                    aabb->setBottom(objCollisionBox.y);
+                    ent2->assign<TopCollisionComponent>();
+                    kinetic->accY_ = std::min(0.0f, kinetic->accY_);
+                    kinetic->speedY_ = std::min(0.0f, kinetic->speedY_);
+                    ent1->assign<BottomCollisionComponent>();
+                    checkKillEnemy(ent1, ent2);
+                }
+            } else if (kineticEntityCollBox.y <= objectBottom
+                       && kineticEntityCollBox.y > objectYCenter) {
+                // Top collision
+                if (aabb->top() + kinetic->speedY_ <= objCollisionBox.y + objCollisionBox.height) {
+                    aabb->setTop(objCollisionBox.y + objCollisionBox.height);
+                    ent2->assign<BottomCollisionComponent>();
+                    kinetic->accY_ = std::max(0.0f, kinetic->accY_);
+                    kinetic->speedY_ = std::max(0.0f, kinetic->speedY_);
+                    ent1->assign<TopCollisionComponent>();
+                    checkIfBreakComponent(ent1, ent2);
+                }
             }
         }
     }
@@ -98,54 +104,56 @@ void PhysicSystem::checkXCollision(Entity *ent1, Entity *ent2) {
     Rectangle collisionRect = GetCollisionRec(kineticEntityCollBox, objCollisionBox);
 
     if (collisionRect.width != 0 && collisionRect.width != aabb->collisionBox_.width) {
-        if (kineticEntityCollBox.x <= objectRight && kineticEntityCollBox.x > objectXCenter) {
-            // Left Collision
-            if (kineticEntityCollBox.x < objectRight) {
-                aabb->collisionBox_.x += std::min(.5f, objectRight - aabb->left());
-            } else {
-                aabb->setLeft(objectRight);
-            }
+        if (validXCollision(ent1, ent2)) {
+            if (kineticEntityCollBox.x <= objectRight && kineticEntityCollBox.x > objectXCenter) {
+                // Left Collision
+                if (kineticEntityCollBox.x < objectRight) {
+                    aabb->collisionBox_.x += std::min(.5f, objectRight - aabb->left());
+                } else {
+                    aabb->setLeft(objectRight);
+                }
 
-            if (!ent2->has<PlayerComponent>()) {
-                kinetic->accX_ = std::max(0.0f, kinetic->accX_);
-                kinetic->speedX_ = std::max(0.0f, kinetic->speedX_);
-            } else {
-                auto kineticEnt2 = ent2->get<KineticComponent>();
-                float acc =  kinetic->accX_ / 2;
-                float speed = kinetic->speedX_ * 0.85f;
-                kinetic->accX_ = acc;
-                kineticEnt2->accX_ = acc;
-                kinetic->speedX_ = speed;
-                kineticEnt2->speedX_ = speed;
-            }
-            ent2->assign<RightCollisionComponent>();
-            ent1->assign<LeftCollisionComponent>();
-        } else if (kineticEntityCollBox.x + kineticEntityCollBox.width >= objCollisionBox.x
-                   && kineticEntityCollBox.x + kineticEntityCollBox.width < objectXCenter) {
-            // Right collision
-            if (kineticEntityCollBox.x + kineticEntityCollBox.width > objCollisionBox.x) {
-                aabb->collisionBox_.x -= std::min(.5f, aabb->right() - objCollisionBox.x);
-            } else {
-                aabb->setRight(objCollisionBox.x);
-            }
+                if (!ent2->has<PlayerComponent>()) {
+                    kinetic->accX_ = std::max(0.0f, kinetic->accX_);
+                    kinetic->speedX_ = std::max(0.0f, kinetic->speedX_);
+                } else {
+                    auto kineticEnt2 = ent2->get<KineticComponent>();
+                    float acc =  kinetic->accX_ / 2;
+                    float speed = kinetic->speedX_ * 0.85f;
+                    kinetic->accX_ = acc;
+                    kineticEnt2->accX_ = acc;
+                    kinetic->speedX_ = speed;
+                    kineticEnt2->speedX_ = speed;
+                }
+                ent2->assign<RightCollisionComponent>();
+                ent1->assign<LeftCollisionComponent>();
+            } else if (kineticEntityCollBox.x + kineticEntityCollBox.width >= objCollisionBox.x
+                       && kineticEntityCollBox.x + kineticEntityCollBox.width < objectXCenter) {
+                // Right collision
+                if (kineticEntityCollBox.x + kineticEntityCollBox.width > objCollisionBox.x) {
+                    aabb->collisionBox_.x -= std::min(.5f, aabb->right() - objCollisionBox.x);
+                } else {
+                    aabb->setRight(objCollisionBox.x);
+                }
 
-            if (!ent2->has<PlayerComponent>()) {
-                kinetic->accX_ = std::min(0.0f, kinetic->accX_);
-                kinetic->speedX_ = std::min(0.0f, kinetic->speedX_);
-            } else {
-                auto kineticEnt2 = ent2->get<KineticComponent>();
-                float acc =  kinetic->accX_ / 2;
-                float speed = kinetic->speedX_ * 0.85f;
-                kinetic->accX_ = acc;
-                kineticEnt2->accX_ = acc;
-                kinetic->speedX_ = speed;
-                kineticEnt2->speedX_ = speed;
-            }
+                if (!ent2->has<PlayerComponent>()) {
+                    kinetic->accX_ = std::min(0.0f, kinetic->accX_);
+                    kinetic->speedX_ = std::min(0.0f, kinetic->speedX_);
+                } else {
+                    auto kineticEnt2 = ent2->get<KineticComponent>();
+                    float acc =  kinetic->accX_ / 2;
+                    float speed = kinetic->speedX_ * 0.85f;
+                    kinetic->accX_ = acc;
+                    kineticEnt2->accX_ = acc;
+                    kinetic->speedX_ = speed;
+                    kineticEnt2->speedX_ = speed;
+                }
 
-            ent2->assign<LeftCollisionComponent>();
-            ent1->assign<RightCollisionComponent>();
+                ent2->assign<LeftCollisionComponent>();
+                ent1->assign<RightCollisionComponent>();
+            }
+            checkCollisionWithEnemy(ent1, ent2);
         }
-        checkPlayerEnemyCollision(ent1, ent2);
     }
 }
 
@@ -155,6 +163,7 @@ void PhysicSystem::moveWalkComponents(World *world) {
                     ComponentHandle<WalkComponent> walkComponent,
                     ComponentHandle<AABBComponent> aabb,
                     ComponentHandle<KineticComponent> kinetic) {
+
         if (entity->has<LeftCollisionComponent>()) {
             walkComponent->speed = std::abs(walkComponent->speed);
             if (entity->has<TextureComponent, EnemyComponent>()) {
@@ -202,7 +211,7 @@ void PhysicSystem::checkKineticTileCollisions(World *world) {
 void PhysicSystem::applyForces(World *world) {
     for (auto ent : world->each<AABBComponent, KineticComponent>())
     {
-        // if (ent->has<FrozenComponent>()) continue;
+        if (ent->has<FrozenComponent>()) continue;
         auto aabb = ent->get<AABBComponent>();
         auto kinetic = ent->get<KineticComponent>();
 
@@ -337,7 +346,7 @@ void PhysicSystem::checkKillEnemy(Entity *ent1, Entity *ent2) {
     }
 }
 
-void PhysicSystem::checkPlayerEnemyCollision(Entity *ent1, Entity *ent2) {
+void PhysicSystem::checkCollisionWithEnemy(Entity *ent1, Entity *ent2) {
     World* world = ent1->getWorld();
 
     if (ent1->has<PlayerComponent>() && ent2->has<EnemyComponent>()) {
@@ -346,5 +355,45 @@ void PhysicSystem::checkPlayerEnemyCollision(Entity *ent1, Entity *ent2) {
     } else if (ent1->has<EnemyComponent>() && ent2->has<PlayerComponent>()) {
         EnemyCollisionEvent event{ent2, ent1};
         if (!ent2->has<FrozenComponent>()) world->emit<EnemyCollisionEvent>(event);
+    } else if (ent1->has<FireBulletComponent>() && ent2->has<EnemyComponent>()) {
+        world->emit<KillEnemyEvent>(KillEnemyEvent(ent2, true));
+    } else if (ent2->has<FireBulletComponent>() && ent1->has<EnemyComponent>()) {
+        world->emit<KillEnemyEvent>(KillEnemyEvent(ent1, true));
     }
+}
+
+void PhysicSystem::handlingBouncingComponents(World *world) {
+
+    world->each<BouncingComponent, AABBComponent, KineticComponent>([&](
+            Entity* entity,
+            ComponentHandle<BouncingComponent> bouncingComponent,
+            ComponentHandle<AABBComponent> aabb,
+            ComponentHandle<KineticComponent> kinetic
+            ) {
+        if (entity->has<BottomCollisionComponent>()) {
+            kinetic->accY_ = -0.85f;
+            entity->remove<BottomCollisionComponent>();
+        }
+
+        if(entity->has<LeftCollisionComponent>() ||
+                entity->has<RightCollisionComponent>()) {
+            world->destroy(entity);
+        }
+    });
+}
+
+bool PhysicSystem::validXCollision(Entity *ent1, Entity *ent2) {
+    if ((ent1->has<PlayerComponent>() && ent2->has<FireBulletComponent>())
+        || (ent1->has<FireBulletComponent>() && ent2->has<PlayerComponent>())) {
+        return false;
+    }
+    return true;
+}
+
+bool PhysicSystem::validYCollision(Entity *ent1, Entity *ent2) {
+    if ((ent1->has<PlayerComponent>() && ent2->has<FireBulletComponent>())
+        || (ent1->has<FireBulletComponent>() && ent2->has<PlayerComponent>())) {
+        return false;
+    }
+    return true;
 }

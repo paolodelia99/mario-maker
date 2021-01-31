@@ -208,6 +208,11 @@ void PlayerSystem::setAnimation(Entity *playerEntity, PlayerState state) {
                 break;
             case INVINCIBLE:
                 break;
+            case SHOOTING:
+                playerEntity->assign<TextureComponent>(
+                        isMario ?
+                        TextureId::MARIO_FLAME_SHOOT  : TextureId::LUIGI_FLAME_SHOOT);
+                break;
             default:
                 break;
         }
@@ -264,6 +269,7 @@ void PlayerSystem::eatMushroom(Entity *entity, Collectible::CollectibleType type
         case Collectible::SUPER_MARIO_MUSHROOM:
             if (!(entity->has<SuperComponent>() || entity->has<SuperFlameComponent>()
                     || entity->has<MegaComponent>())) {
+                float oldHeight = entity->get<AABBComponent>()->top();
                 entity->assign<SuperComponent>();
                 entity->assign<AnimationComponent>(std::vector<TextureId>{
                         currentTexture,
@@ -272,14 +278,15 @@ void PlayerSystem::eatMushroom(Entity *entity, Collectible::CollectibleType type
                         currentTexture,
                         transformTexture,
                         transformTexture,
-                }, 8, false, false, false);
+                }, 4, false, false, false);
                 entity->assign<FrozenComponent>();
-                entity->assign<TimerComponent>([entity]() {
+                entity->assign<TimerComponent>([entity, oldHeight]() {
                     auto aabb = entity->get<AABBComponent>();
                     entity->remove<FrozenComponent>();
                     entity->remove<AnimationComponent>();
+                    aabb->setTop(oldHeight - GAME_TILE_SIZE);
                     aabb->collisionBox_.height = GAME_TILE_SIZE * 2;
-                    }, 40);
+                    }, 60);
             }
             break;
         case Collectible::MEGA_MUSHROOM:
@@ -296,7 +303,7 @@ void PlayerSystem::eatMushroom(Entity *entity, Collectible::CollectibleType type
                         currentTexture,
                         transformTexture,
                         transformTexture,
-                }, 8, false, false, false);
+                }, 10, false, false, false);
                 entity->assign<FrozenComponent>();
                 entity->assign<TimerComponent>([entity]() {
                     auto aabb = entity->get<AABBComponent>();
@@ -327,7 +334,7 @@ void PlayerSystem::eatMushroom(Entity *entity, Collectible::CollectibleType type
                     entity->remove<AnimationComponent>();
                     if (entity->has<SuperComponent>()) entity->remove<SuperComponent>();
                     aabb->collisionBox_.height = GAME_TILE_SIZE * 2;
-                }, 40);
+                }, 60);
             }
             break;
         default:
@@ -406,6 +413,10 @@ void PlayerSystem::setRightAnimation(Entity* player) {
         if (playerComponent->duck){
             setAnimation(player, PlayerState::DUCKING);
             kinetic->accX_ = 0.0f;
+        }
+
+        if (playerComponent->shoot) {
+            setAnimation(player, PlayerState::SHOOTING);
         }
 
     } else {
@@ -499,7 +510,8 @@ bool PlayerSystem::isFlameTexture(TextureId textureId) {
         case MARIO_FLAME_JUMP: case MARIO_FLAME_RUN_1: case MARIO_FLAME_RUN_2:
         case MARIO_FLAME_RUN_3: case LUIGI_FLAME_DRIFT: case LUIGI_FLAME_DUCK:
         case LUIGI_FLAME_JUMP: case LUIGI_FLAME_RUN_1: case LUIGI_FLAME_RUN_2:
-        case LUIGI_FLAME_RUN_3: case LUIGI_FLAME_STAND:
+        case LUIGI_FLAME_RUN_3: case LUIGI_FLAME_STAND: case MARIO_FLAME_SHOOT:
+        case LUIGI_FLAME_SHOOT:
             return true;
         default:
             return false;
@@ -527,6 +539,7 @@ void PlayerSystem::movePlayer(Entity *player, ComponentHandle<PlayerComponent> p
             kinetic->accX_ = 0;
             kinetic->accY_ = 0;
             playerComponent->duck = false;
+            playerComponent->shoot = false;
             break;
         case JUMP:
             if (player->has<BottomCollisionComponent>()) {
@@ -546,6 +559,13 @@ void PlayerSystem::movePlayer(Entity *player, ComponentHandle<PlayerComponent> p
         case DUCK:
             kinetic->accX_ = 0;
             playerComponent->duck = true;
+            break;
+        case SHOOT:
+            if (player->has<SuperFlameComponent>()) {
+                auto world = player->getWorld();
+                createFireBullet(world, player);
+                playerComponent->shoot = true;
+            }
             break;
         case SPRINT:
             break;
@@ -660,4 +680,37 @@ void PlayerSystem::shrink(Entity *player) {
         aabb->collisionBox_.height = GAME_TILE_SIZE;
         aabb->collisionBox_.width = GAME_TILE_SIZE;
     }, 40);
+}
+
+void PlayerSystem::createFireBullet(World *world, Entity *entity) {
+    Entity* fireBullet = world->create();
+    Entity* player = entity;
+    auto playerComponent = player->get<PlayerComponent>();
+    auto aabb = player->get<AABBComponent>();
+    Rectangle posRect;
+    float velocity = 1.8f;
+
+    fireBullet->assign<TextureComponent>(TextureId::FIRE_BULLET);
+    fireBullet->assign<FireBulletComponent>(aabb->getCenterY());
+    if (playerComponent->left) {
+        posRect = Rectangle{
+                aabb->left(),
+                aabb->getCenterY() - 8,
+                GAME_TILE_SIZE / 2,
+                GAME_TILE_SIZE / 2};
+        velocity = -velocity;
+    } else {
+        posRect = Rectangle{
+                aabb->right(),
+                aabb->getCenterY() - 8,
+                GAME_TILE_SIZE / 2,
+                GAME_TILE_SIZE / 2};
+    }
+    fireBullet->assign<RotationComponent>();
+    fireBullet->assign<AABBComponent>(posRect);
+    fireBullet->assign<WalkComponent>(velocity);
+    fireBullet->assign<KineticComponent>();
+    fireBullet->assign<SolidComponent>();
+    fireBullet->assign<GravityComponent>();
+    fireBullet->assign<BouncingComponent>();
 }

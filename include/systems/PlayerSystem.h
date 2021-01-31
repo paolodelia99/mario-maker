@@ -5,17 +5,10 @@
 #ifndef MARIO_MAKER_PLAYERSYSTEM_H
 #define MARIO_MAKER_PLAYERSYSTEM_H
 #include "ECS.h"
+#include "Events.h"
 #include <raylib.h>
 
 using namespace ECS;
-
-struct EnemyCollisionEvent {
-    EnemyCollisionEvent(Entity* player, Entity* enemy)
-    : player(player), enemy(enemy) {}
-
-    Entity* player;
-    Entity* enemy;
-};
 
 class PlayerSystem : public EntitySystem, public EventSubscriber<EnemyCollisionEvent> {
 public:
@@ -52,6 +45,8 @@ private:
     void movePlayer(Entity* player, ComponentHandle<PlayerComponent> playerComponent, Command command);
 
     void shrink(Entity *player);
+
+    void createFireBullet(World *world, Entity *entity);
 };
 
 

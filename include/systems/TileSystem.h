@@ -5,17 +5,14 @@
 #ifndef MARIO_MAKER_TILESYSTEM_H
 #define MARIO_MAKER_TILESYSTEM_H
 #include "ECS.h"
+#include "Events.h"
 #include "Components.h"
 #include "Constants.h"
 
 using namespace ECS;
 
-struct BreakEvent {
-    float x;
-    float y;
-};
-
-class TileSystem : public EntitySystem, public EventSubscriber<BreakEvent> {
+class TileSystem : public EntitySystem,
+                    public EventSubscriber<BreakEvent> {
 public:
 
     TileSystem();
@@ -46,9 +43,9 @@ private:
 
     void manageBounceComponents(World* world);
 
-    virtual void receive(World* world, const BreakEvent& breakEvent) override;
-
     void createDebris(World *world, float xf, float yf);
+
+    virtual void receive(World* world, const BreakEvent& breakEvent) override;
 };
 
 

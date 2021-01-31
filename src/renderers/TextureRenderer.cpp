@@ -35,6 +35,7 @@ TextureRenderer::TextureRenderer(const char* filepath)
     texturePositions_.insert({MARIO_FLAME_RUN_3, new Rectangle{69, 76, TILE_SIZE, TILE_SIZE * 2}});
     texturePositions_.insert({MARIO_FLAME_DRIFT, new Rectangle{86, 76, TILE_SIZE, TILE_SIZE * 2}});
     texturePositions_.insert({MARIO_FLAME_JUMP, new Rectangle{103, 76, TILE_SIZE, TILE_SIZE * 2}});
+    texturePositions_.insert({MARIO_FLAME_SHOOT, new Rectangle{256, 76, TILE_SIZE, TILE_SIZE * 2}});
     texturePositions_.insert({MARIO_MEGA_STAND, new Rectangle{1, 26, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({MARIO_MEGA_RUN_1, new Rectangle{35, 26, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({MARIO_MEGA_RUN_2, new Rectangle{52, 26, TILE_SIZE, TILE_SIZE}});
@@ -71,6 +72,7 @@ TextureRenderer::TextureRenderer(const char* filepath)
     texturePositions_.insert({LUIGI_FLAME_RUN_3, new Rectangle{69, 224, TILE_SIZE, TILE_SIZE * 2}});
     texturePositions_.insert({LUIGI_FLAME_DRIFT, new Rectangle{86, 224, TILE_SIZE, TILE_SIZE * 2}});
     texturePositions_.insert({LUIGI_FLAME_JUMP, new Rectangle{103, 224, TILE_SIZE, TILE_SIZE * 2}});
+    texturePositions_.insert({LUIGI_FLAME_SHOOT, new Rectangle{256, 224, TILE_SIZE, TILE_SIZE * 2}});
     texturePositions_.insert({LUIGI_MEGA_STAND, new Rectangle{1, 174, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({LUIGI_MEGA_RUN_1, new Rectangle{35, 174, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({LUIGI_MEGA_RUN_2, new Rectangle{52, 174, TILE_SIZE, TILE_SIZE}});
@@ -90,6 +92,8 @@ TextureRenderer::TextureRenderer(const char* filepath)
     texturePositions_.insert({FLAME_FLOWER_2, new Rectangle{86, 597, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({FLAME_FLOWER_3, new Rectangle{103, 597, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({FLAME_FLOWER_4, new Rectangle{120, 597, TILE_SIZE, TILE_SIZE}});
+
+    texturePositions_.insert({FIRE_BULLET, new Rectangle{358, 76, TILE_SIZE / 2, TILE_SIZE / 2}});
 
     // fill texture map
     loadTextures();
@@ -117,12 +121,12 @@ void TextureRenderer::renderTextureEntities(ECS::World *world, float delta) {
     }
 }
 
-void TextureRenderer::renderEntity(ECS::Entity *pEntity, float d) {
-    auto aabb = pEntity->get<AABBComponent>();
-    auto texture = pEntity->get<TextureComponent>();
+void TextureRenderer::renderEntity(ECS::Entity *entity, float d) {
+    auto aabb = entity->get<AABBComponent>();
+    auto texture = entity->get<TextureComponent>();
 
-    if (pEntity->has<KineticComponent>()) {
-        auto kinetic = pEntity->get<KineticComponent>();
+    if (entity->has<KineticComponent>()) {
+        auto kinetic = entity->get<KineticComponent>();
 
         Rectangle rect{
                 aabb->left() + texture->offSetX - kinetic->speedX_ * d,
@@ -130,6 +134,11 @@ void TextureRenderer::renderEntity(ECS::Entity *pEntity, float d) {
                 texture->w > 0 ? texture->w : aabb->collisionBox_.width,
                 texture->h > 0 ? texture->h : aabb->collisionBox_.height
         };
+
+//        if (entity->has<RotationComponent>()) {
+//            // fixme: is not working
+//            renderRotationEntity(texture->textureId_, rect, entity->get<RotationComponent>()->rotation_);
+//        }
 
         Renderer::renderEntityTexture(texture->textureId_, rect, texture->flipH, texture->flipV);
     } else {
@@ -149,5 +158,17 @@ void TextureRenderer::renderTileCollisionRect(ECS::World* world) {
         auto aabb = ent->get<AABBComponent>();
 
         if (DEBUG) DrawRectangleLinesEx(aabb->collisionBox_, 2, RED);
+    }
+}
+
+void TextureRenderer::renderRotationEntity(TextureId textureId, Rectangle destRect, int rotation) {
+    auto it = textures_.find(textureId);
+    if (it != textures_.end())
+    {
+        Texture2D texture2D = it->second;
+        Rectangle sourceRect = {0.0f, 0.0f, TILE_SIZE / 2, TILE_SIZE / 2 };
+        Vector2 origin = {TILE_SIZE / 2, TILE_SIZE / 2 };
+        if (DEBUG) DrawRectangleLinesEx(destRect, 2, RED);
+        DrawTexturePro(texture2D, sourceRect, destRect, origin, (float) rotation, WHITE);
     }
 }

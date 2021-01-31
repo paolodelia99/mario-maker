@@ -104,7 +104,7 @@ TEST(textureManagerTest, testRenredingMegaComponent) {
 
         ClearBackground(RAYWHITE);
 
-        textureLoader->renderTexture(MARIO_MEGA_STAND, (Rectangle) {250.f / 2, 250.f / 2, 64, 64}, false);
+        textureLoader->renderTexture(FIRE_BULLET, (Rectangle) {250.f / 2, 250.f / 2, 16, 16}, false);
 
         DrawText("this IS a texture loaded_ from an image!", 300, 370, 10, GRAY);
 
