@@ -208,8 +208,9 @@ void Game::initObjectMap() {
 }
 
 void Game::render(float d) {
-    pMapRenderer_->render(world_, d);
+    pMapRenderer_->renderBackground(world_);
     pTextureRenderer_->renderTextureEntities(world_, d);
     pTextureRenderer_->renderTileCollisionRect(world_);
     pEnemiesRenderer_->renderEnemies(world_, d);
+    pMapRenderer_->render(world_, d);
 }

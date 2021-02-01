@@ -602,6 +602,7 @@ void PlayerSystem::receive(World *world, const EnemyCollisionEvent &enemyCollisi
                     [=](Entity* entity,
                         ComponentHandle<WalkComponent> walk,
                         ComponentHandle<KineticComponent> kineticEnt) {
+                        // fixme: piranha plant case
                         if (entity != player) {
                             entity->remove<WalkComponent>();
                             entity->remove<KineticComponent>();

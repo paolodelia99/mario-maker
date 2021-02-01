@@ -39,9 +39,12 @@ MapRenderer::MapRenderer(Map *map, const char* filepath)
 }
 
 void MapRenderer::render(ECS::World* world, float delta) {
-    drawGraphicsLayer(map_.getBackgroundLayer(), world, false);
     drawGraphicsLayer(map_.getGraphicsLayer(), world, true);
     renderOtherEntities(world, delta);
+}
+
+void MapRenderer::renderBackground(ECS::World* world) {
+    drawGraphicsLayer(map_.getBackgroundLayer(), world, false);
 }
 
 void MapRenderer::drawGraphicsLayer(unsigned int **mapToRender, ECS::World* world, bool graphics) {

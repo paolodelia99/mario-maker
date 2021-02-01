@@ -208,17 +208,35 @@ struct BouncingComponent {};
 
 struct GrowComponent {
 
-    GrowComponent(int frames) : frames(frames) {}
+    GrowComponent(int frames, bool up) : frames_(frames), up_(up), n_(frames) {}
 
-    GrowComponent() = default;
+    explicit GrowComponent(int frames) : frames_(frames), n_(frames) {}
+
+    GrowComponent() {
+        n_ = frames_;
+    };
 
     [[nodiscard]] bool finished() {
-        frames--;
-        return frames <= 0;
+        frames_--;
+        return frames_ <= 0;
     }
 
+    void wait() {
+        waitCounter_++;
+        if (waitCounter_ >= n_) {
+            waitCounter_ = 0;
+            frames_ = n_;
+            up_ = !up_;
+        }
+    }
+
+    bool isGoingUp() { return up_; }
+
 private:
-    int frames = 64;
+    bool up_ = true;
+    int frames_ = 64;
+    int n_;
+    int waitCounter_ = 0;
 };
 
 namespace Collectible {
@@ -416,10 +434,11 @@ struct TimerComponent {
 namespace Enemy {
     enum Type {
         GOOMBA,
-        GREEN_TURTLE,
-        RED_TURTLE,
+        KOOPA_TROOPA,
+        RED_KOOPA_TROOPA,
         GREEN_TURTLE_SHELL,
         RED_TURTLE_SHELL,
+        PIRANHA_PLANT,
     };
 }
 

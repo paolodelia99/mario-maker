@@ -23,6 +23,10 @@ EnemiesRenderer::EnemiesRenderer(const char *filepath)
     texturePositions_.insert({G_TURLE_SHELL_MOVE_3, new Rectangle{111, 50, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({G_TURLE_SHELL_MOVE_4, new Rectangle{128, 50, TILE_SIZE, TILE_SIZE}});
 
+    // Piranha plant
+    texturePositions_.insert({PIRANHA_PLANT_1, new Rectangle{1, 88, TILE_SIZE, TILE_SIZE + TILE_SIZE / 2}});
+    texturePositions_.insert({PIRANHA_PLANT_2, new Rectangle{18, 88, TILE_SIZE, TILE_SIZE + TILE_SIZE / 2}});
+
     loadTextures();
 }
 

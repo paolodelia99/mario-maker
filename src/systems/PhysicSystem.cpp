@@ -6,8 +6,6 @@
 #include <unordered_set>
 #include "PhysicSystem.h"
 
-// TODO: Implement code for handling bounce components
-
 PhysicSystem::PhysicSystem() {
 
 }
@@ -338,11 +336,18 @@ void PhysicSystem::checkIfBreakComponent(Entity *ent1, Entity *ent2) {
 void PhysicSystem::checkKillEnemy(Entity *ent1, Entity *ent2) {
     if (ent2->has<EnemyComponent>() && ent1->has<PlayerComponent>()) {
         World* world = ent1->getWorld();
-        world->emit<KillEnemyEvent>(KillEnemyEvent(ent2));
-        // Make the player bounce
-        auto playerKinetic = ent1->get<KineticComponent>();
-        playerKinetic->accY_ = -0.8f;
-        playerKinetic->speedY_ = -MARIO_BOUNCE;
+
+        if (ent2->get<EnemyComponent>()->type_ != Enemy::PIRANHA_PLANT) {
+            world->emit<KillEnemyEvent>(KillEnemyEvent(ent2));
+            // Make the player bounce
+            auto playerKinetic = ent1->get<KineticComponent>();
+            playerKinetic->accY_ = -0.8f;
+            playerKinetic->speedY_ = -MARIO_BOUNCE;
+        } else {
+            // Bottom collision with piranha plant
+            EnemyCollisionEvent event{ent1, ent2};
+            if (!ent1->has<FrozenComponent>()) world->emit<EnemyCollisionEvent>(event);
+        }
     }
 }
 
@@ -386,6 +391,13 @@ bool PhysicSystem::validXCollision(Entity *ent1, Entity *ent2) {
     if ((ent1->has<PlayerComponent>() && ent2->has<FireBulletComponent>())
         || (ent1->has<FireBulletComponent>() && ent2->has<PlayerComponent>())) {
         return false;
+    } else if ((ent1->has<EnemyComponent>()
+                && ent1->get<EnemyComponent>()->type_ == Enemy::PIRANHA_PLANT
+                && ent2->has<PipeComponent>()) ||
+               (ent2->has<EnemyComponent>()
+                && ent2->get<EnemyComponent>()->type_ == Enemy::PIRANHA_PLANT
+                && ent1->has<PipeComponent>())) {
+        return false;
     }
     return true;
 }
@@ -393,6 +405,13 @@ bool PhysicSystem::validXCollision(Entity *ent1, Entity *ent2) {
 bool PhysicSystem::validYCollision(Entity *ent1, Entity *ent2) {
     if ((ent1->has<PlayerComponent>() && ent2->has<FireBulletComponent>())
         || (ent1->has<FireBulletComponent>() && ent2->has<PlayerComponent>())) {
+        return false;
+    } else if ((ent1->has<EnemyComponent>()
+                    && ent1->get<EnemyComponent>()->type_ == Enemy::PIRANHA_PLANT
+                    && ent2->has<PipeComponent>()) ||
+                    (ent2->has<EnemyComponent>()
+                    && ent2->get<EnemyComponent>()->type_ == Enemy::PIRANHA_PLANT
+                    && ent1->has<PipeComponent>())) {
         return false;
     }
     return true;

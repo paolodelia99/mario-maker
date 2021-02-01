@@ -18,16 +18,18 @@ public:
 
     virtual ~MapRenderer();
 
+    void renderBackground(ECS::World *world);
+
 private:
 
     void drawGraphicsLayer(unsigned int** mapToRender, ECS::World* world, bool graphics);
 
     void renderTexture(TextureId textureId, int x, int y);
 
+    void renderOtherEntities(ECS::World *pWorld, float d);
+
 private:
     Map map_;
-
-    void renderOtherEntities(ECS::World *pWorld, float d);
 };
 
 

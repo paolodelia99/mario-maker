@@ -43,7 +43,11 @@
  </layer>
  <objectgroup id="7" name="pipes">
   <object id="31" x="464" y="160" width="32" height="32"/>
-  <object id="46" x="624.182" y="144.364" width="31.7273" height="47.2727"/>
+  <object id="46" x="624.182" y="144.364" width="31.7273" height="47.2727">
+   <properties>
+    <property name="HAS_PIRANHA_PLANT" type="bool" value="true"/>
+   </properties>
+  </object>
   <object id="47" x="848.545" y="128" width="30.4545" height="63.8182"/>
  </objectgroup>
  <objectgroup id="5" name="bricks">
@@ -117,7 +121,7 @@
   </object>
   <object id="79" x="560.125" y="176.188" width="15.75" height="15.625">
    <properties>
-    <property name="type" value="GREEN_TURTLE"/>
+    <property name="type" value="KOOPA_TROOPA"/>
    </properties>
   </object>
   <object id="80" x="672.318" y="176.136" width="15.9091" height="15.9545">

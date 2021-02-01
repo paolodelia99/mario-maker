@@ -51,7 +51,7 @@ void TileSystem::spawnSuperMarioMushroom(World* world, Entity* ent) {
     auto mushroom = world->create();
     auto entAABB = ent->get<AABBComponent>();
     mushroom->assign<TextureComponent>(TextureId::SUPER_MUSHROOM);
-
+    mushroom->assign<TileComponent>();
     mushroom->assign<GrowComponent>();
     mushroom->assign<CollectibleComponent>(Collectible::CollectibleType::SUPER_MARIO_MUSHROOM);
     mushroom->assign<AABBComponent>(Rectangle{
@@ -135,7 +135,7 @@ void TileSystem::configure(World *world) {
 }
 
 void TileSystem::manageGrowComponents(World *world) {
-    for (auto ent : world->each<GrowComponent, AABBComponent>()) {
+    for (auto ent : world->each<GrowComponent, AABBComponent, TileComponent>()) {
         auto grow = ent->get<GrowComponent>();
         if (!grow->finished()) {
             ent->get<AABBComponent>()->collisionBox_.y -= MUSHROOM_GROW_SPEED;

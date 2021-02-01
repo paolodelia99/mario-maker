@@ -230,11 +230,18 @@ void Map::loadTileEntity(
         height = GAME_TILE_SIZE * n;
     }
 
-    ent->assign<AABBComponent>(Rectangle{x , y, width, height});
+    ECS::ComponentHandle<AABBComponent> aabb = ent->assign<AABBComponent>(Rectangle{x , y, width, height});
     ent->assign<SolidComponent>();
     ent->assign<TileComponent>();
-    if (layerName == "pipes") ent->assign<PipeComponent>();
-    else if (layerName == "bricks") ent->assign<BrickComponent>();
+    if (layerName == "pipes") {
+        ent->assign<PipeComponent>();
+        for (auto prop : properties) {
+            if (prop.getName() == "HAS_PIRANHA_PLANT" && prop.getBoolValue()) {
+                ECS::World* world = ent->getWorld();
+                createPiranhaPlant(world, aabb->getCenterX(), aabb->top());
+            }
+        }
+    } else if (layerName == "bricks") ent->assign<BrickComponent>();
     else if (layerName == "ground") ent->assign<GroundComponent>();
     else if (layerName == "coins") {
         ent->assign<QuestionBlockComponent>();
@@ -301,9 +308,9 @@ void Map::setEnemyType(ECS::Entity *ent, std::string type) {
            TextureId::GOOMBA_1,
            TextureId::GOOMBA_2
         }, 8);
-    } else if (type == "GREEN_TURTLE") {
+    } else if (type == "KOOPA_TROOPA") {
         auto aabb = ent->get<AABBComponent>();
-        ent->assign<EnemyComponent>(Enemy::Type::GREEN_TURTLE);
+        ent->assign<EnemyComponent>(Enemy::Type::KOOPA_TROOPA);
         ent->assign<WalkComponent>();
         aabb->setTop(aabb->top() - 16);
         aabb->setHeight(48);
@@ -312,7 +319,23 @@ void Map::setEnemyType(ECS::Entity *ent, std::string type) {
                 TextureId::GREEN_TURTLE_1,
                 TextureId::GREEN_TURTLE_2
         }, 8);
-    } else if (type == "RED_TURTLE") {
-        ent->assign<EnemyComponent>(Enemy::Type::RED_TURTLE);
+    } else if (type == "RED_KOOPA_TROOPA") {
+        ent->assign<EnemyComponent>(Enemy::Type::RED_KOOPA_TROOPA);
     }
+}
+
+void Map::createPiranhaPlant(ECS::World* world, float spawnX, float spawnY) {
+    auto piranhaPlant = world->create();
+    float  height = GAME_TILE_SIZE + GAME_TILE_SIZE / 2;
+    piranhaPlant->assign<EnemyComponent>(Enemy::PIRANHA_PLANT);
+    piranhaPlant->assign<AABBComponent>(Rectangle{spawnX - GAME_TILE_SIZE / 2, spawnY + height , GAME_TILE_SIZE, height});
+    piranhaPlant->assign<SolidComponent>();
+    piranhaPlant->assign<KineticComponent>();
+    piranhaPlant->assign<TextureComponent>(TextureId::PIRANHA_PLANT_1);
+    piranhaPlant->assign<GrowComponent>(384);
+    piranhaPlant->assign<AnimationComponent>(std::vector<TextureId>{
+        TextureId::PIRANHA_PLANT_1,
+        TextureId::PIRANHA_PLANT_2
+    }, 8);
+
 }

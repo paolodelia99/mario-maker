@@ -24,9 +24,13 @@ public:
 
     void receive(World* world, const KillEnemyEvent& killEnemyEvent) override;
 
+private:
+
     void killEnemyWithFireball(Entity *entity);
 
     void killEnemyWithJump(Entity *entity);
+
+    void managePiranhaPlants(World* world);
 };
 
 

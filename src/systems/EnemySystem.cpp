@@ -4,8 +4,6 @@
 
 #include <EnemySystem.h>
 
-#include "EnemySystem.h"
-
 EnemySystem::EnemySystem() {
 
 }
@@ -22,6 +20,8 @@ void EnemySystem::tick(World *world, float delta) {
             world->destroy(destroy);
         }
     }
+
+    managePiranhaPlants(world);
 
     for (auto ent : world->each<EnemyComponent>()) {
         ent->remove<BottomCollisionComponent>();
@@ -57,6 +57,7 @@ void EnemySystem::killEnemyWithFireball(Entity *enemy) {
     auto enemyComponent = enemy->get<EnemyComponent>();
     auto aabb = enemy->get<AABBComponent>();
     Enemy::Type type = enemy->get<EnemyComponent>()->type_;
+    float xVelocity = enemy->has<LeftCollisionComponent>() ? 2.0f : -2.0f;
     ComponentHandle<TextureComponent> textureComponent;
 
     switch (type) {
@@ -64,11 +65,11 @@ void EnemySystem::killEnemyWithFireball(Entity *enemy) {
             enemy->removeAll();
             textureComponent = enemy->assign<TextureComponent>(TextureId::GOOMBA_1);
             break;
-        case Enemy::GREEN_TURTLE:
-        case Enemy::RED_TURTLE:
+        case Enemy::KOOPA_TROOPA:
+        case Enemy::RED_KOOPA_TROOPA:
             enemy->removeAll();
              textureComponent = enemy->assign<TextureComponent>(
-                     type == Enemy::GREEN_TURTLE ?
+                     type == Enemy::KOOPA_TROOPA ?
                      TextureId::G_TURLE_SHELL_STAND_1 : TextureId::R_TURLE_SHELL_STAND_1);
              textureComponent->h = GAME_TILE_SIZE;
              textureComponent->w = GAME_TILE_SIZE;
@@ -84,7 +85,7 @@ void EnemySystem::killEnemyWithFireball(Entity *enemy) {
     textureComponent->flipV = true;
     enemy->assign<AABBComponent>(aabb->collisionBox_);
     enemy->assign<GravityComponent>();
-    enemy->assign<KineticComponent>(0.0f, 0.0f, 0.0f, -2.0f);
+    enemy->assign<KineticComponent>(xVelocity, -1.5f, 0.0f, -0.50f);
 }
 
 void EnemySystem::killEnemyWithJump(Entity *enemy) {
@@ -103,10 +104,10 @@ void EnemySystem::killEnemyWithJump(Entity *enemy) {
             enemy->assign<AABBComponent>(aabb->collisionBox_);
             enemy->assign<DestroyDelayedComponent>(100);
             break;
-        case Enemy::GREEN_TURTLE:
-        case Enemy::RED_TURTLE:
+        case Enemy::KOOPA_TROOPA:
+        case Enemy::RED_KOOPA_TROOPA:
             enemy->removeAll();
-            enemy->assign<EnemyComponent>(type == Enemy::GREEN_TURTLE ?
+            enemy->assign<EnemyComponent>(type == Enemy::KOOPA_TROOPA ?
                                           Enemy::GREEN_TURTLE_SHELL : Enemy::RED_TURTLE_SHELL);
             enemy->assign<TileComponent>();
             enemy->assign<TurtleShellComponent>(false);
@@ -141,4 +142,21 @@ void EnemySystem::killEnemyWithJump(Entity *enemy) {
             }
             break;
     }
+}
+
+void EnemySystem::managePiranhaPlants(World* world) {
+    world->each<EnemyComponent, GrowComponent>([&](
+            Entity* entity,
+            ComponentHandle<EnemyComponent> enemy,
+            ComponentHandle<GrowComponent> growComponent) {
+        if (enemy->type_ == Enemy::PIRANHA_PLANT) {
+            if (!growComponent->finished()) {
+                entity->get<AABBComponent>()->collisionBox_.y +=
+                        growComponent->isGoingUp() ?
+                        -MUSHROOM_GROW_SPEED : MUSHROOM_GROW_SPEED;
+            } else {
+                growComponent->wait();
+            }
+        }
+    });
 }
