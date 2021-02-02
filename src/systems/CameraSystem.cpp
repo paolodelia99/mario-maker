@@ -35,7 +35,7 @@ void CameraSystem::unconfigure(World *world) {
 }
 
 CameraSystem::~CameraSystem() {
-    // delete pCamera_; fixme: gives and error
+
 }
 
 void CameraSystem::followLeadPlayer(World *world) {

@@ -415,7 +415,8 @@ void PlayerSystem::setRightAnimation(Entity* player) {
             kinetic->accX_ = 0.0f;
         }
 
-        if (playerComponent->shoot) {
+        if (playerComponent->shoot && playerComponent->canShoot) {
+            // fixme: is it worth it
             setAnimation(player, PlayerState::SHOOTING);
         }
 
@@ -568,7 +569,7 @@ void PlayerSystem::movePlayer(Entity *player, ComponentHandle<PlayerComponent> p
                 playerComponent->canShoot = false;
                 player->assign<TimerComponent>([player]() {
                     player->get<PlayerComponent>()->canShoot = true;
-                }, 20);
+                }, 40);
             }
             break;
         case SPRINT:
@@ -606,7 +607,6 @@ void PlayerSystem::receive(World *world, const EnemyCollisionEvent &enemyCollisi
                     [=](Entity* entity,
                         ComponentHandle<WalkComponent> walk,
                         ComponentHandle<KineticComponent> kineticEnt) {
-                        // fixme: piranha plant case
                         if (entity != player) {
                             entity->remove<WalkComponent>();
                             entity->remove<KineticComponent>();

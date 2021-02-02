@@ -77,6 +77,7 @@ After that you should be done.
 
 # Todos 
 
+- [ ] FlagSystem (for winning)
 - [ ] Enemies to Implement
   - [x] Goomba
   - [x] Koopa Troopa
@@ -90,6 +91,7 @@ After that you should be done.
   - [ ] Hammer Heavy Bro 
 - [ ] fix animation of brick breaking
 - [ ] Sounds and music
+- [ ] Bubble after a player die
 
 # Author
 

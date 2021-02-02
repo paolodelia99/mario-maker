@@ -171,11 +171,9 @@ void Game::handleInput() {
         else if (IsKeyDown(KEY_D)) it->setCurrentCommand(KEY_D);
         else if (IsKeyDown(KEY_A)) it->setCurrentCommand(KEY_A);
         else if (IsKeyDown(KEY_S)) it->setCurrentCommand(KEY_S);
+        else if (IsKeyDown(KEY_Z)) it->setCurrentCommand(KEY_Z);
+        else if (IsKeyDown(KEY_F)) it->setCurrentCommand(KEY_F);
         else it->setNullCommand();
-
-        // Control if the player shoot
-        if (IsKeyPressed(KEY_Z)) it->setCurrentCommand(KEY_Z);
-        else if (IsKeyPressed(KEY_F)) it->setCurrentCommand(KEY_F);
     }
 }
 

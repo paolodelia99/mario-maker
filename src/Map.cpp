@@ -243,7 +243,9 @@ void Map::loadTileEntity(
         }
     } else if (layerName == "bricks") ent->assign<BrickComponent>();
     else if (layerName == "ground") ent->assign<GroundComponent>();
-    else if (layerName == "coins") {
+    else if (layerName == "square_brick") {
+        ent->assign<SquareBrick>();
+    } else if (layerName == "coins") {
         ent->assign<QuestionBlockComponent>();
         ent->remove<AABBComponent>();
         ent->assign<AABBComponent>(Rectangle{x, y + 0.5f, width, height});

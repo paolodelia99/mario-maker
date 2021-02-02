@@ -97,6 +97,8 @@ struct WalkComponent {
 
 struct BrickComponent {};
 
+struct SquareBrick {};
+
 struct PipeComponent {};
 
 struct QuestionBlockComponent {

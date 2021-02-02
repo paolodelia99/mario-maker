@@ -40,11 +40,8 @@ void TileSystem::createCoin(World* world, Entity* ent) {
     coin->assign<TileComponent>();
     coin->assign<KineticComponent>(0.0f, -80.f);
     coin->assign<TimerComponent>([=]() {
-        //todo: implement score components
         world->destroy(coin);
         }, 25);
-
-    //todo: sounds component is missing
 }
 
 void TileSystem::spawnSuperMarioMushroom(World* world, Entity* ent) {
@@ -110,9 +107,10 @@ void TileSystem::spawnFlameMushroom(World* world, Entity* ent) {
 void TileSystem::spawnOneUpMushroom(World* world, Entity* ent) {
     auto mushroom = world->create();
     auto entAABB = ent->get<AABBComponent>();
-    mushroom->assign<TextureComponent>(TextureId::ONE_UP_MUSHROOM);
 
+    mushroom->assign<TextureComponent>(TextureId::ONE_UP_MUSHROOM);
     mushroom->assign<GrowComponent>();
+    mushroom->assign<TileComponent>();
     mushroom->assign<CollectibleComponent>(Collectible::CollectibleType::ONE_UP_MUSHROOM);
     mushroom->assign<AABBComponent>(Rectangle{
             entAABB->left() + 4,

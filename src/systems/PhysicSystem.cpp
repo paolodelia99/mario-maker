@@ -125,7 +125,6 @@ void PhysicSystem::checkXCollision(Entity *ent1, Entity *ent2) {
                 }
                 ent2->assign<RightCollisionComponent>();
                 ent1->assign<LeftCollisionComponent>();
-                checkCollisionWithEnemy(ent1, ent2);
             } else if (kineticEntityCollBox.x + kineticEntityCollBox.width >= objCollisionBox.x
                        && kineticEntityCollBox.x + kineticEntityCollBox.width < objectXCenter) {
                 // Right collision
@@ -150,8 +149,8 @@ void PhysicSystem::checkXCollision(Entity *ent1, Entity *ent2) {
 
                 ent2->assign<LeftCollisionComponent>();
                 ent1->assign<RightCollisionComponent>();
-                checkCollisionWithEnemy(ent1, ent2);
             }
+            checkCollisionWithEnemy(ent1, ent2);
         }
     }
 }
@@ -362,11 +361,20 @@ void PhysicSystem::checkCollisionWithEnemy(Entity *ent1, Entity *ent2) {
         EnemyCollisionEvent event{ent2, ent1};
         if (!ent2->has<FrozenComponent>()) world->emit<EnemyCollisionEvent>(event);
     } else if (ent1->has<FireBulletComponent>() && ent2->has<EnemyComponent>()) {
-        world->emit<KillEnemyEvent>(KillEnemyEvent(ent2, true));
-        world->destroy(ent1);
+        world->emit<KillEnemyEvent>(KillEnemyEvent(ent2));
     } else if (ent2->has<FireBulletComponent>() && ent1->has<EnemyComponent>()) {
-        world->emit<KillEnemyEvent>(KillEnemyEvent(ent1, true));
-        world->destroy(ent2);
+        world->emit<KillEnemyEvent>(KillEnemyEvent(ent1));
+    } else if (ent1->has<EnemyComponent>() && ent2->has<EnemyComponent>()) {
+        Enemy::Type enemy1 = ent1->get<EnemyComponent>()->type_;
+        Enemy::Type enemy2 = ent2->get<EnemyComponent>()->type_;
+
+        if ((enemy1 == Enemy::RED_TURTLE_SHELL || enemy1 == Enemy::GREEN_TURTLE_SHELL) &&
+                (enemy2 != Enemy::RED_TURTLE_SHELL && enemy2 != Enemy::GREEN_TURTLE_SHELL)) {
+            world->emit<KillEnemyEvent>(KillEnemyEvent(ent2, true));
+        } else if ((enemy1 != Enemy::RED_TURTLE_SHELL && enemy1 != Enemy::GREEN_TURTLE_SHELL) &&
+                   (enemy2 == Enemy::RED_TURTLE_SHELL || enemy2 == Enemy::GREEN_TURTLE_SHELL)) {
+            world->emit<KillEnemyEvent>(KillEnemyEvent(ent1, true));
+        }
     }
 }
 
