@@ -9,6 +9,36 @@
 void CameraSystem::tick(World *world, float delta) {
     EntitySystem::tick(world, delta);
 
+    followLeadPlayer(world);
+
+    defreezeCloseEnemies(world);
+}
+
+CameraSystem::CameraSystem(const int screenW, const int screenH, const int mapW, const int mapH)
+:screenWidth_(screenW), screenHeight_(screenH), mapWidth_(mapW), mapHeight_(mapH)
+{
+
+}
+
+void CameraSystem::configure(World *world) {
+    EntitySystem::configure(world);
+
+    CameraComponent* camera2D = &world->findFirst<CameraComponent>()->get<CameraComponent>().get();
+
+    if (!camera2D) throw std::invalid_argument("Camera Component not found in Camera System");
+
+    pCamera_ = camera2D;
+}
+
+void CameraSystem::unconfigure(World *world) {
+    EntitySystem::unconfigure(world);
+}
+
+CameraSystem::~CameraSystem() {
+    // delete pCamera_; fixme: gives and error
+}
+
+void CameraSystem::followLeadPlayer(World *world) {
     Entity* leadPlayer = world->findFirst<PlayerComponent, AABBComponent, LeadCameraComponent>();
 
     if (leadPlayer) {
@@ -41,26 +71,18 @@ void CameraSystem::tick(World *world, float delta) {
     }
 }
 
-CameraSystem::CameraSystem(const int screenW, const int screenH, const int mapW, const int mapH)
-:screenWidth_(screenW), screenHeight_(screenH), mapWidth_(mapW), mapHeight_(mapH)
-{
+void CameraSystem::defreezeCloseEnemies(World *world) {
+    Entity* leadPlayer = world->findFirst<PlayerComponent, AABBComponent, LeadCameraComponent>();
+    auto aabb = leadPlayer->get<AABBComponent>();
+    Vector2 playerPos = { aabb->left(), aabb->top() };
 
-}
+    for (auto enemy : world->each<EnemyComponent, FrozenComponent, AABBComponent>()) {
+        auto enemyAABB = enemy->get<AABBComponent>();
+        Vector2 enemyPos = { enemyAABB->left(), enemyAABB->top() };
 
-void CameraSystem::configure(World *world) {
-    EntitySystem::configure(world);
-
-    CameraComponent* camera2D = &world->findFirst<CameraComponent>()->get<CameraComponent>().get();
-
-    if (!camera2D) throw std::invalid_argument("Camera Component not found in Camera System");
-
-    pCamera_ = camera2D;
-}
-
-void CameraSystem::unconfigure(World *world) {
-    EntitySystem::unconfigure(world);
-}
-
-CameraSystem::~CameraSystem() {
-    // delete pCamera_; fixme: gives and error
+        if (std::abs(playerPos.x - enemyPos.x) <= screenWidth_ / 2
+            && std::abs(playerPos.y - enemyPos.y) <= screenHeight_ / 2) {
+            enemy->remove<FrozenComponent>();
+        }
+    }
 }

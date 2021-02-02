@@ -24,11 +24,17 @@ public:
     void tick(World* world, float delta);
 
 private:
+
+    void followLeadPlayer(World* world);
+
+private:
     CameraComponent* pCamera_;
     const int screenWidth_;
     const int screenHeight_;
     const int mapWidth_;
     const int mapHeight_;
+
+    void defreezeCloseEnemies(World *world);
 };
 
 #endif //MARIO_MAKER_CAMERASYSTEM_H

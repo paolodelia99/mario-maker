@@ -290,6 +290,7 @@ void Map::loadTileEntity(
 void Map::createEnemy(ECS::Entity *ent, std::vector<tmx::Property> properties) {
     ent->assign<GravityComponent>();
     ent->assign<KineticComponent>();
+    ent->assign<FrozenComponent>();
     if (!properties.empty()) {
         for (const auto& property : properties) {
             if (property.getName() == "type") {
@@ -327,6 +328,7 @@ void Map::setEnemyType(ECS::Entity *ent, std::string type) {
 void Map::createPiranhaPlant(ECS::World* world, float spawnX, float spawnY) {
     auto piranhaPlant = world->create();
     float  height = GAME_TILE_SIZE + GAME_TILE_SIZE / 2;
+    piranhaPlant->assign<FrozenComponent>();
     piranhaPlant->assign<EnemyComponent>(Enemy::PIRANHA_PLANT);
     piranhaPlant->assign<AABBComponent>(Rectangle{spawnX - GAME_TILE_SIZE / 2, spawnY + height , GAME_TILE_SIZE, height});
     piranhaPlant->assign<SolidComponent>();

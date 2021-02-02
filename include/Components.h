@@ -136,6 +136,7 @@ struct PlayerComponent {
     bool sprint = false;
     bool shoot = false;
     bool jump = false;
+    bool canShoot = true;
     int left = 0;
     int right = 0;
 };

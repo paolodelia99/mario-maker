@@ -561,10 +561,14 @@ void PlayerSystem::movePlayer(Entity *player, ComponentHandle<PlayerComponent> p
             playerComponent->duck = true;
             break;
         case SHOOT:
-            if (player->has<SuperFlameComponent>()) {
+            if (player->has<SuperFlameComponent>() && playerComponent->canShoot) {
                 auto world = player->getWorld();
                 createFireBullet(world, player);
                 playerComponent->shoot = true;
+                playerComponent->canShoot = false;
+                player->assign<TimerComponent>([player]() {
+                    player->get<PlayerComponent>()->canShoot = true;
+                }, 20);
             }
             break;
         case SPRINT:

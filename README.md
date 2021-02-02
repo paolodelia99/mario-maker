@@ -77,9 +77,18 @@ After that you should be done.
 
 # Todos 
 
-- [ ] Implement enemies
+- [ ] Enemies to Implement
+  - [x] Goomba
+  - [x] Koopa Troopa
+  - [x] Piranha plant
+  - [ ] Browser
+  - [ ] Baby Browser
+  - [ ] Tartosso
+  - [ ] Thwomp  
+  - [ ] bob-omb 
+  - [ ] Hammer Bro
+  - [ ] Hammer Heavy Bro 
 - [ ] fix animation of brick breaking
-- [ ] Improve collision system
 - [ ] Sounds and music
 
 # Author

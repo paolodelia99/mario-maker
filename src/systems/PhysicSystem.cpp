@@ -125,6 +125,7 @@ void PhysicSystem::checkXCollision(Entity *ent1, Entity *ent2) {
                 }
                 ent2->assign<RightCollisionComponent>();
                 ent1->assign<LeftCollisionComponent>();
+                checkCollisionWithEnemy(ent1, ent2);
             } else if (kineticEntityCollBox.x + kineticEntityCollBox.width >= objCollisionBox.x
                        && kineticEntityCollBox.x + kineticEntityCollBox.width < objectXCenter) {
                 // Right collision
@@ -149,8 +150,8 @@ void PhysicSystem::checkXCollision(Entity *ent1, Entity *ent2) {
 
                 ent2->assign<LeftCollisionComponent>();
                 ent1->assign<RightCollisionComponent>();
+                checkCollisionWithEnemy(ent1, ent2);
             }
-            checkCollisionWithEnemy(ent1, ent2);
         }
     }
 }
@@ -362,8 +363,10 @@ void PhysicSystem::checkCollisionWithEnemy(Entity *ent1, Entity *ent2) {
         if (!ent2->has<FrozenComponent>()) world->emit<EnemyCollisionEvent>(event);
     } else if (ent1->has<FireBulletComponent>() && ent2->has<EnemyComponent>()) {
         world->emit<KillEnemyEvent>(KillEnemyEvent(ent2, true));
+        world->destroy(ent1);
     } else if (ent2->has<FireBulletComponent>() && ent1->has<EnemyComponent>()) {
         world->emit<KillEnemyEvent>(KillEnemyEvent(ent1, true));
+        world->destroy(ent2);
     }
 }
 

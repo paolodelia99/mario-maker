@@ -76,6 +76,9 @@ void EnemySystem::killEnemyWithFireball(Entity *enemy) {
              aabb->collisionBox_.width = GAME_TILE_SIZE;
              aabb->collisionBox_.height = GAME_TILE_SIZE;
             break;
+        case Enemy::PIRANHA_PLANT:
+            enemy->removeAll();
+            textureComponent = enemy->assign<TextureComponent>(TextureId::PIRANHA_PLANT_1);
         default:
             break;
     }
