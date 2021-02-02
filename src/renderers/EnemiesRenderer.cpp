@@ -27,6 +27,14 @@ EnemiesRenderer::EnemiesRenderer(const char *filepath)
     texturePositions_.insert({PIRANHA_PLANT_1, new Rectangle{1, 88, TILE_SIZE, TILE_SIZE + TILE_SIZE / 2}});
     texturePositions_.insert({PIRANHA_PLANT_2, new Rectangle{18, 88, TILE_SIZE, TILE_SIZE + TILE_SIZE / 2}});
 
+    // Tartosso
+    texturePositions_.insert({TARTOSSO_1, new Rectangle{301, 42, TILE_SIZE, TILE_SIZE + TILE_SIZE / 2}});
+    texturePositions_.insert({TARTOSSO_2, new Rectangle{326, 42, TILE_SIZE, TILE_SIZE + TILE_SIZE / 2}});
+    texturePositions_.insert({TARTOSSO_D_1, new Rectangle{355, 42, TILE_SIZE, TILE_SIZE + TILE_SIZE / 2}});
+    texturePositions_.insert({TARTOSSO_D_2, new Rectangle{380, 42, TILE_SIZE, TILE_SIZE + TILE_SIZE / 2}});
+    texturePositions_.insert({TARTOSSO_D_3, new Rectangle{408, 42, TILE_SIZE + 2, TILE_SIZE + TILE_SIZE / 2}});
+    texturePositions_.insert({TARTOSSO_DEAD, new Rectangle{433, 42, TILE_SIZE + 4, TILE_SIZE + TILE_SIZE / 2}});
+
     loadTextures();
 }
 

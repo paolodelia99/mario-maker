@@ -442,6 +442,13 @@ namespace Enemy {
         GREEN_TURTLE_SHELL,
         RED_TURTLE_SHELL,
         PIRANHA_PLANT,
+        TARTOSSO
+    };
+
+    enum TartossoState {
+        LIVE,
+        DEAD,
+        TRANSFORMING
     };
 }
 
@@ -452,6 +459,38 @@ struct EnemyComponent {
     Enemy::Type type_;
 };
 
+struct TartossoComponent {
+
+    TartossoComponent() = default;
+
+    TartossoComponent(Enemy::TartossoState tartossoState) : tartossoState(tartossoState) {}
+
+    [[nodiscard]] bool dead() {
+        counter++;
+        if (counter > n) {
+            counter = 0;
+            tartossoState = Enemy::TRANSFORMING;
+            return false;
+        }
+        return true;
+    }
+
+    [[nodiscard]] bool isTransforming() {
+        counter++;
+        if (counter > n / 9) {
+            counter = 0;
+            tartossoState = Enemy::LIVE;
+            return false;
+        }
+        return true;
+    }
+
+    float prevVelocity = 0.0f;
+    Enemy::TartossoState tartossoState = Enemy::LIVE;
+    int counter = 0;
+private:
+    int n = 360;
+};
 
 struct TurtleShellComponent {
 

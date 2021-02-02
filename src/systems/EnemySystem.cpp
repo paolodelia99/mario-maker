@@ -21,7 +21,7 @@ void EnemySystem::tick(World *world, float delta) {
         }
     }
 
-    managePiranhaPlants(world);
+    manageEnemyEntities(world);
 
     for (auto ent : world->each<EnemyComponent>()) {
         ent->remove<BottomCollisionComponent>();
@@ -126,9 +126,9 @@ void EnemySystem::killEnemyWithJump(Entity *enemy) {
             break;
         case Enemy::GREEN_TURTLE_SHELL:
         case Enemy::RED_TURTLE_SHELL:
-            ComponentHandle<TurtleShellComponent> turtleShellComponent = enemy->get<TurtleShellComponent>();
-            if (turtleShellComponent) {
-                if (turtleShellComponent->isMoving_) {
+            if (enemy->get<TurtleShellComponent>()) {
+                bool isMoving = enemy->get<TurtleShellComponent>()->isMoving_;
+                if (isMoving) {
                     enemy->remove<AnimationComponent>();
                     enemy->remove<WalkComponent>();
                     enemy->assign<TextureComponent>(TextureId::G_TURLE_SHELL_STAND_1);
@@ -141,10 +141,30 @@ void EnemySystem::killEnemyWithJump(Entity *enemy) {
                             TextureId::G_TURLE_SHELL_MOVE_4,
                     }, 4);
                 }
-                turtleShellComponent->isMoving_ = !turtleShellComponent->isMoving_;
+                enemy->get<TurtleShellComponent>()->isMoving_ = !isMoving;
             }
             break;
+        case Enemy::TARTOSSO:
+            if (enemy->get<TartossoComponent>()->tartossoState == Enemy::TartossoState::LIVE) {
+                enemy->get<TartossoComponent>()->tartossoState = Enemy::TartossoState::DEAD;
+                float prevVelocity = enemy->get<WalkComponent>()->speed;
+                enemy->get<TartossoComponent>()->prevVelocity = prevVelocity;
+                enemy->remove<WalkComponent>();
+                enemy->assign<AnimationComponent>(std::vector<TextureId>{
+                        TextureId::TARTOSSO_D_1,
+                        TextureId::TARTOSSO_D_2,
+                        TextureId::TARTOSSO_D_3,
+                        TextureId::TARTOSSO_DEAD,
+                }, 8, false, false, false);
+            break;
+        }
     }
+}
+
+void EnemySystem::manageEnemyEntities(World* world) {
+    manageTartossos(world);
+
+    managePiranhaPlants(world);
 }
 
 void EnemySystem::managePiranhaPlants(World* world) {
@@ -162,4 +182,35 @@ void EnemySystem::managePiranhaPlants(World* world) {
             }
         }
     });
+}
+
+void EnemySystem::manageTartossos(World *world) {
+    for (auto tartosso : world->each<TartossoComponent>()) {
+        Enemy::TartossoState tartossoState = tartosso->get<TartossoComponent>()->tartossoState;
+        switch (tartossoState) {
+            case Enemy::DEAD:
+                if (!tartosso->get<TartossoComponent>()->dead()) {
+                    tartosso->assign<AnimationComponent>(std::vector<TextureId>{
+                        TextureId::TARTOSSO_DEAD,
+                        TextureId::TARTOSSO_D_3,
+                        TextureId::TARTOSSO_D_2,
+                        TextureId::TARTOSSO_D_1,
+                        TextureId::TARTOSSO_1
+                    }, 8);
+                }
+                break;
+            case Enemy::TRANSFORMING:
+                if (!tartosso->get<TartossoComponent>()->isTransforming()) {
+                    tartosso->assign<WalkComponent>(tartosso->get<TartossoComponent>()->prevVelocity);
+                    tartosso->get<TextureComponent>()->flipH = tartosso->get<TartossoComponent>()->prevVelocity > 0;
+                    tartosso->assign<AnimationComponent>(std::vector<TextureId>{
+                            TextureId::TARTOSSO_1,
+                            TextureId::TARTOSSO_2
+                    }, 8);
+                }
+                break;
+            case Enemy::LIVE:
+                break;
+        }
+    }
 }

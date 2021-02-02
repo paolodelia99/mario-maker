@@ -77,6 +77,7 @@ After that you should be done.
 
 # Todos 
 
+- [ ] State pattern for controlling the player and the enemies (https://gameprogrammingpatterns.com/state.html)
 - [ ] FlagSystem (for winning)
 - [ ] Enemies to Implement
   - [x] Goomba

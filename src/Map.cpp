@@ -324,6 +324,18 @@ void Map::setEnemyType(ECS::Entity *ent, std::string type) {
         }, 8);
     } else if (type == "RED_KOOPA_TROOPA") {
         ent->assign<EnemyComponent>(Enemy::Type::RED_KOOPA_TROOPA);
+    } else if (type == "TARTOSSO") {
+        auto aabb = ent->get<AABBComponent>();
+        ent->assign<EnemyComponent>(Enemy::Type::TARTOSSO);
+        ent->assign<WalkComponent>();
+        aabb->setTop(aabb->top() - 16);
+        aabb->setHeight(48);
+        ent->assign<TartossoComponent>();
+        ent->assign<TextureComponent>(TextureId::TARTOSSO_1);
+        ent->assign<AnimationComponent>(std::vector<TextureId>{
+                TextureId::TARTOSSO_1,
+                TextureId::TARTOSSO_2
+        }, 8);
     }
 }
 

@@ -26,11 +26,15 @@ public:
 
 private:
 
+    void manageEnemyEntities(World* world);
+
     void killEnemyWithFireball(Entity *entity);
 
     void killEnemyWithJump(Entity *entity);
 
     void managePiranhaPlants(World* world);
+
+    void manageTartossos(World *world);
 };
 
 

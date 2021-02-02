@@ -136,7 +136,7 @@
   </object>
   <object id="82" x="1120.27" y="176.364" width="15.4545" height="15.1818">
    <properties>
-    <property name="type" value="KOOPA_TROOPA"/>
+    <property name="type" value="TARTOSSO"/>
    </properties>
   </object>
  </objectgroup>
