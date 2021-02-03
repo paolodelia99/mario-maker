@@ -236,7 +236,7 @@ void Map::loadTileEntity(
     if (layerName == "pipes") {
         ent->assign<PipeComponent>();
         for (auto prop : properties) {
-            if (prop.getName() == "HAS_PIRANHA_PLANT" && prop.getBoolValue()) {
+            if (prop.getName() == "has_piranha_plant" && prop.getBoolValue()) {
                 ECS::World* world = ent->getWorld();
                 createPiranhaPlant(world, aabb->getCenterX(), aabb->top());
             }
@@ -244,7 +244,7 @@ void Map::loadTileEntity(
     } else if (layerName == "bricks") ent->assign<BrickComponent>();
     else if (layerName == "ground") ent->assign<GroundComponent>();
     else if (layerName == "square_brick") ent->assign<SquareBrick>();
-    else if (layerName == "coins") {
+    else if (layerName == "question_block") {
         ent->assign<QuestionBlockComponent>();
         ent->remove<AABBComponent>();
         ent->assign<AABBComponent>(Rectangle{x, y + 0.5f, width, height});
@@ -256,7 +256,7 @@ void Map::loadTileEntity(
         createObject(ent, properties);
     }
 
-    if (layerName == "bricks" || layerName == "coins") {
+    if (layerName == "bricks" || layerName == "question_block") {
         if (ent->has<BrickComponent>()) {
             ent->assign<TextureComponent>(TextureId::BRICK);
             ent->assign<BreakableComponent>();

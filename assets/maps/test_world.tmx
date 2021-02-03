@@ -45,7 +45,7 @@
   <object id="31" x="464" y="160" width="32" height="32"/>
   <object id="46" x="624.182" y="144.364" width="31.7273" height="47.2727">
    <properties>
-    <property name="HAS_PIRANHA_PLANT" type="bool" value="true"/>
+    <property name="has_piranha_plant" type="bool" value="true"/>
    </properties>
   </object>
   <object id="47" x="848.545" y="128" width="30.4545" height="63.8182"/>
@@ -74,7 +74,7 @@
   <object id="69" x="1120.36" y="64.1818" width="15.3636" height="16"/>
   <object id="70" x="1136.55" y="64.2727" width="15.4545" height="15.4545"/>
  </objectgroup>
- <objectgroup id="6" name="coins">
+ <objectgroup id="6" name="question_block">
   <object id="41" x="320" y="80.2727" width="15.8125" height="15.6023">
    <properties>
     <property name="coins" type="bool" value="false"/>
