@@ -12,9 +12,10 @@ Game::Game(const char *mapName, const int screenWidth, const int screenHeight, b
     world_ = ECS::World::createWorld();
     pMap_ = new Map(mapName);
     pMap_->loadMap(world_);
-    pMapRenderer_ = new MapRenderer(pMap_, SMB1_TILESET_PATH);
-    pTextureRenderer_ = new TextureRenderer(SBM1_PLAYER_TILESET_PATH);
-    pEnemiesRenderer_ = new EnemiesRenderer(SMB1_ENEMIES_TILESET_PATH);
+    mapRenderer = new MapRenderer(pMap_, SMB1_TILESET_PATH);
+    textureRenderer = new TextureRenderer(SBM1_PLAYER_TILESET_PATH);
+    enemiesRenderer = new EnemiesRenderer(SMB1_ENEMIES_TILESET_PATH);
+    objectRenderer = new ObjectRenderer(SMB1_OBJECT_TILESET_PATH);
 }
 
 void Game::mainLoop() {
@@ -69,8 +70,8 @@ void Game::mainLoop() {
 
 Game::~Game() {
     delete world_;
-    delete pMapRenderer_;
-    delete pTextureRenderer_;
+    delete mapRenderer;
+    delete textureRenderer;
 }
 
 void Game::initWorld() {
@@ -206,9 +207,10 @@ void Game::initObjectMap() {
 }
 
 void Game::render(float d) {
-    pMapRenderer_->renderBackground(world_);
-    pTextureRenderer_->renderTextureEntities(world_, d);
-    pTextureRenderer_->renderTileCollisionRect(world_);
-    pEnemiesRenderer_->renderEnemies(world_, d);
-    pMapRenderer_->render(world_, d);
+    mapRenderer->renderBackground(world_);
+    textureRenderer->renderTextureEntities(world_, d);
+    textureRenderer->renderTileCollisionRect(world_);
+    enemiesRenderer->renderEnemies(world_, d);
+    objectRenderer->render(world_);
+    mapRenderer->render(world_, d);
 }

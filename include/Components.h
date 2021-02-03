@@ -292,6 +292,8 @@ typedef TileTexture_* TileTexture;
 
 struct TileComponent {};
 
+struct ObjectComponent {};
+
 struct TextureComponent {
     explicit TextureComponent(TextureId textureId) : textureId_(textureId) {};
 

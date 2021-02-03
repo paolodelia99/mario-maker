@@ -6,11 +6,12 @@
 #define MARIO_MAKER_GAME_H
 #include <raylib.h>
 #include <iostream>
-#include <EnemiesRenderer.h>
 #include "ECS.h"
 #include "Constants.h"
 #include "renderers/MapRenderer.h"
 #include "renderers/TextureRenderer.h"
+#include "renderers/EnemiesRenderer.h"
+#include "renderers/ObjectRenderer.h"
 #include "CameraSystem.h"
 #include "PlayerSystem.h"
 #include "PhysicSystem.h"
@@ -53,9 +54,10 @@ private:
     const int screenWidth_;
     const int screenHeight_;
     ECS::EntitySystem* animationSystem_;
-    MapRenderer* pMapRenderer_;
-    TextureRenderer* pTextureRenderer_;
-    EnemiesRenderer *pEnemiesRenderer_;
+    MapRenderer* mapRenderer;
+    TextureRenderer* textureRenderer;
+    EnemiesRenderer *enemiesRenderer;
+    ObjectRenderer* objectRenderer;
 };
 
 

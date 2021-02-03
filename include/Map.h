@@ -81,6 +81,8 @@ private:
     Vector2 spawnPositionP1_;
     Vector2 spawnPostionP2_;
     std::map<unsigned int, TileTexture> mapTextureTable_;
+
+    void createObject(ECS::Entity *entity, std::vector<tmx::Property> properties);
 };
 
 

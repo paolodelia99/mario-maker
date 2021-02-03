@@ -6,6 +6,7 @@
 constexpr const char* SBM1_PLAYER_TILESET_PATH = "../assets/tilesets/players-tileset.png";
 constexpr const char* SMB1_TILESET_PATH = "../assets/tilesets/tiles-2.png";
 constexpr const char* SMB1_ENEMIES_TILESET_PATH = "../assets/tilesets/enemies-tileset.png";
+constexpr const char* SMB1_OBJECT_TILESET_PATH = "../assets/tilesets/objects-tileset.png";
 
 constexpr bool DEBUG = false;
 constexpr bool SECOND_PLAYER = false;

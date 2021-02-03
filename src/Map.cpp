@@ -243,15 +243,18 @@ void Map::loadTileEntity(
         }
     } else if (layerName == "bricks") ent->assign<BrickComponent>();
     else if (layerName == "ground") ent->assign<GroundComponent>();
-    else if (layerName == "square_brick") {
-        ent->assign<SquareBrick>();
-    } else if (layerName == "coins") {
+    else if (layerName == "square_brick") ent->assign<SquareBrick>();
+    else if (layerName == "coins") {
         ent->assign<QuestionBlockComponent>();
         ent->remove<AABBComponent>();
         ent->assign<AABBComponent>(Rectangle{x, y + 0.5f, width, height});
     } else if (layerName == "enemies") {
         ent->remove<TileComponent>();
         createEnemy(ent, properties);
+    } else if (layerName == "objects") {
+        ent->remove<TileComponent>();
+        ent->assign<ObjectComponent>();
+        createObject(ent, properties);
     }
 
     if (layerName == "bricks" || layerName == "coins") {
@@ -354,4 +357,33 @@ void Map::createPiranhaPlant(ECS::World* world, float spawnX, float spawnY) {
         TextureId::PIRANHA_PLANT_2
     }, 8);
 
+}
+
+void Map::createObject(ECS::Entity *entity, std::vector<tmx::Property> properties) {
+    if (!properties.empty()) {
+        for (const auto& property : properties) {
+            if (property.getName() == "type") {
+                if (property.getStringValue() == "FINAL_FLAG_POLE") {
+                    ECS::World* world = entity->getWorld();
+                    int poleHeigth = 152 * 2;
+                    entity->assign<TextureComponent>(TextureId::FINAL_FLAG_POLE);
+                    auto aabb = entity->get<AABBComponent>();
+                    aabb->setLeft(aabb->left() + 8);
+                    aabb->setWidth(GAME_TILE_SIZE / 2);
+                    aabb->setTop(aabb->bottom() - poleHeigth);
+                    aabb->setHeight(poleHeigth);
+
+                    auto flag = world->create();
+                    flag->assign<TextureComponent>(TextureId::FINAL_FLAG);
+                    flag->assign<ObjectComponent>();
+                    flag->assign<AABBComponent>(Rectangle{
+                        aabb->left() - GAME_TILE_SIZE + 8,
+                        aabb->top() + GAME_TILE_SIZE / 2,
+                       GAME_TILE_SIZE,
+                       GAME_TILE_SIZE
+                    });
+                }
+            }
+        }
+    }
 }
