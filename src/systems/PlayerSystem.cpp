@@ -213,6 +213,25 @@ void PlayerSystem::setAnimation(Entity *playerEntity, PlayerState state) {
                         isMario ?
                         TextureId::MARIO_FLAME_SHOOT  : TextureId::LUIGI_FLAME_SHOOT);
                 break;
+            case SIT:
+                if (playerEntity->has<SuperComponent>()) {
+                    playerEntity->assign<TextureComponent>(
+                            isMario ?
+                            TextureId::SUPER_MARIO_SIT_2 : TextureId::SUPER_LUIGI_SIT_2);
+                } else if (playerEntity->has<MegaComponent>()) {
+                    playerEntity->assign<TextureComponent>(
+                            isMario ?
+                            TextureId::MARIO_MEGA_SIT_2 : TextureId::LUIGI_MEGA_SIT_2);
+                } else if (playerEntity->has<SuperFlameComponent>()) {
+                    playerEntity->assign<TextureComponent>(
+                            isMario ?
+                            TextureId::MARIO_FLAME_SIT_2 : TextureId::LUIGI_FLAME_SIT_2);
+                } else {
+                    playerEntity->assign<TextureComponent>(
+                            isMario ?
+                            TextureId::MARIO_SIT_2 : TextureId::LUIGI_SIT_2);
+                }
+                break;
             default:
                 break;
         }

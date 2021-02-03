@@ -253,7 +253,6 @@ void Map::loadTileEntity(
         createEnemy(ent, properties);
     } else if (layerName == "objects") {
         ent->remove<TileComponent>();
-        ent->assign<ObjectComponent>();
         createObject(ent, properties);
     }
 
@@ -366,6 +365,7 @@ void Map::createObject(ECS::Entity *entity, std::vector<tmx::Property> propertie
                 if (property.getStringValue() == "FINAL_FLAG_POLE") {
                     ECS::World* world = entity->getWorld();
                     int poleHeigth = 152 * 2;
+                    entity->assign<ObjectComponent>(Object::Type::FINAL_FLAG_POLE);
                     entity->assign<TextureComponent>(TextureId::FINAL_FLAG_POLE);
                     auto aabb = entity->get<AABBComponent>();
                     aabb->setLeft(aabb->left() + 8);
@@ -375,13 +375,14 @@ void Map::createObject(ECS::Entity *entity, std::vector<tmx::Property> propertie
 
                     auto flag = world->create();
                     flag->assign<TextureComponent>(TextureId::FINAL_FLAG);
-                    flag->assign<ObjectComponent>();
+                    flag->assign<ObjectComponent>(Object::Type::FINAL_FLAG);
                     flag->assign<AABBComponent>(Rectangle{
                         aabb->left() - GAME_TILE_SIZE + 8,
                         aabb->top() + GAME_TILE_SIZE / 2,
                        GAME_TILE_SIZE,
                        GAME_TILE_SIZE
                     });
+                    flag->assign<WinnerFlagComponent>();
                 }
             }
         }

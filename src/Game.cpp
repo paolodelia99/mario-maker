@@ -158,6 +158,7 @@ void Game::registerSystems() {
     world_->registerSystem(new PhysicSystem());
     world_->registerSystem(new TileSystem());
     world_->registerSystem(new TimerSystem());
+    world_->disableSystem(world_->registerSystem(new FlagSystem()));
 }
 
 void Game::handleInput() {
@@ -185,8 +186,7 @@ void Game::initObjectMap() {
     auto objectMapEnt = world_->create();
     auto objMapComponent = objectMapEnt->assign<ObjectMapComponent>(mapWidth, mapHeight);
 
-    for (ECS::Entity* object : world_->each<TileComponent, AABBComponent, SolidComponent>())
-    {
+    for (ECS::Entity* object : world_->each<TileComponent, AABBComponent, SolidComponent>()) {
         auto aabb = object->get<AABBComponent>();
 
         if (round(aabb->collisionBox_.width) <= GAME_TILE_SIZE && round(aabb->collisionBox_.height) <= GAME_TILE_SIZE)
@@ -195,10 +195,8 @@ void Game::initObjectMap() {
             unsigned int y = (int)round(aabb->top() / 32);
             objMapComponent->set(object->getEntityId(), x, y);
         } else {
-            for (int j = (int)(round(aabb->top() / 32)); j < (int)(aabb->bottom() / 32); j++)
-            {
-                for (int i = (int)(round(aabb->left() / 32)); i < (int)(aabb->right() / 32); i++)
-                {
+            for (int j = (int)(round(aabb->top() / 32)); j < (int)(aabb->bottom() / 32); j++) {
+                for (int i = (int)(round(aabb->left() / 32)); i < (int)(aabb->right() / 32); i++) {
                     objMapComponent->set(object->getEntityId(), i, j);
                 }
             }

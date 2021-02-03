@@ -19,6 +19,7 @@
 #include "TileSystem.h"
 #include "TimerSystem.h"
 #include "EnemySystem.h"
+#include "systems/FlagSystem.h"
 
 class Game {
 public:

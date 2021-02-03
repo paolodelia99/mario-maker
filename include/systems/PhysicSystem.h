@@ -38,7 +38,7 @@ private:
 
     void checkKineticKineticCollisions(World* world);
 
-    void checkKineticTileCollisions(World* world);
+    void checkKineticStaticCollisions(World* world);
 
     void applyForces(World* world);
 
@@ -57,6 +57,8 @@ private:
     bool validXCollision(Entity *ent1, Entity *ent2);
 
     bool validYCollision(Entity *ent1, Entity *ent2);
+
+    void checkCollisionWithObject(Entity *ent1, Entity *ent2);
 };
 
 

@@ -30,3 +30,12 @@ struct KillEnemyEvent {
     Entity* enemy;
     bool killedByFireball = false;
 };
+
+struct CollisionWithFinalPole {
+
+    CollisionWithFinalPole(Entity *player, float flagPoleBottom)
+    : player(player), flagPoleBottom(flagPoleBottom) {}
+
+    Entity* player;
+    float flagPoleBottom;
+};

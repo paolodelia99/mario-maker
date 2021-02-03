@@ -121,7 +121,8 @@ enum PlayerState {
     DRIFTING,
     DUCKING,
     INVINCIBLE,
-    SHOOTING
+    SHOOTING,
+    SIT
 };
 
 struct PlayerComponent {
@@ -292,7 +293,21 @@ typedef TileTexture_* TileTexture;
 
 struct TileComponent {};
 
-struct ObjectComponent {};
+namespace Object {
+    enum Type {
+        FINAL_FLAG_POLE,
+        FINAL_FLAG
+    };
+}
+
+struct ObjectComponent {
+
+    ObjectComponent(Object::Type type) : type(type) {}
+
+    Object::Type type;
+};
+
+struct WinnerFlagComponent {};
 
 struct TextureComponent {
     explicit TextureComponent(TextureId textureId) : textureId_(textureId) {};

@@ -19,7 +19,7 @@ void PhysicSystem::tick(World *world, float delta) {
 
     checkKineticKineticCollisions(world);
 
-    checkKineticTileCollisions(world);
+    checkKineticStaticCollisions(world);
 
     moveWalkComponents(world);
 
@@ -151,6 +151,7 @@ void PhysicSystem::checkXCollision(Entity *ent1, Entity *ent2) {
                 ent1->assign<RightCollisionComponent>();
             }
             checkCollisionWithEnemy(ent1, ent2);
+            checkCollisionWithObject(ent1, ent2);
         }
     }
 }
@@ -178,7 +179,7 @@ void PhysicSystem::moveWalkComponents(World *world) {
     });
 }
 
-void PhysicSystem::checkKineticTileCollisions(World *world) {
+void PhysicSystem::checkKineticStaticCollisions(World *world) {
     auto objMapEntity = world->findFirst<ObjectMapComponent>();
     if (objMapEntity) {
         ComponentHandle<ObjectMapComponent> map = objMapEntity->get<ObjectMapComponent>();
@@ -203,6 +204,15 @@ void PhysicSystem::checkKineticTileCollisions(World *world) {
         }
     } else {
         throw std::invalid_argument("There isn't any objMapEntity!");
+    }
+
+    // Check collision with objects
+    for (auto entity : world->each<AABBComponent, PlayerComponent, KineticComponent, SolidComponent>()) {
+        for (auto obj : world->each<ObjectComponent, AABBComponent, SolidComponent, TextureComponent>()) {
+            checkXCollision(entity, obj);
+
+            checkYCollision(entity, obj);
+        }
     }
 }
 
@@ -426,4 +436,20 @@ bool PhysicSystem::validYCollision(Entity *ent1, Entity *ent2) {
         return false;
     }
     return true;
+}
+
+void PhysicSystem::checkCollisionWithObject(Entity *ent1, Entity *ent2) {
+    World* world = ent1->getWorld();
+
+    if (ent1->has<PlayerComponent>()
+            && ent2->has<ObjectComponent>()
+            && ent2->get<ObjectComponent>()->type == Object::Type::FINAL_FLAG_POLE) {
+        auto poleAABB = ent2->get<AABBComponent>()->bottom();
+        world->emit<CollisionWithFinalPole>(CollisionWithFinalPole(ent1, poleAABB));
+    } else if (ent2->has<PlayerComponent>()
+               && ent1->has<ObjectComponent>()
+               && ent1->get<ObjectComponent>()->type == Object::Type::FINAL_FLAG) {
+        auto poleAABB = ent1->get<AABBComponent>()->bottom();
+        world->emit<CollisionWithFinalPole>(CollisionWithFinalPole(ent2, poleAABB));
+    }
 }
