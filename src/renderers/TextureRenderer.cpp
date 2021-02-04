@@ -21,6 +21,7 @@ TextureRenderer::TextureRenderer(const char* filepath)
     texturePositions_.insert({MARIO_SIT_2, new Rectangle{239, 9, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({MARIO_DUCK, new Rectangle{18, 9, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({MARIO_DEAD, new Rectangle{256, 9, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({MARIO_GREET, new Rectangle{341, 9, TILE_SIZE, TILE_SIZE}});
     // Super mario
     texturePositions_.insert({SUPER_MARIO_STAND, new Rectangle{1, 43, TILE_SIZE, TILE_SIZE * 2}});
     texturePositions_.insert({SUPER_MARIO_DUCK, new Rectangle{18, 43, TILE_SIZE, TILE_SIZE * 2}});
@@ -51,6 +52,7 @@ TextureRenderer::TextureRenderer(const char* filepath)
     texturePositions_.insert({MARIO_MEGA_SIT_2, new Rectangle{239, 26, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({MARIO_MEGA_DUCK, new Rectangle{18, 26, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({MARIO_MEGA_DEAD, new Rectangle{256, 26, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({MARIO_MEGA_GREET, new Rectangle{341, 26, TILE_SIZE, TILE_SIZE}});
 
     // Luigi Textures
     texturePositions_.insert({LUIGI_STAND, new Rectangle{1, 157, TILE_SIZE, TILE_SIZE}});

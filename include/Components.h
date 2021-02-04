@@ -122,7 +122,8 @@ enum PlayerState {
     DUCKING,
     INVINCIBLE,
     SHOOTING,
-    SIT
+    SIT,
+    GREET
 };
 
 struct PlayerComponent {
@@ -135,6 +136,8 @@ struct PlayerComponent {
     PlayerState current_state_;
     bool sprint = false;
     bool canShoot = true;
+    bool sit = false;
+    bool greet = false;
     int left = 0;
     int right = 0;
 };
@@ -389,6 +392,7 @@ struct CommandComponent {
     std::map<Command, int> commandsKeyTable_;
     std::map<int, Command> keyCommandTable_;
     Command currentCommand_;
+    bool enable = true;
 };
 
 ECS_DEFINE_TYPE(CommandComponent);

@@ -165,6 +165,9 @@ So you have to choose the spawn position according to that coordinate system.
 - [ ] Add the possibility of choosing between Mario and Luigi
 - [ ] Add the possibility of choosing the map to play (if there are more than one)
 - [ ] Documenting the code ?? (if it does make sense)
+- [ ] Improve kinetic-kinetic collision detection, possible solutions:
+  - spacialHashMap 
+  - event-driven collision using a priority-queue
 
 # Author
 

@@ -36,6 +36,7 @@ private:
     FlagState state_ = NONE;
     Entity* winningFlag_;
     float flagPoleBottom_;
+    Entity *finalPole_;
 };
 
 #endif //MARIO_MAKER_FLAGSYSTEM_H

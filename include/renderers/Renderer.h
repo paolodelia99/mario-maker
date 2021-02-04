@@ -77,7 +77,7 @@ private:
             case MARIO_MEGA_SIT_2: case LUIGI_MEGA_STAND:  case LUIGI_MEGA_DUCK:
             case LUIGI_MEGA_JUMP:  case LUIGI_MEGA_DRIFT:  case LUIGI_MEGA_RUN_1:
             case LUIGI_MEGA_RUN_2: case LUIGI_MEGA_RUN_3:  case LUIGI_MEGA_DEAD:
-            case LUIGI_MEGA_SIT_1: case LUIGI_MEGA_SIT_2:
+            case LUIGI_MEGA_SIT_1: case LUIGI_MEGA_SIT_2:  case MARIO_MEGA_GREET:
                 dims.first = width * 4;
                 dims.second = height * 4;
                 break;

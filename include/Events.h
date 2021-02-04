@@ -33,9 +33,9 @@ struct KillEnemyEvent {
 
 struct CollisionWithFinalPole {
 
-    CollisionWithFinalPole(Entity *player, float flagPoleBottom)
-    : player(player), flagPoleBottom(flagPoleBottom) {}
+    CollisionWithFinalPole(Entity *player, Entity* pole)
+    : player(player), pole(pole) {}
 
     Entity* player;
-    float flagPoleBottom;
+    Entity* pole;
 };

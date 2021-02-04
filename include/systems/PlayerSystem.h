@@ -32,8 +32,6 @@ private:
 
     void handleFrozenTransform(Entity* entity);
 
-    void setRightAnimation(Entity* player);
-
     TextureId getRightTransitionAnimation(Entity* entity, Collectible::CollectibleType mushroom, bool isMario);
 
     bool isSuperTexture(TextureId textureId);
@@ -42,7 +40,7 @@ private:
 
     bool isMegaTexture(TextureId textureId);
 
-    void movePlayer(Entity* player, ComponentHandle<PlayerComponent> playerComponent, Command command);
+    void movePlayer(Entity* player);
 
     void shrink(Entity *player);
 
