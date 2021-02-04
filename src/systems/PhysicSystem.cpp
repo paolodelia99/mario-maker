@@ -180,9 +180,9 @@ void PhysicSystem::moveWalkComponents(World *world) {
 }
 
 void PhysicSystem::checkKineticStaticCollisions(World *world) {
-    auto objMapEntity = world->findFirst<ObjectMapComponent>();
+    auto objMapEntity = world->findFirst<IdsMapComponent, StaticEntitiesMapComponent>();
     if (objMapEntity) {
-        ComponentHandle<ObjectMapComponent> map = objMapEntity->get<ObjectMapComponent>();
+        ComponentHandle<IdsMapComponent> map = objMapEntity->get<IdsMapComponent>();
 
         for (auto ent : world->each<KineticComponent, AABBComponent, SolidComponent>())
         {
@@ -203,7 +203,7 @@ void PhysicSystem::checkKineticStaticCollisions(World *world) {
             }
         }
     } else {
-        throw std::invalid_argument("There isn't any objMapEntity!");
+        throw std::invalid_argument("There isn't any kineticMapEntity!");
     }
 
     // Check collision with objects
@@ -242,6 +242,31 @@ void PhysicSystem::applyForces(World *world) {
 }
 
 void PhysicSystem::checkKineticKineticCollisions(World* world) {
+//    auto kineticMapEntities = world->findFirst<IdsMapComponent, KineticEntitiesMapComponent>();
+//    if (kineticMapEntities) {
+//        ComponentHandle<IdsMapComponent> map = kineticMapEntities->get<IdsMapComponent>();
+//
+//        for (auto ent : world->each<KineticComponent, AABBComponent, SolidComponent>())
+//        {
+//            ComponentHandle<AABBComponent> aabb = ent->get<AABBComponent>();
+//            std::unordered_set<int> neighbors = getNeighborIds(map, aabb);
+//
+//            for (auto id : neighbors) {
+//                if (id == ent->getEntityId()) continue;
+//                if (id == -1) continue;
+//
+//                auto object = world->getById(id);
+//                if (!object) continue;
+//                if (!object->has<AABBComponent, SolidComponent, KineticComponent>()) continue;
+//
+//                checkYCollision(ent, object);
+//
+//                checkXCollision(ent, object);
+//            }
+//        }
+//    } else {
+//        throw std::invalid_argument("There isn't any KineticMapEntity!");
+//    }
     for (auto ent : world->each<AABBComponent, KineticComponent, SolidComponent>())
     {
         for (auto ent2 : world->each<AABBComponent, KineticComponent, SolidComponent>())
@@ -262,7 +287,7 @@ void PhysicSystem::applyGravity(World* world) {
     }
 }
 
-std::unordered_set<int> PhysicSystem::getNeighborIds(ComponentHandle<ObjectMapComponent> map, ComponentHandle<AABBComponent> aabb) {
+std::unordered_set<int> PhysicSystem::getNeighborIds(ComponentHandle<IdsMapComponent> map, ComponentHandle<AABBComponent> aabb) {
     int height = (int) std::round(aabb->collisionBox_.height / 32);
     int width = (int) std::round(aabb->collisionBox_.width / 32);
     std::unordered_set<int> neighbors;
@@ -315,7 +340,7 @@ std::unordered_set<int> PhysicSystem::getNeighborIds(ComponentHandle<ObjectMapCo
 }
 
 void PhysicSystem::checkIfOutsideWorld(World *world) {
-    auto objMap = world->findFirst<ObjectMapComponent>()->get<ObjectMapComponent>();
+    auto objMap = world->findFirst<IdsMapComponent, StaticEntitiesMapComponent>()->get<IdsMapComponent>();
 
     world->each<AABBComponent>([&](
             Entity* entity,
@@ -329,7 +354,7 @@ void PhysicSystem::checkIfOutsideWorld(World *world) {
 
 void PhysicSystem::checkIfBreakComponent(Entity *ent1, Entity *ent2) {
     World* world = ent1->getWorld();
-    ComponentHandle<ObjectMapComponent> objMap = world->findFirst<ObjectMapComponent>()->get<ObjectMapComponent>();
+    ComponentHandle<IdsMapComponent> objMap = world->findFirst<IdsMapComponent, StaticEntitiesMapComponent>()->get<IdsMapComponent>();
 
     if (ent1->has<PlayerComponent>() && ent2->has<BreakableComponent, AABBComponent>()) {
         if (ent1->has<SuperComponent>() || ent1->has<SuperFlameComponent>() || ent1->has<MegaComponent>()) {
@@ -371,9 +396,9 @@ void PhysicSystem::checkCollisionWithEnemy(Entity *ent1, Entity *ent2) {
         EnemyCollisionEvent event{ent2, ent1};
         if (!ent2->has<FrozenComponent>()) world->emit<EnemyCollisionEvent>(event);
     } else if (ent1->has<FireBulletComponent>() && ent2->has<EnemyComponent>()) {
-        world->emit<KillEnemyEvent>(KillEnemyEvent(ent2));
+        world->emit<KillEnemyEvent>(KillEnemyEvent(ent2, true));
     } else if (ent2->has<FireBulletComponent>() && ent1->has<EnemyComponent>()) {
-        world->emit<KillEnemyEvent>(KillEnemyEvent(ent1));
+        world->emit<KillEnemyEvent>(KillEnemyEvent(ent1, true));
     } else if (ent1->has<EnemyComponent>() && ent2->has<EnemyComponent>()) {
         Enemy::Type enemy1 = ent1->get<EnemyComponent>()->type_;
         Enemy::Type enemy2 = ent2->get<EnemyComponent>()->type_;

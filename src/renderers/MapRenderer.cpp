@@ -50,7 +50,7 @@ void MapRenderer::renderBackground(ECS::World* world) {
 
 void MapRenderer::drawGraphicsLayer(unsigned int **mapToRender, ECS::World* world, bool graphics) {
 
-    auto objectMapComponent = world->findFirst<ObjectMapComponent>();
+    auto objectMapComponent = world->findFirst<IdsMapComponent>();
 
     for (int i = 0; i < map_.getWidth(); i++)
     {
@@ -64,7 +64,7 @@ void MapRenderer::drawGraphicsLayer(unsigned int **mapToRender, ECS::World* worl
                 {
                     DrawTexture(texture2D, i * 32, j * 32, WHITE);
                 } else {
-                    auto map = objectMapComponent->get<ObjectMapComponent>();
+                    auto map = objectMapComponent->get<IdsMapComponent>();
                     int id = map->get(i, j);
                     auto ent = world->getById(id);
 

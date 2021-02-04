@@ -73,16 +73,18 @@ void CameraSystem::followLeadPlayer(World *world) {
 
 void CameraSystem::defreezeCloseEnemies(World *world) {
     Entity* leadPlayer = world->findFirst<PlayerComponent, AABBComponent, LeadCameraComponent>();
-    auto aabb = leadPlayer->get<AABBComponent>();
-    Vector2 playerPos = { aabb->left(), aabb->top() };
+    if (leadPlayer) {
+        auto aabb = leadPlayer->get<AABBComponent>();
+        Vector2 playerPos = { aabb->left(), aabb->top() };
 
-    for (auto enemy : world->each<EnemyComponent, FrozenComponent, AABBComponent>()) {
-        auto enemyAABB = enemy->get<AABBComponent>();
-        Vector2 enemyPos = { enemyAABB->left(), enemyAABB->top() };
+        for (auto enemy : world->each<EnemyComponent, FrozenComponent, AABBComponent>()) {
+            auto enemyAABB = enemy->get<AABBComponent>();
+            Vector2 enemyPos = { enemyAABB->left(), enemyAABB->top() };
 
-        if (std::abs(playerPos.x - enemyPos.x) <= screenWidth_ / 2
-            && std::abs(playerPos.y - enemyPos.y) <= screenHeight_ / 2) {
-            enemy->remove<FrozenComponent>();
+            if (std::abs(playerPos.x - enemyPos.x + GAME_TILE_SIZE) <= screenWidth_ / 2
+                && std::abs(playerPos.y - enemyPos.y) <= screenHeight_ / 2) {
+                enemy->remove<FrozenComponent>();
+            }
         }
     }
 }

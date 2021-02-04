@@ -88,7 +88,7 @@ void Game::initWorld() {
             );
     cameraId_ = camera->getEntityId();
 
-    initObjectMap();
+    initIdsMap();
 
     registerSystems();
 }
@@ -100,7 +100,7 @@ void Game::initPlayers() {
     // First Player
     ECS::Entity* mario = world_->create();
     player1Id_ = mario->getEntityId();
-    mario->assign<PlayerComponent>(Vector2 {spawnPositionP1.x * 32, spawnPositionP1.y * 32});
+    mario->assign<PlayerComponent>();
     mario->assign<AABBComponent>(
             Rectangle {
                     spawnPositionP1.x * 32,
@@ -124,7 +124,7 @@ void Game::initPlayers() {
     // Second Player
     if (secondPlayer) {
         ECS::Entity* luigi = world_->create();
-        luigi->assign<PlayerComponent>(Vector2 {spawnPositionP2.x * 32, spawnPositionP2.y * 32});
+        luigi->assign<PlayerComponent>();
         luigi->assign<AABBComponent>(
                 Rectangle {
                         spawnPositionP2.x * 32,
@@ -158,6 +158,7 @@ void Game::registerSystems() {
     world_->registerSystem(new PhysicSystem());
     world_->registerSystem(new TileSystem());
     world_->registerSystem(new TimerSystem());
+    world_->registerSystem(new IdsMapSystem());
     world_->disableSystem(world_->registerSystem(new FlagSystem()));
 }
 
@@ -179,25 +180,47 @@ void Game::handleInput() {
     }
 }
 
-void Game::initObjectMap() {
+void Game::initIdsMap() {
     int mapWidth, mapHeight;
     mapWidth = pMap_->getWidth();
     mapHeight = pMap_->getHeight();
-    auto objectMapEnt = world_->create();
-    auto objMapComponent = objectMapEnt->assign<ObjectMapComponent>(mapWidth, mapHeight);
+    auto staticEntitiesMap = world_->create();
+    auto idsMapComponent = staticEntitiesMap->assign<IdsMapComponent>(mapWidth, mapHeight);
+    staticEntitiesMap->assign<StaticEntitiesMapComponent>();
 
+    // init static ids map
     for (ECS::Entity* object : world_->each<TileComponent, AABBComponent, SolidComponent>()) {
         auto aabb = object->get<AABBComponent>();
 
-        if (round(aabb->collisionBox_.width) <= GAME_TILE_SIZE && round(aabb->collisionBox_.height) <= GAME_TILE_SIZE)
-        {
+        if (round(aabb->collisionBox_.width) <= GAME_TILE_SIZE && round(aabb->collisionBox_.height) <= GAME_TILE_SIZE) {
             unsigned int x = (int)round(aabb->left() / 32);
             unsigned int y = (int)round(aabb->top() / 32);
-            objMapComponent->set(object->getEntityId(), x, y);
+            idsMapComponent->set(object->getEntityId(), x, y);
         } else {
             for (int j = (int)(round(aabb->top() / 32)); j < (int)(aabb->bottom() / 32); j++) {
                 for (int i = (int)(round(aabb->left() / 32)); i < (int)(aabb->right() / 32); i++) {
-                    objMapComponent->set(object->getEntityId(), i, j);
+                    idsMapComponent->set(object->getEntityId(), i, j);
+                }
+            }
+        }
+    }
+
+    auto kineticEntitiesMap = world_->create();
+    auto KineticIdsMapComponent = kineticEntitiesMap->assign<IdsMapComponent>(mapWidth, mapHeight);
+    kineticEntitiesMap->assign<KineticEntitiesMapComponent>();
+
+    // init kinetic ids map
+    for (ECS::Entity* entity : world_->each<AABBComponent, KineticComponent, SolidComponent>()) {
+        auto aabb = entity->get<AABBComponent>();
+
+        if (round(aabb->collisionBox_.width) <= GAME_TILE_SIZE && round(aabb->collisionBox_.height) <= GAME_TILE_SIZE) {
+            unsigned int x = (int)round(aabb->left() / 32);
+            unsigned int y = (int)round(aabb->top() / 32);
+            KineticIdsMapComponent->set(entity->getEntityId(), x, y);
+        } else {
+            for (int j = (int)(round(aabb->top() / 32)); j < (int)(aabb->bottom() / 32); j++) {
+                for (int i = (int)(round(aabb->left() / 32)); i < (int)(aabb->right() / 32); i++) {
+                    KineticIdsMapComponent->set(entity->getEntityId(), i, j);
                 }
             }
         }

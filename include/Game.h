@@ -20,6 +20,7 @@
 #include "TimerSystem.h"
 #include "EnemySystem.h"
 #include "systems/FlagSystem.h"
+#include "systems/IdsMapSystem.h"
 
 class Game {
 public:
@@ -39,7 +40,7 @@ private:
 
     void handleInput();
 
-    void initObjectMap();
+    void initIdsMap();
 
     void render(float d);
 

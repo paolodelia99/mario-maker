@@ -44,7 +44,7 @@ private:
 
     void applyGravity(World* world);
 
-    std::unordered_set<int> getNeighborIds(ComponentHandle<ObjectMapComponent> map, ComponentHandle<AABBComponent> handle);
+    std::unordered_set<int> getNeighborIds(ComponentHandle<IdsMapComponent> map, ComponentHandle<AABBComponent> handle);
 
     void checkIfBreakComponent(Entity *ent1, Entity *ent2);
 

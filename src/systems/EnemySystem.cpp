@@ -46,7 +46,8 @@ void EnemySystem::unconfigure(World *world) {
 void EnemySystem::receive(World *world, const KillEnemyEvent& killEnemyEvent) {
     auto enemy = killEnemyEvent.enemy;
 
-    if (killEnemyEvent.killedByFireball) {
+    if (killEnemyEvent.killedByFireball
+        && enemy->get<EnemyComponent>()->type_ != Enemy::TARTOSSO) {
         killEnemyWithFireball(enemy);
     } else {
         killEnemyWithJump(enemy);
@@ -119,7 +120,7 @@ void EnemySystem::killEnemyWithJump(Entity *enemy) {
             enemy->assign<KineticComponent>(kinetic->speedX_, kinetic->speedY_);
             enemy->assign<AABBComponent>(Rectangle{
                     collisionRec.x,
-                    collisionRec.y + 16,
+                    collisionRec.y + GAME_TILE_SIZE / 2,
                     GAME_TILE_SIZE,
                     GAME_TILE_SIZE
             });

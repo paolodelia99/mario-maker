@@ -38,8 +38,6 @@ void PlayerSystem::tick(World *world, float delta) {
 
         movePlayer(player, playerComponent, currentCommand);
 
-        setRightAnimation(player);
-
         collectCollectible(world, player);
 
         int lookingLeft = 0;
@@ -409,45 +407,6 @@ void PlayerSystem::handleFrozenTransform(Entity *entity) {
     }
 }
 
-void PlayerSystem::setRightAnimation(Entity* player) {
-    auto playerComponent = player->get<PlayerComponent>();
-    auto kinetic = player->get<KineticComponent>();
-
-    if (!player->has<FrozenComponent>()) {
-        if (player->has<BottomCollisionComponent>()) {
-            if ((bool) std::abs(kinetic->speedY_) || (bool) std::abs(kinetic->accX_)) {
-                if ((kinetic->speedX_ > 0 && kinetic->accX_ < 0) ||
-                    (kinetic->speedX_ < 0 && kinetic->accX_ > 0)) {
-                    setAnimation(player, PlayerState::DRIFTING);
-                } else {
-                    setAnimation(player, PlayerState::RUNNING);
-                }
-            } else {
-                setAnimation(player, PlayerState::STANDING);
-            }
-        } else {
-            setAnimation(player, PlayerState::JUMPING);
-        }
-
-        if (playerComponent->duck){
-            setAnimation(player, PlayerState::DUCKING);
-            kinetic->accX_ = 0.0f;
-        }
-
-        if (playerComponent->shoot && playerComponent->canShoot) {
-            // fixme: is it worth it
-            setAnimation(player, PlayerState::SHOOTING);
-        }
-
-    } else {
-        if (player->has<BottomCollisionComponent>()) {
-            setAnimation(player, PlayerState::STANDING);
-        } else {
-            setAnimation(player, PlayerState::JUMPING);
-        }
-    }
-}
-
 TextureId
 PlayerSystem::getRightTransitionAnimation(Entity *entity, Collectible::CollectibleType mushroom, bool isMario) {
     auto playerState = entity->get<PlayerComponent>()->current_state_;
@@ -553,39 +512,64 @@ bool PlayerSystem::isMegaTexture(TextureId textureId) {
 
 void PlayerSystem::movePlayer(Entity *player, ComponentHandle<PlayerComponent> playerComponent, Command command) {
     auto kinetic = player->get<KineticComponent>();
+    PlayerState playerState = PlayerState::STANDING;
 
     switch (command) {
         case NONE_COMMAND:
             kinetic->accX_ = 0;
             kinetic->accY_ = 0;
-            playerComponent->duck = false;
-            playerComponent->shoot = false;
+            if (player->has<BottomCollisionComponent>()) {
+                playerState = PlayerState::STANDING;
+            } else {
+                playerState = PlayerState::JUMPING;
+            }
             break;
         case JUMP:
             if (player->has<BottomCollisionComponent>()) {
                 kinetic->accY_ = -MARIO_JUMP_ACCELERATION;
             }
+            playerState = PlayerState::JUMPING;
             break;
         case MOVE_RIGHT:
             kinetic->accX_ = (float) (MARIO_ACCELERATION_X) * 1.7f;
             playerComponent->right = true;
             playerComponent->left = false;
+            if (player->has<BottomCollisionComponent>()) {
+                if ((kinetic->speedX_ > 0 && kinetic->accX_ < 0) ||
+                    (kinetic->speedX_ < 0 && kinetic->accX_ > 0)) {
+                    playerState = PlayerState::DRIFTING;
+                } else {
+                    playerState = PlayerState::RUNNING;
+                }
+            } else {
+                playerState = PlayerState::JUMPING;
+            }
             break;
         case MOVE_LEFT:
             kinetic->accX_ = (float) -1 * (MARIO_ACCELERATION_X) * 1.7f;
             playerComponent->right = false;
             playerComponent->left = true;
+            if (player->has<BottomCollisionComponent>()) {
+                if ((kinetic->speedX_ > 0 && kinetic->accX_ < 0) ||
+                    (kinetic->speedX_ < 0 && kinetic->accX_ > 0)) {
+                    playerState = PlayerState::DRIFTING;
+                } else {
+                    playerState = PlayerState::RUNNING;
+                }
+            } else {
+                playerState = PlayerState::JUMPING;
+            }
             break;
         case DUCK:
-            kinetic->accX_ = 0;
-            playerComponent->duck = true;
+            kinetic->accX_ = 0.0f;
+            playerState = PlayerState::DUCKING;
             break;
         case SHOOT:
             if (player->has<SuperFlameComponent>() && playerComponent->canShoot) {
                 auto world = player->getWorld();
                 createFireBullet(world, player);
-                playerComponent->shoot = true;
                 playerComponent->canShoot = false;
+                playerState = PlayerState::SHOOTING;
                 player->assign<TimerComponent>([player]() {
                     player->get<PlayerComponent>()->canShoot = true;
                 }, 40);
@@ -596,6 +580,8 @@ void PlayerSystem::movePlayer(Entity *player, ComponentHandle<PlayerComponent> p
         case SPECIAL:
             break;
     }
+
+    setAnimation(player, playerState);
 }
 
 void PlayerSystem::receive(World *world, const EnemyCollisionEvent &enemyCollisionEvent) {

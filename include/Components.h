@@ -127,18 +127,13 @@ enum PlayerState {
 
 struct PlayerComponent {
 
-    PlayerComponent(Vector2 home)
-    : home_(home)
+    PlayerComponent()
     {
         current_state_ = STANDING;
     };
 
-    Vector2 home_;
     PlayerState current_state_;
-    bool duck = false;
     bool sprint = false;
-    bool shoot = false;
-    bool jump = false;
     bool canShoot = true;
     int left = 0;
     int right = 0;
@@ -413,9 +408,9 @@ struct CameraComponent {
     Camera2D camera;
 };
 
-struct ObjectMapComponent {
+struct IdsMapComponent {
 
-    explicit ObjectMapComponent(int width, int height)
+    explicit IdsMapComponent(int width, int height)
     :width_(width), height_(height)
     {
         idsMatrix_ = std::vector<int>(width * height);
@@ -429,10 +424,18 @@ struct ObjectMapComponent {
     }
 
     void set(size_t entId, int x, int y) {
-        idsMatrix_.at(x + y * width_) =  entId;
+        if (x < width_ && y < height_) {
+            idsMatrix_.at(x + y * width_) =  entId;
+        }
     }
 
-    ~ObjectMapComponent() {}
+    void clear() {
+        for (int i = 0; i < width_ * height_; i++) {
+            idsMatrix_.at(i) = -1;
+        }
+    }
+
+    ~IdsMapComponent() {}
 
 public:
     unsigned int width_;
@@ -440,6 +443,10 @@ public:
 private:
     std::vector<int> idsMatrix_;
 };
+
+struct StaticEntitiesMapComponent {};
+
+struct KineticEntitiesMapComponent {};
 
 struct TimerComponent {
 
