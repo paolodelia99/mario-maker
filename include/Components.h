@@ -444,6 +444,48 @@ private:
     std::vector<int> idsMatrix_;
 };
 
+struct SpacialHashMapComponent {
+
+    explicit SpacialHashMapComponent(unsigned int width, unsigned int height)
+    : width_(width), height_(height) {
+        clear();
+    }
+
+    std::vector<int> get(int x, int y) {
+        if (x < 0 || y < 0) return {-1};
+        if (x >= width_ || y >= height_) return {-1};
+        return spacialHashmap_.at(x + y * width_);
+    }
+
+    void set(int x, int y, int entId) {
+        if (x < width_ && y < height_) {
+            if (entId != -1) {
+                std::vector<int> v = spacialHashmap_.at(x + y * width_);
+                v.erase(std::remove(v.begin(), v.end(), -1), v.end());
+                v.push_back(entId);
+            } else {
+                std::vector<int> arr;
+                arr.push_back(-1);
+                spacialHashmap_.insert({x + y * width_ , arr});
+            }
+        }
+    }
+
+    void clear() {
+        for (int i = 0; i < width_ * height_; i++) {
+            std::vector<int> arr;
+            arr.push_back(-1);
+            spacialHashmap_.insert({i , arr});
+        }
+    }
+
+public:
+    unsigned int width_;
+    unsigned int height_;
+private:
+    std::map<int, std::vector<int>> spacialHashmap_;
+};
+
 struct StaticEntitiesMapComponent {};
 
 struct KineticEntitiesMapComponent {};

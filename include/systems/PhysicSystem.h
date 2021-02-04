@@ -46,6 +46,8 @@ private:
 
     std::unordered_set<int> getNeighborIds(ComponentHandle<IdsMapComponent> map, ComponentHandle<AABBComponent> handle);
 
+    std::vector<std::vector<int>> getNeighborIds(ComponentHandle<SpacialHashMapComponent> map, ComponentHandle<AABBComponent> aabb);
+
     void checkIfBreakComponent(Entity *ent1, Entity *ent2);
 
     void checkKillEnemy(Entity *ent1, Entity *ent2);
