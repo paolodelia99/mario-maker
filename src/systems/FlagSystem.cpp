@@ -40,7 +40,7 @@ void FlagSystem::tick(World *world, float delta) {
                     winner_->get<KineticComponent>()->accX_ = 0.0f;
                     winner_->get<PlayerComponent>()->greet = true;
                 }, 150);
-                state_ = NONE;
+                world->disableSystem(this);
                 break;
         }
     }

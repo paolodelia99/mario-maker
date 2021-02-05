@@ -211,7 +211,8 @@ void PlayerSystem::setAnimation(Entity *playerEntity, PlayerState state) {
                         isMario ?
                         TextureId::MARIO_FLAME_SHOOT  : TextureId::LUIGI_FLAME_SHOOT);
                 break;
-            case SIT:
+            case SIT: {
+                float xOffset = 6.0f;
                 if (playerEntity->has<SuperComponent>()) {
                     playerEntity->assign<TextureComponent>(
                             isMario ?
@@ -220,6 +221,7 @@ void PlayerSystem::setAnimation(Entity *playerEntity, PlayerState state) {
                     playerEntity->assign<TextureComponent>(
                             isMario ?
                             TextureId::MARIO_MEGA_SIT_2 : TextureId::LUIGI_MEGA_SIT_2);
+                    xOffset = 18.0f;
                 } else if (playerEntity->has<SuperFlameComponent>()) {
                     playerEntity->assign<TextureComponent>(
                             isMario ?
@@ -229,6 +231,8 @@ void PlayerSystem::setAnimation(Entity *playerEntity, PlayerState state) {
                             isMario ?
                             TextureId::MARIO_SIT_2 : TextureId::LUIGI_SIT_2);
                 }
+                playerEntity->get<TextureComponent>()->offSetX = xOffset;
+            }
                 break;
             case GREET:
                 if (playerEntity->has<SuperComponent>()) {
