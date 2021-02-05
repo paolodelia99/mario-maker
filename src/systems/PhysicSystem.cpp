@@ -515,14 +515,14 @@ void PhysicSystem::checkCollisionWithObject(Entity *ent1, Entity *ent2) {
     World* world = ent1->getWorld();
 
     if (ent1->has<PlayerComponent>()
-            && ent2->has<ObjectComponent>()
-            && ent2->get<ObjectComponent>()->type == Object::Type::FINAL_FLAG_POLE) {
+        && ent2->has<ObjectComponent, SolidComponent>()
+        && ent2->get<ObjectComponent>()->type == Object::Type::FINAL_FLAG_POLE) {
         auto poleAABB = ent2->get<AABBComponent>()->bottom();
-        world->emit<CollisionWithFinalPole>(CollisionWithFinalPole(ent1, poleAABB));
+        world->emit<CollisionWithFinalPole>(CollisionWithFinalPole(ent1, ent2));
     } else if (ent2->has<PlayerComponent>()
-               && ent1->has<ObjectComponent>()
-               && ent1->get<ObjectComponent>()->type == Object::Type::FINAL_FLAG) {
+               && ent1->has<ObjectComponent, SolidComponent>()
+               && ent1->get<ObjectComponent>()->type == Object::Type::FINAL_FLAG_POLE) {
         auto poleAABB = ent1->get<AABBComponent>()->bottom();
-        world->emit<CollisionWithFinalPole>(CollisionWithFinalPole(ent2, poleAABB));
+        world->emit<CollisionWithFinalPole>(CollisionWithFinalPole(ent2, ent1));
     }
 }
