@@ -98,13 +98,16 @@ void EnemySystem::killEnemyWithJump(Entity *enemy) {
     Rectangle collisionRec = aabb->collisionBox_;
     auto kinetic = enemy->get<KineticComponent>();
     Enemy::Type type = enemy->get<EnemyComponent>()->type_;
+    bool wasBig = enemyComponent->isBig;
 
     switch (type) {
         case Enemy::GOOMBA:
             enemy->removeAll();
             enemy->assign<EnemyComponent>(enemyComponent->type_);
+            enemy->get<EnemyComponent>()->isBig = wasBig;
             enemy->assign<TileComponent>();
             enemy->assign<TextureComponent>(TextureId::GOOMBA_DEAD);
+            enemy->get<TextureComponent>()->setDimensions(collisionRec.width, collisionRec.height);
             enemy->assign<AABBComponent>(aabb->collisionBox_);
             enemy->assign<DestroyDelayedComponent>(100);
             break;
@@ -224,7 +227,7 @@ void EnemySystem::manageParachutes(World *world) {
         auto entity = parachute->get<ParachuteComponent>()->associatedEntity;
         if (entity->has<BottomCollisionComponent>()) {
             world->destroy(parachute);
-            entity->get<GravityComponent>()->hasParachute = false;
+            entity->get<EnemyComponent>()->hasParachute = false;
             entity->assign<WalkComponent>();
         } else {
             parachute->get<AABBComponent>()->setBottom(entity->get<AABBComponent>()->top());

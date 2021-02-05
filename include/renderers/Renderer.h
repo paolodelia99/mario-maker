@@ -65,6 +65,33 @@ protected:
         }
     }
 
+    void render2XEntityTexture(TextureId textureId, Rectangle dstRect, bool flipH, bool flipV) {
+        auto it = textures_.find(textureId);
+        auto it1 = texturePositions_.find(textureId);
+        if (it != textures_.end())
+        {
+            if (dstRect.width == 0) dstRect.width = it1->second->width;
+            if (dstRect.height == 0) dstRect.height = it1->second->height;
+            Texture2D texture2D = it->second;
+            Rectangle sourceRect = {
+                    0.0f,
+                    0.0f,
+                    (flipH ? -1.0f : 1.0f) * dstRect.width / 2,
+                    (flipV ? -1.0f : 1.0f) * dstRect.height / 2 };
+            Rectangle destRect = { dstRect.x, dstRect.y, dstRect.width, dstRect.height };
+            Vector2 origin = { 0.0f, 0.0f };
+            if (DEBUG) DrawRectangleLinesEx(destRect, 2, RED);
+
+            DrawTexturePro(
+                    texture2D,
+                    sourceRect,
+                    destRect,
+                    origin,
+                    0.0f,
+                    WHITE );
+        }
+    }
+
 private:
 
     std::pair<int, int> getTextureDimensions(TextureId textureId, int width, int height) {

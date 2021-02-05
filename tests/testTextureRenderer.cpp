@@ -117,3 +117,40 @@ TEST(textureManagerTest, testRenredingMegaComponent) {
 
     EXPECT_TRUE(true);
 }
+
+TEST(textureManagerTest, testRender2XTexture) {
+    InitWindow(250, 250, "Test texture Loader");
+    SetTargetFPS(60);
+    int c = 0;
+    const char* filepath = "../../assets/tilesets/enemies-tileset.png";
+
+    Image image = LoadImage(filepath);
+    ImageCrop(&image, Rectangle{98, 2, 16, 16});
+    ImageResize(&image, 32, 32);
+
+    Texture2D texture2D = LoadTextureFromImage(image);
+    UnloadImage(image);
+
+    Rectangle sourceRect = {0.0f, 0.0f, -1.0f * 32, 32};
+    Rectangle destRect = {120, 120, 64, 64};
+    Vector2 origin = { 0, 0 };
+
+    while(++c < 360) {
+        BeginDrawing();
+
+        ClearBackground(RAYWHITE);
+
+        // DrawTexture(texture2D, 120, 120, WHITE);
+        DrawTexturePro(texture2D, sourceRect, destRect, origin, 0.0f, WHITE);
+
+        DrawText("this IS a texture loaded_ from an image!", 300, 370, 10, GRAY);
+
+        EndDrawing();
+    }
+
+    UnloadTexture(texture2D);
+
+    CloseWindow();
+
+    EXPECT_TRUE(true);
+}

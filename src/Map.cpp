@@ -292,6 +292,9 @@ void Map::loadTileEntity(
 }
 
 void Map::createEnemy(ECS::Entity *ent, std::vector<tmx::Property> properties) {
+    bool hasParachute = false;
+    bool isBig = false;
+
     ent->assign<GravityComponent>();
     ent->assign<KineticComponent>();
     ent->assign<FrozenComponent>();
@@ -301,16 +304,27 @@ void Map::createEnemy(ECS::Entity *ent, std::vector<tmx::Property> properties) {
                 setEnemyType(ent, property.getStringValue());
             } else if (property.getName() == "has_parachute" && property.getBoolValue()) {
                 createParachute(ent);
+                hasParachute = true;
+            } else if (property.getName() == "isBig" && property.getBoolValue()) {
+                isBig = true;
             }
         }
     }
 
-    if (ent->has<GravityComponent>() && ent->get<GravityComponent>()->hasParachute) {
+    if (hasParachute) {
+        ent->get<EnemyComponent>()->hasParachute = true;
         ent->remove<WalkComponent>();
         if (ent->has<KineticComponent>()) {
             ent->get<KineticComponent>()->speedX_ = 0.0f;
             ent->get<KineticComponent>()->accX_ = 0.0f;
         }
+    }
+
+    if (isBig) {
+        auto aabb = ent->get<AABBComponent>();
+        ent->get<EnemyComponent>()->isBig = true;
+        aabb->setWidth(aabb->collisionBox_.width * 2);
+        aabb->setHeight(aabb->collisionBox_.height * 2);
     }
 }
 
@@ -403,14 +417,14 @@ void Map::createParachute(ECS::Entity *entity) {
     ECS::World* world = entity->getWorld();
     ECS::Entity* parachute = world->create();
     auto aabb = entity->get<AABBComponent>();
-    entity->get<GravityComponent>()->hasParachute = true;
     parachute->assign<ObjectComponent>(Object::Type::PARACHUTE);
     parachute->assign<ParachuteComponent>(entity);
-    parachute->assign<AABBComponent>(Rectangle{
+    auto parAABB = parachute->assign<AABBComponent>(Rectangle{
             aabb->left(),
             aabb->top() + GAME_TILE_SIZE,
             GAME_TILE_SIZE,
             GAME_TILE_SIZE
     });
+    parAABB->setCenterX(aabb->getCenterX());
     parachute->assign<TextureComponent>(TextureId::PARACHUTE);
 }

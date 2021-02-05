@@ -62,9 +62,17 @@ void EnemiesRenderer::renderEnemies(ECS::World *world, float delta) {
                 textureComponent->h > 0 ? textureComponent->h : aabb->collisionBox_.height
             };
 
-            Renderer::renderEntityTexture(textureComponent->textureId_, rect, flipH, flipV);
+            if (ent->get<EnemyComponent>()->isBig) {
+                Renderer::render2XEntityTexture(textureComponent->textureId_, rect, flipH, flipV);
+            } else {
+                Renderer::renderEntityTexture(textureComponent->textureId_, rect, flipH, flipV);
+            }
         } else {
-            Renderer::renderEntityTexture(textureComponent->textureId_, aabb->collisionBox_, flipH, flipV);
+            if (ent->get<EnemyComponent>()->isBig) {
+                Renderer::render2XEntityTexture(textureComponent->textureId_, aabb->collisionBox_, flipH, flipV);
+            } else {
+                Renderer::renderEntityTexture(textureComponent->textureId_, aabb->collisionBox_, flipH, flipV);
+            }
         }
     }
 }

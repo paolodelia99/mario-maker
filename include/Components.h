@@ -56,6 +56,10 @@ struct AABBComponent {
         collisionBox_.x = value - collisionBox_.width;
     }
 
+    void setCenterX(float value) {
+        collisionBox_.x = value - collisionBox_.width / 2;
+    }
+
     void setWidth(float value) {
         if (value >= 0) {
             collisionBox_.width = value;
@@ -169,12 +173,7 @@ struct FireBulletComponent {
     float upperBound_;
 };
 
-struct GravityComponent {
-
-    GravityComponent() = default;
-
-    bool hasParachute = false;
-};
+struct GravityComponent {};
 
 struct SolidComponent {};
 
@@ -326,6 +325,11 @@ struct TextureComponent {
     explicit TextureComponent(TextureId textureId) : textureId_(textureId) {};
 
     ~TextureComponent()  = default;
+
+    void setDimensions(int newW, int newH) {
+        w = newW;
+        h = newH;
+    }
 
     TextureId textureId_;
 
@@ -519,6 +523,7 @@ struct TimerComponent {
 
 namespace Enemy {
     enum Type {
+        NONE,
         GOOMBA,
         KOOPA_TROOPA,
         RED_KOOPA_TROOPA,
@@ -540,6 +545,9 @@ struct EnemyComponent {
     EnemyComponent(Enemy::Type type) : type_(type) {}
 
     Enemy::Type type_;
+    bool hasParachute = false;
+    bool isBig = false;
+    bool hasWings = false;
 };
 
 struct TartossoComponent {
