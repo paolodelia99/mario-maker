@@ -9,6 +9,8 @@
 #include <map>
 #include <utility>
 #include <iostream>
+#include <unordered_set>
+
 
 ECS_TYPE_IMPLEMENTATION;
 
@@ -451,21 +453,20 @@ struct SpacialHashMapComponent {
         clear();
     }
 
-    std::vector<int> get(int x, int y) {
+    std::unordered_set<int> get(int x, int y) {
         if (x < 0 || y < 0) return {-1};
         if (x >= width_ || y >= height_) return {-1};
         return spacialHashmap_.at(x + y * width_);
     }
 
-    void set(int x, int y, int entId) {
+    void set(unsigned int x,unsigned int y, int entId) {
         if (x < width_ && y < height_) {
             if (entId != -1) {
-                std::vector<int> v = spacialHashmap_.at(x + y * width_);
-                v.erase(std::remove(v.begin(), v.end(), -1), v.end());
-                v.push_back(entId);
+                spacialHashmap_.at(x + y * width_).insert(entId);
+                spacialHashmap_.at(x + y * width_).erase(-1);
             } else {
-                std::vector<int> arr;
-                arr.push_back(-1);
+                std::unordered_set<int> arr;
+                arr.insert(-1);
                 spacialHashmap_.insert({x + y * width_ , arr});
             }
         }
@@ -473,8 +474,8 @@ struct SpacialHashMapComponent {
 
     void clear() {
         for (int i = 0; i < width_ * height_; i++) {
-            std::vector<int> arr;
-            arr.push_back(-1);
+            std::unordered_set<int> arr;
+            arr.insert(-1);
             spacialHashmap_.insert({i , arr});
         }
     }
@@ -482,8 +483,7 @@ struct SpacialHashMapComponent {
 public:
     unsigned int width_;
     unsigned int height_;
-private:
-    std::map<int, std::vector<int>> spacialHashmap_;
+    std::map<int, std::unordered_set<int>> spacialHashmap_;
 };
 
 struct StaticEntitiesMapComponent {};

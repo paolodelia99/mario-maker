@@ -25,8 +25,8 @@ void IdsMapSystem::tick(World *world, ECS::DefaultTickData data) {
     if (kineticMapEnt) {
         ComponentHandle<SpacialHashMapComponent> kineticMap = kineticMapEnt->get<SpacialHashMapComponent>();
 
-        // fixme: there might be a more sofisticated way to update the map without clear it all the time
-        //idea: store prev position and compare it with actual position
+        //fixme: there might be a more sofisticated way to update the map without clear it all the time
+        // idea: store prev position and compare it with actual position
         kineticMap->clear();
 
         for (auto entity : world->each<AABBComponent, KineticComponent, SolidComponent>()) {
@@ -38,8 +38,8 @@ void IdsMapSystem::tick(World *world, ECS::DefaultTickData data) {
                 unsigned int y = (int)round(aabb->top() / 32);
                 kineticMap->set(x, y, entity->getEntityId());
             } else {
-                for (int j = (int)(round(aabb->top() / 32)); j < (int)(aabb->bottom() / 32); j++) {
-                    for (int i = (int)(round(aabb->left() / 32)); i < (int)(aabb->right() / 32); i++) {
+                for (int j = (int)(floor(aabb->top() / 32)); j < (int)(aabb->bottom() / 32); j++) {
+                    for (int i = (int)(floor(aabb->left() / 32)); i < (int)(aabb->right() / 32); i++) {
                         kineticMap->set(i, j, entity->getEntityId());
                     }
                 }

@@ -155,10 +155,10 @@ void Game::registerSystems() {
     world_->registerSystem(new PlayerSystem());
     world_->registerSystem(new EnemySystem());
     animationSystem_ = world_->registerSystem(new AnimationSystem());
+    world_->registerSystem(new IdsMapSystem());
     world_->registerSystem(new PhysicSystem());
     world_->registerSystem(new TileSystem());
     world_->registerSystem(new TimerSystem());
-    world_->registerSystem(new IdsMapSystem());
     world_->disableSystem(world_->registerSystem(new FlagSystem()));
 }
 
@@ -206,25 +206,8 @@ void Game::initIdsMap() {
     }
 
     auto kineticEntitiesMap = world_->create();
-    auto KineticIdsMapComponent = kineticEntitiesMap->assign<SpacialHashMapComponent>(mapWidth, mapHeight);
+    kineticEntitiesMap->assign<SpacialHashMapComponent>(mapWidth, mapHeight);
     kineticEntitiesMap->assign<KineticEntitiesMapComponent>();
-
-    // init kinetic ids map
-    for (ECS::Entity* entity : world_->each<AABBComponent, KineticComponent, SolidComponent>()) {
-        auto aabb = entity->get<AABBComponent>();
-
-        if (round(aabb->collisionBox_.width) <= GAME_TILE_SIZE && round(aabb->collisionBox_.height) <= GAME_TILE_SIZE) {
-            unsigned int x = (int)round(aabb->left() / 32);
-            unsigned int y = (int)round(aabb->top() / 32);
-            KineticIdsMapComponent->set(x, y, entity->getEntityId());
-        } else {
-            for (int j = (int)(round(aabb->top() / 32)); j < (int)(aabb->bottom() / 32); j++) {
-                for (int i = (int)(round(aabb->left() / 32)); i < (int)(aabb->right() / 32); i++) {
-                    KineticIdsMapComponent->set(i, j, entity->getEntityId());
-                }
-            }
-        }
-    }
 }
 
 void Game::render(float d) {

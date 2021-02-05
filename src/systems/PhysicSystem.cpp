@@ -248,40 +248,32 @@ void PhysicSystem::checkKineticKineticCollisions(World* world) {
 
         for (auto ent : world->each<KineticComponent, AABBComponent, SolidComponent>())
         {
+            if (ent->has<FrozenComponent>()) continue;
             ComponentHandle<AABBComponent> aabb = ent->get<AABBComponent>();
-            std::vector<std::vector<int>> neighbors = getNeighborIds(map, aabb);
+            std::vector<std::unordered_set<int>> neighbors = getNeighborIds(map, aabb);
 
-            for (auto cell : neighbors) {
-                for (auto id : cell) {
-                    if (id == ent->getEntityId()) continue;
-                    if (id == -1) continue;
+            for (const auto& cell : neighbors) {
+                if(cell.find(-1) != cell.end()) {
+                    continue;
+                } else {
+                    for (auto id : cell) {
+                        if (id == ent->getEntityId()) continue;
+                        if (id == -1) break;
 
-                    auto object = world->getById(id);
-                    if (!object) continue;
-                    if (!object->has<AABBComponent, SolidComponent, KineticComponent>()) continue;
+                        auto object = world->getById(id);
+                        if (!object) continue;
+                        if (!object->has<AABBComponent, SolidComponent, KineticComponent>()) continue;
 
-                    checkYCollision(ent, object);
+                        checkYCollision(ent, object);
 
-                    checkXCollision(ent, object);
+                        checkXCollision(ent, object);
+                    }
                 }
             }
         }
     } else {
         throw std::invalid_argument("There isn't any KineticMapEntity!");
     }
-
-// Old way
-//    for (auto ent : world->each<AABBComponent, KineticComponent, SolidComponent>())
-//    {
-//        for (auto ent2 : world->each<AABBComponent, KineticComponent, SolidComponent>())
-//        {
-//            if (ent == ent2) continue;
-//
-//            checkYCollision(ent, ent2);
-//
-//            checkXCollision(ent, ent2);
-//        }
-//    }
 }
 
 void PhysicSystem::applyGravity(World* world) {
@@ -343,10 +335,10 @@ std::unordered_set<int> PhysicSystem::getNeighborIds(ComponentHandle<IdsMapCompo
     return neighbors;
 }
 
-std::vector<std::vector<int>> PhysicSystem::getNeighborIds(ComponentHandle<SpacialHashMapComponent> map, ComponentHandle<AABBComponent> aabb) {
+std::vector<std::unordered_set<int>> PhysicSystem::getNeighborIds(ComponentHandle<SpacialHashMapComponent> map, ComponentHandle<AABBComponent> aabb) {
     int height = (int) std::round(aabb->collisionBox_.height / 32);
     int width = (int) std::round(aabb->collisionBox_.width / 32);
-    std::vector<std::vector<int>> neighbors;
+    std::vector<std::unordered_set<int>> neighbors;
     int x = (int) std::round(aabb->left() / 32);
     int y = (int) std::round(aabb->top() / 32);
 
