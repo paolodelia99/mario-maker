@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="110" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="100">
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="110" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="104">
  <properties>
   <property name="spawn_mario_x" value="6"/>
   <property name="spawn_mario_y" value="11"/>
@@ -137,6 +137,12 @@
   <object id="82" x="1120.27" y="176.364" width="15.4545" height="15.1818">
    <properties>
     <property name="type" value="TARTOSSO"/>
+   </properties>
+  </object>
+  <object id="102" x="144" y="15.6667" width="16" height="16">
+   <properties>
+    <property name="has_parachute" type="bool" value="true"/>
+    <property name="type" value="GOOMBA"/>
    </properties>
   </object>
  </objectgroup>

@@ -281,6 +281,12 @@ void PhysicSystem::applyGravity(World* world) {
     {
         ent->get<KineticComponent>()->accY_ += GRAVITY;
     }
+
+    for (auto parachute : world->each<ParachuteComponent>()) {
+        auto ent = parachute->get<ParachuteComponent>()->associatedEntity;
+
+        ent->get<KineticComponent>()->accY_ -= 0.0997f;
+    }
 }
 
 std::unordered_set<int> PhysicSystem::getNeighborIds(ComponentHandle<IdsMapComponent> map, ComponentHandle<AABBComponent> aabb) {

@@ -116,6 +116,7 @@ void EnemySystem::killEnemyWithJump(Entity *enemy) {
             enemy->assign<TileComponent>();
             enemy->assign<TurtleShellComponent>(false);
             enemy->assign<SolidComponent>();
+            enemy->assign<GravityComponent>();
             enemy->assign<TextureComponent>(TextureId::G_TURLE_SHELL_STAND_1);
             enemy->assign<KineticComponent>(kinetic->speedX_, kinetic->speedY_);
             enemy->assign<AABBComponent>(Rectangle{
@@ -166,6 +167,8 @@ void EnemySystem::manageEnemyEntities(World* world) {
     manageTartossos(world);
 
     managePiranhaPlants(world);
+
+    manageParachutes(world);
 }
 
 void EnemySystem::managePiranhaPlants(World* world) {
@@ -212,6 +215,19 @@ void EnemySystem::manageTartossos(World *world) {
                 break;
             case Enemy::LIVE:
                 break;
+        }
+    }
+}
+
+void EnemySystem::manageParachutes(World *world) {
+    for (auto parachute : world->each<ParachuteComponent>()) {
+        auto entity = parachute->get<ParachuteComponent>()->associatedEntity;
+        if (entity->has<BottomCollisionComponent>()) {
+            world->destroy(parachute);
+            entity->get<GravityComponent>()->hasParachute = false;
+            entity->assign<WalkComponent>();
+        } else {
+            parachute->get<AABBComponent>()->setBottom(entity->get<AABBComponent>()->top());
         }
     }
 }

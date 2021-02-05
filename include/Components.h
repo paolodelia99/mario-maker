@@ -169,7 +169,12 @@ struct FireBulletComponent {
     float upperBound_;
 };
 
-struct GravityComponent {};
+struct GravityComponent {
+
+    GravityComponent() = default;
+
+    bool hasParachute = false;
+};
 
 struct SolidComponent {};
 
@@ -296,7 +301,8 @@ struct TileComponent {};
 namespace Object {
     enum Type {
         FINAL_FLAG_POLE,
-        FINAL_FLAG
+        FINAL_FLAG,
+        PARACHUTE
     };
 }
 
@@ -308,6 +314,13 @@ struct ObjectComponent {
 };
 
 struct WinnerFlagComponent {};
+
+struct ParachuteComponent {
+
+    ParachuteComponent(ECS::Entity *associatedEntity) : associatedEntity(associatedEntity) {}
+
+    ECS::Entity* associatedEntity;
+};
 
 struct TextureComponent {
     explicit TextureComponent(TextureId textureId) : textureId_(textureId) {};

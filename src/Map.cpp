@@ -299,7 +299,17 @@ void Map::createEnemy(ECS::Entity *ent, std::vector<tmx::Property> properties) {
         for (const auto& property : properties) {
             if (property.getName() == "type") {
                 setEnemyType(ent, property.getStringValue());
+            } else if (property.getName() == "has_parachute" && property.getBoolValue()) {
+                createParachute(ent);
             }
+        }
+    }
+
+    if (ent->has<GravityComponent>() && ent->get<GravityComponent>()->hasParachute) {
+        ent->remove<WalkComponent>();
+        if (ent->has<KineticComponent>()) {
+            ent->get<KineticComponent>()->speedX_ = 0.0f;
+            ent->get<KineticComponent>()->accX_ = 0.0f;
         }
     }
 }
@@ -387,4 +397,20 @@ void Map::createObject(ECS::Entity *entity, std::vector<tmx::Property> propertie
             }
         }
     }
+}
+
+void Map::createParachute(ECS::Entity *entity) {
+    ECS::World* world = entity->getWorld();
+    ECS::Entity* parachute = world->create();
+    auto aabb = entity->get<AABBComponent>();
+    entity->get<GravityComponent>()->hasParachute = true;
+    parachute->assign<ObjectComponent>(Object::Type::PARACHUTE);
+    parachute->assign<ParachuteComponent>(entity);
+    parachute->assign<AABBComponent>(Rectangle{
+            aabb->left(),
+            aabb->top() + GAME_TILE_SIZE,
+            GAME_TILE_SIZE,
+            GAME_TILE_SIZE
+    });
+    parachute->assign<TextureComponent>(TextureId::PARACHUTE);
 }

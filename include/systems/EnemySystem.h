@@ -35,6 +35,8 @@ private:
     void managePiranhaPlants(World* world);
 
     void manageTartossos(World *world);
+
+    void manageParachutes(World *world);
 };
 
 
