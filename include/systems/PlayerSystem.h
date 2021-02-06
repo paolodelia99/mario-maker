@@ -10,7 +10,10 @@
 
 using namespace ECS;
 
-class PlayerSystem : public EntitySystem, public EventSubscriber<EnemyCollisionEvent> {
+class PlayerSystem :
+        public EntitySystem,
+        public EventSubscriber<EnemyCollisionEvent>,
+        public EventSubscriber<PLayerCollectableCollisionEvent>{
 public:
     PlayerSystem();
 
@@ -24,9 +27,8 @@ public:
 
     void receive(World* world, const EnemyCollisionEvent& enemyCollisionEvent) override;
 
+    void receive(World* world, const PLayerCollectableCollisionEvent& pLayerCollectableCollisionEvent) override;
 private:
-
-    void collectCollectible(World* world, Entity* player);
 
     void eatMushroom(Entity *pEntity, Collectible::CollectibleType type);
 

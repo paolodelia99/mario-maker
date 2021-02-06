@@ -16,6 +16,7 @@ void PlayerSystem::configure(World *world) {
     EntitySystem::configure(world);
 
     world->subscribe<EnemyCollisionEvent>(this);
+    world->subscribe<PLayerCollectableCollisionEvent>(this);
 }
 
 void PlayerSystem::unconfigure(World *world) {
@@ -37,8 +38,6 @@ void PlayerSystem::tick(World *world, float delta) {
         }
 
         movePlayer(player);
-
-        collectCollectible(world, player);
 
         int lookingLeft = 0;
         if (playerComponent->left || playerComponent->right) lookingLeft = playerComponent->left;
@@ -270,33 +269,6 @@ void PlayerSystem::setAnimation(Entity *playerEntity, PlayerState state) {
 
         playerComponent->current_state_ = state;
     }
-}
-
-bool CheckCollisionRecs_(Rectangle rec1, Rectangle rec2)
-{
-    bool collision = false;
-
-    if ((rec1.x <= (rec2.x + rec2.width) && (rec1.x + rec1.width) >= rec2.x) &&
-        (rec1.y <= (rec2.y + rec2.height) && (rec1.y + rec1.height) >= rec2.y)) collision = true;
-
-    return collision;
-}
-
-void PlayerSystem::collectCollectible(World *world, Entity *player) {
-    auto playerAABB = player->get<AABBComponent>()->collisionBox_;
-    auto playerComponent = player->get<PlayerComponent>();
-    world->each<CollectibleComponent, AABBComponent>([&](
-            Entity* entity,
-            ComponentHandle<CollectibleComponent> collectible,
-            ComponentHandle<AABBComponent> collectibleAABB
-            ) {
-       if (CheckCollisionRecs_(playerAABB, collectibleAABB->collisionBox_)) {
-           auto collectibleType = collectible->type;
-           playerComponent->current_state_ = STANDING;
-           eatMushroom(player, collectibleType);
-           world->destroy(entity);
-       }
-    });
 }
 
 void PlayerSystem::eatMushroom(Entity *entity, Collectible::CollectibleType type) {
@@ -775,4 +747,13 @@ void PlayerSystem::createFireBullet(World *world, Entity *entity) {
     fireBullet->assign<SolidComponent>();
     fireBullet->assign<GravityComponent>();
     fireBullet->assign<BouncingComponent>();
+}
+
+void PlayerSystem::receive(World *world, const PLayerCollectableCollisionEvent &pLayerCollectableCollisionEvent) {
+    Entity* collectibleEntity = pLayerCollectableCollisionEvent.collectable;
+    Entity* player = pLayerCollectableCollisionEvent.player;
+
+    player->get<PlayerComponent>()->current_state_ = STANDING;
+    eatMushroom(player, collectibleEntity->get<CollectibleComponent>()->type);
+    world->destroy(collectibleEntity);
 }

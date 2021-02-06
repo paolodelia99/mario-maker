@@ -142,8 +142,8 @@ void TileSystem::manageGrowComponents(World *world) {
 
             if (ent->get<CollectibleComponent>()->type != Collectible::FLAME_MUSHROOM) {
                 ent->assign<WalkComponent>(MUSHROOM_MOVE_SPEED);
-                ent->assign<KineticComponent>();
             }
+            ent->assign<KineticComponent>();
             ent->assign<GravityComponent>();
             ent->assign<SolidComponent>();
             ent->assign<TileComponent>();

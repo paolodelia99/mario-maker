@@ -89,6 +89,7 @@ void PhysicSystem::checkYCollision(Entity *ent1, Entity *ent2) {
                     checkIfBreakComponent(ent1, ent2);
                 }
             }
+            checkCollisionWithCollectible(ent1, ent2);
         }
     }
 }
@@ -168,6 +169,7 @@ void PhysicSystem::checkXCollision(Entity *ent1, Entity *ent2) {
             }
             checkCollisionWithEnemy(ent1, ent2);
             checkCollisionWithObject(ent1, ent2);
+            checkCollisionWithCollectible(ent1, ent2);
         }
     }
 }
@@ -546,5 +548,19 @@ void PhysicSystem::checkCollisionWithObject(Entity *ent1, Entity *ent2) {
                && ent1->get<ObjectComponent>()->type == Object::Type::FINAL_FLAG_POLE) {
         auto poleAABB = ent1->get<AABBComponent>()->bottom();
         world->emit<CollisionWithFinalPole>(CollisionWithFinalPole(ent2, ent1));
+    }
+}
+
+void PhysicSystem::checkCollisionWithCollectible(Entity *ent1, Entity *ent2) {
+    World* world = ent1->getWorld();
+
+    if (ent2->has<CollectibleComponent>() && ent1->has<PlayerComponent>()) {
+        world->emit<PLayerCollectableCollisionEvent>(PLayerCollectableCollisionEvent(ent2, ent1));
+    } else if (ent1->has<CollectibleComponent>() && ent2->has<PlayerComponent>()) {
+        world->emit<PLayerCollectableCollisionEvent>(PLayerCollectableCollisionEvent(ent1, ent2));
+    } else if (ent2->has<CollectibleComponent>() && ent1->has<EnemyComponent>()) {
+        world->emit<EnemyCollectableCollisionEvent>(EnemyCollectableCollisionEvent(ent2, ent1));
+    } else if (ent1->has<CollectibleComponent>() && ent2->has<EnemyComponent>()) {
+        world->emit<EnemyCollectableCollisionEvent>(EnemyCollectableCollisionEvent(ent2, ent1));
     }
 }

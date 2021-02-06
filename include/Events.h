@@ -15,6 +15,25 @@ struct EnemyCollisionEvent {
     Entity* enemy;
 };
 
+struct PLayerCollectableCollisionEvent {
+
+    PLayerCollectableCollisionEvent(Entity *collectable, Entity *player)
+    : collectable(collectable), player(player) {}
+
+    Entity* collectable;
+    Entity* player;
+};
+
+
+struct EnemyCollectableCollisionEvent {
+
+    EnemyCollectableCollisionEvent(Entity *collectable, Entity *enemy)
+    : collectable(collectable), enemy(enemy) {}
+
+    Entity* collectable;
+    Entity* enemy;
+};
+
 struct BreakEvent {
     float x;
     float y;
