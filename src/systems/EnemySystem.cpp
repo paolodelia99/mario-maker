@@ -1,8 +1,7 @@
 //
 // Created by paolo on 29/01/21.
 //
-
-#include <EnemySystem.h>
+#include "systems/EnemySystem.h"
 
 EnemySystem::EnemySystem() {
 
@@ -35,6 +34,7 @@ void EnemySystem::configure(World *world) {
     EntitySystem::configure(world);
 
     world->subscribe<KillEnemyEvent>(this);
+    world->subscribe<EnemyCollectableCollisionEvent>(this);
 }
 
 void EnemySystem::unconfigure(World *world) {
@@ -297,4 +297,58 @@ void EnemySystem::createChildGoombas(World *world, Rectangle sourceRect) {
         goomba2->assign<WalkComponent>();
         goomba2->get<WalkComponent>()->invertSpeed();
     }, 100);
+}
+
+void EnemySystem::receive(World *world, const EnemyCollectableCollisionEvent &event) {
+    Entity* collectibleEntity = event.collectable;
+    Entity* enemy = event.enemy;
+
+    eatMushroom(enemy, collectibleEntity->get<CollectibleComponent>()->type);
+    world->destroy(collectibleEntity);
+}
+
+void EnemySystem::eatMushroom(Entity *entity, Collectible::CollectibleType type) {
+
+    TextureId currentTexture = entity->get<TextureComponent>()->textureId_;
+
+    switch (type) {
+        case Collectible::CollectibleType::SUPER_MARIO_MUSHROOM:
+        case Collectible::MEGA_MUSHROOM: {
+            if (!entity->get<EnemyComponent>()->isBig) {
+                float oldHeight = entity->get<AABBComponent>()->top();
+                auto animComponent = entity->get<AnimationComponent>();
+                std::vector<TextureId> oldAnimation = animComponent->textures;
+                int oldDuration = animComponent->duration;
+                entity->assign<AnimationComponent>(std::vector<TextureId>{
+                    currentTexture,
+                    TextureId::EMPTY,
+                    currentTexture,
+                    TextureId::EMPTY,
+                    currentTexture,
+                    currentTexture,
+                    TextureId::EMPTY,
+                    TextureId::EMPTY,
+                    currentTexture,
+                }, 4, false, false, false);
+                entity->assign<FrozenComponent>();
+                entity->assign<TimerComponent>([=]() {
+                    auto aabb = entity->get<AABBComponent>();
+                    entity->remove<FrozenComponent>();
+                    entity->remove<AnimationComponent>();
+                    aabb->setTop(oldHeight - GAME_TILE_SIZE);
+                    aabb->collisionBox_.height = GAME_TILE_SIZE * 2;
+                    aabb->collisionBox_.width = GAME_TILE_SIZE * 2;
+                    entity->get<EnemyComponent>()->isBig = true;
+                    entity->assign<AnimationComponent>(oldAnimation, oldDuration);
+                    entity->get<TextureComponent>()->setDimensions(aabb->getWidth(), aabb->getHeight());
+                }, 40);
+            }
+        }
+            break;
+        case Collectible::NONE:
+        case Collectible::FLAME_MUSHROOM:
+        case Collectible::ONE_UP_MUSHROOM:
+            break;
+    }
+
 }

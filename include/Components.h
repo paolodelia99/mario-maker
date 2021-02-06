@@ -72,6 +72,10 @@ struct AABBComponent {
         }
     }
 
+    float getHeight() { return collisionBox_.height; }
+
+    float getWidth() { return collisionBox_.width; }
+
     Rectangle collisionBox_;
 };
 

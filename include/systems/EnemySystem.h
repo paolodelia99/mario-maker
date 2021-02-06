@@ -10,7 +10,10 @@
 
 using namespace ECS;
 
-class EnemySystem : public EntitySystem, public EventSubscriber<KillEnemyEvent> {
+class EnemySystem :
+        public EntitySystem,
+        public EventSubscriber<KillEnemyEvent>,
+        public EventSubscriber<EnemyCollectableCollisionEvent> {
 public:
     EnemySystem();
 
@@ -23,6 +26,8 @@ public:
     void unconfigure(World* world) override;
 
     void receive(World* world, const KillEnemyEvent& killEnemyEvent) override;
+
+    void receive(World* world, const EnemyCollectableCollisionEvent& event) override;
 
 private:
 
@@ -38,9 +43,9 @@ private:
 
     void manageParachutes(World *world);
 
-    void createChildGoombas(Rectangle sourceRect);
-
     void createChildGoombas(World *world, Rectangle sourceRect);
+
+    void eatMushroom(Entity *entity, Collectible::CollectibleType type);
 };
 
 

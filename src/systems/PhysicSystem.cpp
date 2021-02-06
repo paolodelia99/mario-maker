@@ -96,7 +96,7 @@ void PhysicSystem::checkYCollision(Entity *ent1, Entity *ent2) {
 
 void PhysicSystem::checkXCollision(Entity *ent1, Entity *ent2) {
     auto aabb = ent1->get<AABBComponent>();
-    auto kinetic = ent1->get<KineticComponent>();
+    ComponentHandle<KineticComponent> kinetic = ent1->get<KineticComponent>();
     Rectangle objCollisionBox = ent2->get<AABBComponent>()->collisionBox_;
     float objectRight = objCollisionBox.x + objCollisionBox.width;
     float objectXCenter = objCollisionBox.x + objCollisionBox.width / 2;
@@ -109,6 +109,7 @@ void PhysicSystem::checkXCollision(Entity *ent1, Entity *ent2) {
                 aabb->collisionBox_.width,
                 aabb->collisionBox_.height - 4 };
     } else {
+        kinetic = new KineticComponent();
         kineticEntityCollBox = Rectangle{
                 aabb->left(),
                 aabb->top() + 2,
@@ -561,6 +562,7 @@ void PhysicSystem::checkCollisionWithCollectible(Entity *ent1, Entity *ent2) {
     } else if (ent2->has<CollectibleComponent>() && ent1->has<EnemyComponent>()) {
         world->emit<EnemyCollectableCollisionEvent>(EnemyCollectableCollisionEvent(ent2, ent1));
     } else if (ent1->has<CollectibleComponent>() && ent2->has<EnemyComponent>()) {
-        world->emit<EnemyCollectableCollisionEvent>(EnemyCollectableCollisionEvent(ent2, ent1));
+        world->emit<EnemyCollectableCollisionEvent>(EnemyCollectableCollisionEvent(ent1, ent2
+        ));
     }
 }

@@ -146,7 +146,7 @@
     <property name="type" value="GOOMBA"/>
    </properties>
   </object>
-  <object id="104" x="256" y="16" width="16" height="16">
+  <object id="104" x="464" y="16" width="16" height="16">
    <properties>
     <property name="has_parachute" type="bool" value="true"/>
     <property name="type" value="GOOMBA"/>
@@ -159,7 +159,7 @@
     <property name="type" value="GOOMBA"/>
    </properties>
   </object>
-  <object id="106" x="416" y="32" width="16" height="16">
+  <object id="106" x="256" y="32" width="16" height="16">
    <properties>
     <property name="has_parachute" type="bool" value="true"/>
     <property name="isBig" type="bool" value="false"/>
