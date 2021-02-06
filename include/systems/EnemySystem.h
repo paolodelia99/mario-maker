@@ -37,6 +37,10 @@ private:
     void manageTartossos(World *world);
 
     void manageParachutes(World *world);
+
+    void createChildGoombas(Rectangle sourceRect);
+
+    void createChildGoombas(World *world, Rectangle sourceRect);
 };
 
 

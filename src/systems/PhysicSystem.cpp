@@ -46,12 +46,20 @@ void PhysicSystem::checkYCollision(Entity *ent1, Entity *ent2) {
     Rectangle objCollisionBox = ent2->get<AABBComponent>()->collisionBox_;
     float objectBottom = objCollisionBox.y + objCollisionBox.height;
     float objectYCenter = objCollisionBox.y + objCollisionBox.height / 2;
-    Rectangle kineticEntityCollBox = Rectangle{
-            aabb->collisionBox_.x + kinetic->speedX_,
-            aabb->collisionBox_.y + kinetic->speedY_,
-            aabb->collisionBox_.width - TILE_ROUNDNESS / 2,
-            aabb->collisionBox_.height + 1
-    };
+    Rectangle kineticEntityCollBox;
+    if (kinetic) {
+        kineticEntityCollBox = Rectangle{
+                aabb->collisionBox_.x + kinetic->speedX_,
+                aabb->collisionBox_.y + kinetic->speedY_,
+                aabb->collisionBox_.width - TILE_ROUNDNESS / 2,
+                aabb->collisionBox_.height + 1 };
+    } else {
+        kineticEntityCollBox = Rectangle{
+                aabb->collisionBox_.x,
+                aabb->collisionBox_.y,
+                aabb->collisionBox_.width - TILE_ROUNDNESS / 2,
+                aabb->collisionBox_.height + 1 };
+    }
 
     Rectangle collisionRect = GetCollisionRec(kineticEntityCollBox, objCollisionBox);
 
@@ -91,13 +99,21 @@ void PhysicSystem::checkXCollision(Entity *ent1, Entity *ent2) {
     Rectangle objCollisionBox = ent2->get<AABBComponent>()->collisionBox_;
     float objectRight = objCollisionBox.x + objCollisionBox.width;
     float objectXCenter = objCollisionBox.x + objCollisionBox.width / 2;
+    Rectangle kineticEntityCollBox;
 
-    Rectangle kineticEntityCollBox = Rectangle{
-            aabb->left() + kinetic->speedX_,
-            aabb->top() + kinetic->speedY_ + 2,
-            aabb->collisionBox_.width,
-            aabb->collisionBox_.height - 4
-    };
+    if (kinetic) {
+        kineticEntityCollBox = Rectangle{
+                aabb->left() + kinetic->speedX_,
+                aabb->top() + kinetic->speedY_ + 2,
+                aabb->collisionBox_.width,
+                aabb->collisionBox_.height - 4 };
+    } else {
+        kineticEntityCollBox = Rectangle{
+                aabb->left(),
+                aabb->top() + 2,
+                aabb->collisionBox_.width,
+                aabb->collisionBox_.height - 4 };
+    }
 
     Rectangle collisionRect = GetCollisionRec(kineticEntityCollBox, objCollisionBox);
 

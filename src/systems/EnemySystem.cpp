@@ -60,6 +60,7 @@ void EnemySystem::killEnemyWithFireball(Entity *enemy) {
     Enemy::Type type = enemy->get<EnemyComponent>()->type_;
     float xVelocity = enemy->has<LeftCollisionComponent>() ? 2.0f : -2.0f;
     ComponentHandle<TextureComponent> textureComponent;
+    bool wasBig = enemyComponent->isBig;
 
     switch (type) {
         case Enemy::GOOMBA:
@@ -77,6 +78,13 @@ void EnemySystem::killEnemyWithFireball(Entity *enemy) {
              aabb->collisionBox_.width = GAME_TILE_SIZE;
              aabb->collisionBox_.height = GAME_TILE_SIZE;
             break;
+        case Enemy::GREEN_TURTLE_SHELL:
+        case Enemy::RED_TURTLE_SHELL:
+            enemy->removeAll();
+            textureComponent = enemy->assign<TextureComponent>(
+                    type == Enemy::GREEN_TURTLE_SHELL ?
+                    TextureId::G_TURLE_SHELL_STAND_1 : TextureId::R_TURLE_SHELL_STAND_1);
+            break;
         case Enemy::PIRANHA_PLANT:
             enemy->removeAll();
             textureComponent = enemy->assign<TextureComponent>(TextureId::PIRANHA_PLANT_1);
@@ -85,9 +93,11 @@ void EnemySystem::killEnemyWithFireball(Entity *enemy) {
     }
 
     enemy->assign<EnemyComponent>(enemyComponent->type_);
+    enemy->get<EnemyComponent>()->isBig = wasBig;
     enemy->assign<TileComponent>();
     textureComponent->flipV = true;
     enemy->assign<AABBComponent>(aabb->collisionBox_);
+    enemy->get<TextureComponent>()->setDimensions(aabb->collisionBox_.width, aabb->collisionBox_.height);
     enemy->assign<GravityComponent>();
     enemy->assign<KineticComponent>(xVelocity, -1.5f, 0.0f, -0.50f);
 }
@@ -99,6 +109,7 @@ void EnemySystem::killEnemyWithJump(Entity *enemy) {
     auto kinetic = enemy->get<KineticComponent>();
     Enemy::Type type = enemy->get<EnemyComponent>()->type_;
     bool wasBig = enemyComponent->isBig;
+    World* world = enemy->getWorld();
 
     switch (type) {
         case Enemy::GOOMBA:
@@ -108,8 +119,9 @@ void EnemySystem::killEnemyWithJump(Entity *enemy) {
             enemy->assign<TileComponent>();
             enemy->assign<TextureComponent>(TextureId::GOOMBA_DEAD);
             enemy->get<TextureComponent>()->setDimensions(collisionRec.width, collisionRec.height);
-            enemy->assign<AABBComponent>(aabb->collisionBox_);
+            enemy->assign<AABBComponent>(collisionRec);
             enemy->assign<DestroyDelayedComponent>(100);
+            if (wasBig) createChildGoombas(world, collisionRec);
             break;
         case Enemy::KOOPA_TROOPA:
         case Enemy::RED_KOOPA_TROOPA:
@@ -233,4 +245,56 @@ void EnemySystem::manageParachutes(World *world) {
             parachute->get<AABBComponent>()->setBottom(entity->get<AABBComponent>()->top());
         }
     }
+}
+
+Entity* createGoomba(World* world, Rectangle collisionBox) {
+    Entity* goomba = world->create();
+    goomba->assign<SolidComponent>();
+    goomba->assign<GravityComponent>();
+    goomba->assign<EnemyComponent>(Enemy::Type::GOOMBA);
+    goomba->assign<AABBComponent>(collisionBox);
+    goomba->assign<KineticComponent>();
+    goomba->assign<TextureComponent>(TextureId::GOOMBA_1);
+    goomba->assign<AnimationComponent>(std::vector<TextureId>{
+            TextureId::GOOMBA_1,
+            TextureId::GOOMBA_2
+    }, 8);
+
+    return goomba;
+}
+
+void EnemySystem::createChildGoombas(World *world, Rectangle sourceRect) {
+    float centerX = sourceRect.x + sourceRect.width / 2;
+    float centerY = sourceRect.y + sourceRect.height / 2;
+    Rectangle collisionBox1 = {
+            sourceRect.x,
+            centerY,
+            GAME_TILE_SIZE,
+            GAME_TILE_SIZE
+    };
+    Rectangle collisionBox2 = {
+            centerX,
+            centerY,
+            GAME_TILE_SIZE,
+            GAME_TILE_SIZE
+    };
+    float accX = 0.5f, accY = -1.5f;
+
+    Entity* goomba1 = createGoomba(world, collisionBox1);
+    Entity* goomba2 = createGoomba(world, collisionBox2);
+    auto kinetic1 = goomba1->get<KineticComponent>();
+    auto kinetic2 = goomba2->get<KineticComponent>();
+
+    kinetic1->accX_ = -accX;
+    kinetic1->accY_ = accY;
+    kinetic2->accX_ = accX;
+    kinetic2->accY_ = accY;
+
+    goomba1->assign<TimerComponent>([goomba1]() {
+        goomba1->assign<WalkComponent>();
+    }, 100);
+    goomba2->assign<TimerComponent>([goomba2]() {
+        goomba2->assign<WalkComponent>();
+        goomba2->get<WalkComponent>()->invertSpeed();
+    }, 100);
 }

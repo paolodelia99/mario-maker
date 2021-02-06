@@ -98,6 +98,10 @@ struct WalkComponent {
 
     WalkComponent(float speed) : speed(speed) {}
 
+    void invertSpeed() {
+        speed = -speed;
+    }
+
     float speed = -0.6f;
 };
 

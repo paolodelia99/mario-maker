@@ -124,8 +124,9 @@
     <property name="type" value="KOOPA_TROOPA"/>
    </properties>
   </object>
-  <object id="80" x="672.318" y="176.136" width="15.9091" height="15.9545">
+  <object id="80" x="672" y="160" width="15.9091" height="15.9545">
    <properties>
+    <property name="isBig" type="bool" value="true"/>
     <property name="type" value="GOOMBA"/>
    </properties>
   </object>
@@ -161,7 +162,7 @@
   <object id="106" x="416" y="32" width="16" height="16">
    <properties>
     <property name="has_parachute" type="bool" value="true"/>
-    <property name="isBig" type="bool" value="true"/>
+    <property name="isBig" type="bool" value="false"/>
     <property name="type" value="KOOPA_TROOPA"/>
    </properties>
   </object>
