@@ -444,8 +444,9 @@ void PhysicSystem::checkIfBreakComponent(Entity *ent1, Entity *ent2) {
 void PhysicSystem::checkKillEnemy(Entity *ent1, Entity *ent2) {
     if (ent2->has<EnemyComponent>() && ent1->has<PlayerComponent>()) {
         World* world = ent1->getWorld();
+        Enemy::Type type = ent2->get<EnemyComponent>()->type_;
 
-        if (ent2->get<EnemyComponent>()->type_ != Enemy::PIRANHA_PLANT) {
+        if (type != Enemy::PIRANHA_PLANT && type != Enemy::Type::THWOMP) {
             world->emit<KillEnemyEvent>(KillEnemyEvent(ent2));
             // Make the player bounce
             auto playerKinetic = ent1->get<KineticComponent>();

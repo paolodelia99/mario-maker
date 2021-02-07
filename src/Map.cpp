@@ -361,6 +361,16 @@ void Map::setEnemyType(ECS::Entity *ent, std::string type) {
                 TextureId::TARTOSSO_1,
                 TextureId::TARTOSSO_2
         }, 8);
+    } else if (type == "THWOMP") {
+        auto aabb = ent->get<AABBComponent>();
+        ent->assign<EnemyComponent>(Enemy::THWOMP);
+        ent->assign<SolidComponent>();
+        ent->assign<TextureComponent>(TextureId::THWOMP_2_V);
+        ent->remove<GravityComponent>();
+        aabb->setHeight(GAME_TILE_SIZE * 2);
+        aabb->setWidth(24 * 2);
+        ent->assign<ThwompComponent>();
+        ent->get<ThwompComponent>()->setInitialHeight(aabb->top());
     }
 }
 

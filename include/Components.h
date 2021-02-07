@@ -10,6 +10,7 @@
 #include <utility>
 #include <iostream>
 #include <unordered_set>
+#include <bits/stdc++.h>
 
 
 ECS_TYPE_IMPLEMENTATION;
@@ -538,13 +539,21 @@ namespace Enemy {
         GREEN_TURTLE_SHELL,
         RED_TURTLE_SHELL,
         PIRANHA_PLANT,
-        TARTOSSO
+        TARTOSSO,
+        THWOMP
     };
 
     enum TartossoState {
         LIVE,
         DEAD,
         TRANSFORMING
+    };
+
+    enum ThwompState {
+        RESTING,
+        GOING_DOWN,
+        GOING_UP,
+        WAITING
     };
 }
 
@@ -556,6 +565,18 @@ struct EnemyComponent {
     bool hasParachute = false;
     bool isBig = false;
     bool hasWings = false;
+};
+
+struct ThwompComponent {
+
+    ThwompComponent() = default;
+
+    void setInitialHeight (float value) {
+        initialHeight = value;
+    }
+
+    Enemy::ThwompState state = Enemy::ThwompState::RESTING;
+    float initialHeight = 0.0f;
 };
 
 struct TartossoComponent {

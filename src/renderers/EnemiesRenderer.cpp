@@ -35,6 +35,13 @@ EnemiesRenderer::EnemiesRenderer(const char *filepath)
     texturePositions_.insert({TARTOSSO_D_3, new Rectangle{408, 42, TILE_SIZE + 2, TILE_SIZE + TILE_SIZE / 2}});
     texturePositions_.insert({TARTOSSO_DEAD, new Rectangle{433, 42, TILE_SIZE + 4, TILE_SIZE + TILE_SIZE / 2}});
 
+    // Thwomp
+    texturePositions_.insert({THWOMP_1_V, new Rectangle{460, 84, 24, TILE_SIZE * 2}});
+    texturePositions_.insert({THWOMP_2_V, new Rectangle{489, 84, 24, TILE_SIZE * 2}});
+    texturePositions_.insert({THWOMP_ANGRY_V, new Rectangle{514, 84, 24, TILE_SIZE * 2}});
+    texturePositions_.insert({THWOMP_H, new Rectangle{543, 84, 24, TILE_SIZE * 2}});
+    texturePositions_.insert({THWOMP_ANGRY_H, new Rectangle{568, 84, 24, TILE_SIZE * 2}});
+
     loadTextures();
 }
 

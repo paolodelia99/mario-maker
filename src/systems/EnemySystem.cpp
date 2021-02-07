@@ -181,6 +181,8 @@ void EnemySystem::killEnemyWithJump(Entity *enemy) {
 void EnemySystem::manageEnemyEntities(World* world) {
     manageTartossos(world);
 
+    manageThwomps(world);
+
     managePiranhaPlants(world);
 
     manageParachutes(world);
@@ -311,6 +313,8 @@ void EnemySystem::eatMushroom(Entity *entity, Collectible::CollectibleType type)
 
     TextureId currentTexture = entity->get<TextureComponent>()->textureId_;
 
+    if (entity->get<EnemyComponent>()->type_ == Enemy::THWOMP) return;
+
     switch (type) {
         case Collectible::CollectibleType::SUPER_MARIO_MUSHROOM:
         case Collectible::MEGA_MUSHROOM: {
@@ -351,4 +355,60 @@ void EnemySystem::eatMushroom(Entity *entity, Collectible::CollectibleType type)
             break;
     }
 
+}
+
+void EnemySystem::manageThwomps(World *world) {
+    for (auto thwomp : world->each<ThwompComponent, AABBComponent, EnemyComponent>()) {
+        if (thwomp->has<FrozenComponent>()) continue;
+        auto thwompComponent = thwomp->get<ThwompComponent>();
+        auto state = thwompComponent->state;
+        auto aabb = thwomp->get<AABBComponent>();
+        float minDist = FLT_MAX;
+
+        switch (state) {
+            case Enemy::ThwompState::RESTING:
+                for (auto player : world->each<PlayerComponent, AABBComponent>()) {
+                    auto playerAABB = player->get<AABBComponent>();
+                    float dist = std::sqrt(
+                            std::pow(aabb->left() - playerAABB->left(), 2) +
+                            std::pow(aabb->top() - playerAABB->top(), 2));
+                    if (dist < minDist) minDist = dist;
+                }
+                if (minDist <= 300) {
+                    thwompComponent->state = Enemy::ThwompState::GOING_DOWN;
+                    thwomp->get<TextureComponent>()->textureId_ = TextureId::THWOMP_ANGRY_V;
+                    thwomp->assign<TimerComponent>([=]() {
+                        auto kinetic = thwomp->get<KineticComponent>();
+                        if (kinetic) kinetic->accY_ = +4.0f;
+                    }, 50);
+                } else {
+                    thwomp->get<TextureComponent>()->textureId_ = TextureId::THWOMP_2_V;
+                }
+                break;
+            case Enemy::ThwompState::GOING_DOWN:
+                if (thwomp->has<BottomCollisionComponent>()) {
+                    thwompComponent->state = Enemy::ThwompState::WAITING;
+                    thwomp->assign<TimerComponent>([=]() {
+                        auto kinetic = thwomp->get<KineticComponent>();
+                        thwompComponent->state = Enemy::ThwompState::GOING_UP;
+                        if (kinetic) kinetic->accY_ = -1.5f;
+                    }, 80);
+                }
+                break;
+            case Enemy::ThwompState::WAITING:
+                break;
+            case Enemy::ThwompState::GOING_UP:
+                std::cout << "top: " << aabb->top() << std::endl;
+                std::cout << "initial height: " << thwompComponent->initialHeight << std::endl;
+                if (aabb->top() <= thwompComponent->initialHeight) {
+                    auto kinetic = thwomp->get<KineticComponent>();
+                    if (kinetic) {
+                        kinetic->accY_ = 0.0f;
+                        kinetic->speedY_ = 0.0f;
+                    }
+                    thwompComponent->state = Enemy::ThwompState::RESTING;
+                }
+                break;
+        }
+    }
 }

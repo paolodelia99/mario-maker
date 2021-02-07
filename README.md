@@ -30,6 +30,12 @@ the tmx files which contains the structure of the map.
   
 If you're using **CLion** I've included the `./idea` folder, which can help you setting up and build the project.
 
+## Run the game
+
+    path_to_build/mario_maker <path_map_to_load>
+
+Where the `path_map_to_load` is relative to the build folder. So, for example, it could be `../assets/maps/map_1.tmx`.
+
 ## Commands
 
 The first player's commands are:
