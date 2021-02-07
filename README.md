@@ -142,32 +142,9 @@ For those who don't know the (0, 0) position is the square at the top left, and 
 while y increases by going down.
 So you have to choose the spawn position according to that coordinate system.
 
-# Todos 
+# Contributing
 
-- [ ] State pattern for controlling the player and the enemies (https://gameprogrammingpatterns.com/state.html)
-- [x] FlagSystem (for winning)
-- [ ] Enemies to Implement
-  - [x] Goomba
-  - [x] Koopa Troopa
-  - [x] Piranha plant
-  - [ ] Browser
-  - [ ] Baby Browser
-  - [x] Tartosso
-  - [ ] Thwomp  
-  - [ ] bob-omb 
-  - [ ] Hammer Bro
-  - [ ] Hammer Heavy Bro 
-- [ ] fix animation of brick breaking
-- [ ] Sounds and music
-- [ ] Bubble after a player die
-- [ ] Controller for the second player (controller input not detected in linux by raylib)
-- [ ] Make controls customizable
-- [ ] Add the possibility of choosing between Mario and Luigi
-- [ ] Add the possibility of choosing the map to play (if there are more than one)
-- [ ] Documenting the code ?? (if it does make sense)
-- [ ] Improve kinetic-kinetic collision detection, possible solutions:
-  - spacialHashMap 
-  - event-driven collision using a priority-queue
+Contributors are welcome! But before you do it check out the [guidelines](docs/CONTRIBUTING.md).
 
 # Author
 
