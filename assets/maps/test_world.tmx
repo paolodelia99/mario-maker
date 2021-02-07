@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="110" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="108">
  <properties>
-  <property name="spawn_mario_x" value="6"/>
-  <property name="spawn_mario_y" value="11"/>
+  <property name="spawn_mario_x" type="int" value="6"/>
+  <property name="spawn_mario_y" type="int" value="11"/>
  </properties>
  <tileset firstgid="1" name="mapTiles-2" tilewidth="16" tileheight="16" tilecount="812" columns="29">
   <image source="../tilesets/tiles-2.png" width="464" height="448"/>

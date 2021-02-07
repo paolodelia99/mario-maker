@@ -2,11 +2,10 @@
 // Created by paolo on 06/01/21.
 //
 
-#include <iostream>
 #include "../include/Menu.h"
 
-Menu::Menu(int width, int height)
-:width(width), height(height)
+Menu::Menu(const char* mapFilepath, int width, int height)
+: mapFilepath_(mapFilepath), width(width), height(height)
 {
     InitWindow(width, height, "Mario Maker");
     SetTargetFPS(60);
@@ -71,8 +70,7 @@ void Menu::menuLoop() const {
 }
 
 void Menu::startGame() const {
-    const char* mapPath = "../assets/maps/test_world.tmx";
-    Game game(mapPath, width, height, SECOND_PLAYER);
+    Game game(mapFilepath_, width, height, SECOND_PLAYER);
 
     game.mainLoop();
 }

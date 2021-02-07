@@ -5,23 +5,26 @@
 #ifndef MARIO_MAKER_MENU_H
 #define MARIO_MAKER_MENU_H
 #include <raylib.h>
+#include <iostream>
+#include <dirent.h>
 #include "Game.h"
 
 class Menu {
 public:
-    Menu(int width, int height);
+    Menu(const char* mapFilepath, int width, int height);
 
     virtual ~Menu();
 
     void menuLoop() const;
 
-    void startGame();
+private:
+
+    void startGame() const;
 
 private:
     int width;
     int height;
-
-    void startGame() const;
+    const char* mapFilepath_;
 };
 
 

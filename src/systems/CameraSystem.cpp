@@ -52,9 +52,7 @@ void CameraSystem::followLeadPlayer(World *world) {
             pCamera_->camera.target.x -= 2;
         }
 
-        if (playerAABB.top() > pCamera_->camera.target.y) {
-            pCamera_->camera.target.y = playerAABB.top();
-        }
+        pCamera_->camera.target.y = playerAABB.top();
 
         // Check if the camera doesn't exist the map
         if (pCamera_->camera.target.x < screenWidth_ / 2) {

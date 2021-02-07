@@ -62,12 +62,11 @@ void Map::loadProperties(const std::vector<tmx::Property> properties) {
     Vector2 marioSpawn;
     for (const tmx::Property& property : properties)
     {
-        int value = std::stoi(property.getStringValue());
         if (property.getName() == "spawn_mario_x") {
-            marioSpawn.x = value;
+            marioSpawn.x = property.getIntValue();
 
         } else if (property.getName() == "spawn_mario_y") {
-            marioSpawn.y = value;
+            marioSpawn.y = property.getIntValue();
         }
     }
 
