@@ -53,7 +53,7 @@ void Game::mainLoop() {
 
         BeginMode2D(camera.get().camera);
 
-        render(static_cast<float>(lag / FPS));
+        render(static_cast<float>(lag / MS_PER_UPDATE));
 
         // just for showing the center of the camera
 #ifdef DEBUG

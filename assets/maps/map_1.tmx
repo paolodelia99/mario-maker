@@ -127,70 +127,70 @@
   </object>
   <object id="94" x="1664" y="64" width="16" height="16">
    <properties>
-    <property name="type" value="THWOMP"/>
+    <property name="type" value="THWOMP_V"/>
    </properties>
   </object>
   <object id="95" x="1712" y="64" width="16" height="16">
    <properties>
-    <property name="type" value="THWOMP"/>
+    <property name="type" value="THWOMP_V"/>
    </properties>
   </object>
   <object id="96" x="1760" y="64" width="16" height="16">
    <properties>
-    <property name="type" value="THWOMP"/>
+    <property name="type" value="THWOMP_V"/>
    </properties>
   </object>
   <object id="97" x="1808" y="64" width="16" height="16">
    <properties>
-    <property name="type" value="THWOMP"/>
+    <property name="type" value="THWOMP_V"/>
    </properties>
   </object>
   <object id="98" x="1616" y="64" width="16" height="16">
    <properties>
-    <property name="type" value="THWOMP"/>
+    <property name="type" value="THWOMP_V"/>
    </properties>
   </object>
   <object id="99" x="1568" y="64" width="16" height="16">
    <properties>
-    <property name="type" value="THWOMP"/>
+    <property name="type" value="THWOMP_V"/>
    </properties>
   </object>
   <object id="100" x="1472" y="64" width="16" height="16">
    <properties>
     <property name="isBig" type="bool" value="false"/>
-    <property name="type" value="THWOMP"/>
+    <property name="type" value="THWOMP_V"/>
    </properties>
   </object>
   <object id="101" x="1408" y="64" width="16" height="16">
    <properties>
     <property name="isBig" type="bool" value="false"/>
-    <property name="type" value="THWOMP"/>
+    <property name="type" value="THWOMP_V"/>
    </properties>
   </object>
   <object id="103" x="1296" y="64" width="16" height="16">
    <properties>
-    <property name="type" value="THWOMP"/>
+    <property name="type" value="THWOMP_V"/>
    </properties>
   </object>
   <object id="104" x="1248" y="64" width="16" height="16">
    <properties>
-    <property name="type" value="THWOMP"/>
+    <property name="type" value="THWOMP_V"/>
    </properties>
   </object>
   <object id="105" x="1200" y="64" width="16" height="16">
    <properties>
-    <property name="type" value="THWOMP"/>
+    <property name="type" value="THWOMP_V"/>
    </properties>
   </object>
   <object id="106" x="1152" y="64" width="16" height="16">
    <properties>
-    <property name="type" value="THWOMP"/>
+    <property name="type" value="THWOMP_V"/>
    </properties>
   </object>
   <object id="107" x="1344" y="64" width="16" height="16">
    <properties>
     <property name="isBig" type="bool" value="false"/>
-    <property name="type" value="THWOMP"/>
+    <property name="type" value="THWOMP_V"/>
    </properties>
   </object>
  </objectgroup>

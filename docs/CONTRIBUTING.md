@@ -33,6 +33,7 @@ Here's I made a list of thing that I would like to implement. Enjoy!
 
 Feel free also to add thing that you would like to see in the game.
 
+- [ ] frame rate drops when there are too many entities
 - [ ] State pattern for controlling the player and the enemies (https://gameprogrammingpatterns.com/state.html)
 - [x] FlagSystem (for winning)
 - [ ] Enemies to Implement
@@ -42,7 +43,7 @@ Feel free also to add thing that you would like to see in the game.
     - [ ] Browser
     - [ ] Baby Browser
     - [x] Tartosso
-    - [ ] Thwomp
+    - [x] Thwomp
     - [ ] bob-omb
     - [ ] Hammer Bro
     - [ ] Hammer Heavy Bro

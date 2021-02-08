@@ -3,7 +3,8 @@
 //
 #pragma once
 
-#define DEBUG false
+// remove the comment if you want to display the collision boxes
+// #define DEBUG
 
 constexpr const char* SBM1_PLAYER_TILESET_PATH = "../assets/tilesets/players-tileset.png";
 constexpr const char* SMB1_TILESET_PATH = "../assets/tilesets/tiles-2.png";
@@ -16,8 +17,8 @@ constexpr int GAME_TILE_SIZE = 32;
 constexpr int TILE_SIZE = 16;
 constexpr int TILE_ROUNDNESS = 4;
 
-constexpr float MS_PER_UPDATE = 1.f / 120;
 constexpr int FPS = 60;
+constexpr float MS_PER_UPDATE = 0.01f;
 
 constexpr float GRAVITY = .10f;
 constexpr float FRICTION = .94;

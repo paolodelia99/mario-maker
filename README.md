@@ -11,7 +11,7 @@ The main architectural/design pattern used to build the game is the [ECS](https:
 - [Quick Start](#quick-start)
 - [Libraries Used](#libraries-used)  
 - [Creating your own map](#creating-your-own-map)
-- [Todos](#todos)
+- [Contributing](#Contributing)
 
 # Quick start 
 

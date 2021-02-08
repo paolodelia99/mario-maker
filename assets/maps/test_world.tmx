@@ -124,10 +124,10 @@
     <property name="type" value="KOOPA_TROOPA"/>
    </properties>
   </object>
-  <object id="80" x="672" y="160" width="15.9091" height="15.9545">
+  <object id="80" x="816" y="160" width="16" height="16">
    <properties>
-    <property name="isBig" type="bool" value="true"/>
-    <property name="type" value="GOOMBA"/>
+    <property name="isBig" type="bool" value="false"/>
+    <property name="type" value="THWOMP_H"/>
    </properties>
   </object>
   <object id="81" x="976.182" y="176.364" width="15.9091" height="15.0909">
@@ -168,7 +168,7 @@
   </object>
   <object id="108" x="400" y="32" width="16" height="16">
    <properties>
-    <property name="type" value="THWOMP"/>
+    <property name="type" value="THWOMP_V"/>
    </properties>
   </object>
  </objectgroup>

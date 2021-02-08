@@ -559,7 +559,7 @@ void jumpOverEnemy(Entity* player, Entity* enemy) {
     Enemy::Type type = enemy->get<EnemyComponent>()->type_;
 
     if (type != Enemy::Type::PIRANHA_PLANT
-        && type != Enemy::Type::THWOMP) {
+        && type != Enemy::Type::THWOMP_V) {
         world->emit<KillEnemyEvent>(KillEnemyEvent(enemy));
         // Make the player bounce
         auto playerKinetic = player->get<KineticComponent>();

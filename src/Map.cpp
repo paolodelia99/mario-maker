@@ -361,16 +361,28 @@ void Map::setEnemyType(ECS::Entity *ent, std::string type) {
                 TextureId::TARTOSSO_1,
                 TextureId::TARTOSSO_2
         }, 8);
-    } else if (type == "THWOMP") {
+    } else if (type == "THWOMP_V") {
         auto aabb = ent->get<AABBComponent>();
-        ent->assign<EnemyComponent>(Enemy::THWOMP);
+        ent->assign<EnemyComponent>(Enemy::THWOMP_V);
         ent->assign<SolidComponent>();
         ent->assign<TextureComponent>(TextureId::THWOMP_2_V);
         ent->remove<GravityComponent>();
         aabb->setHeight(GAME_TILE_SIZE * 2);
         aabb->setWidth(24 * 2);
         ent->assign<ThwompComponent>();
-        ent->get<ThwompComponent>()->setInitialHeight(aabb->top());
+        ent->get<ThwompComponent>()->setInitialPos(aabb->top());
+    } else if (type == "THWOMP_H") {
+        auto aabb = ent->get<AABBComponent>();
+        ent->assign<EnemyComponent>(Enemy::THWOMP_H);
+        ent->assign<SolidComponent>();
+        ent->assign<TextureComponent>(TextureId::THWOMP_H);
+        ent->remove<GravityComponent>();
+        aabb->setTop(aabb->top() - 1);
+        aabb->setHeight(GAME_TILE_SIZE * 2);
+        aabb->setWidth(24 * 2);
+        ECS::ComponentHandle<ThwompComponent> thwompComponent = ent->assign<ThwompComponent>();
+        thwompComponent->setInitialPos(aabb->right());
+        thwompComponent->setHorizontal();
     }
 }
 

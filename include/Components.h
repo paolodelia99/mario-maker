@@ -540,7 +540,8 @@ namespace Enemy {
         RED_TURTLE_SHELL,
         PIRANHA_PLANT,
         TARTOSSO,
-        THWOMP
+        THWOMP_V,
+        THWOMP_H
     };
 
     enum TartossoState {
@@ -551,8 +552,8 @@ namespace Enemy {
 
     enum ThwompState {
         RESTING,
-        GOING_DOWN,
-        GOING_UP,
+        MOVING_TOWARDS,
+        GOING_BACK,
         WAITING
     };
 }
@@ -571,12 +572,15 @@ struct ThwompComponent {
 
     ThwompComponent() = default;
 
-    void setInitialHeight (float value) {
-        initialHeight = value;
+    void setInitialPos (float value) {
+        initialPos = value;
     }
 
+    void setHorizontal() { isVertical = false; }
+
     Enemy::ThwompState state = Enemy::ThwompState::RESTING;
-    float initialHeight = 0.0f;
+    float initialPos = 0.0f;
+    bool isVertical = true;
 };
 
 struct TartossoComponent {
