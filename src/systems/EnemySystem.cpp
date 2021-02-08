@@ -364,6 +364,7 @@ void EnemySystem::manageThwomps(World *world) {
         auto state = thwompComponent->state;
         auto aabb = thwomp->get<AABBComponent>();
         float minDist = FLT_MAX;
+        bool left = thwompComponent->left;
 
         if (thwompComponent->isVertical) {
             switch (state) {
@@ -416,7 +417,14 @@ void EnemySystem::manageThwomps(World *world) {
                         auto playerAABB = player->get<AABBComponent>();
                         if (playerAABB->top() >= aabb->top() + GAME_TILE_SIZE
                             && playerAABB->top() <= aabb->bottom() + GAME_TILE_SIZE) {
-                            float dist = aabb->left() - playerAABB->left();
+                            float dist;
+
+                            if (left) {
+                                dist = aabb->left() - playerAABB->left();
+                            } else {
+                                dist = playerAABB->left() - aabb->left();
+                            }
+
                             if (dist >= 0 && dist < minDist) minDist = dist;
                         }
                     }
@@ -425,7 +433,10 @@ void EnemySystem::manageThwomps(World *world) {
                         thwomp->get<TextureComponent>()->textureId_ = TextureId::THWOMP_ANGRY_H;
                         thwomp->assign<TimerComponent>([=]() {
                             auto kinetic = thwomp->get<KineticComponent>();
-                            if (kinetic) kinetic->accX_ = -4.0f;
+                            if (kinetic) {
+                                if (left) kinetic->accX_ = -4.0f;
+                                else kinetic->accX_ = 4.0f;
+                            }
                         }, 50);
                     } else {
                         thwomp->get<TextureComponent>()->textureId_ = TextureId::THWOMP_H;
@@ -437,20 +448,31 @@ void EnemySystem::manageThwomps(World *world) {
                         thwomp->assign<TimerComponent>([=]() {
                             auto kinetic = thwomp->get<KineticComponent>();
                             thwompComponent->state = Enemy::ThwompState::GOING_BACK;
-                            if (kinetic) kinetic->accX_ = 1.5f;
+                            if (kinetic) kinetic->accX_ = (left ? 1 : -1) * 1.5f;
                         }, 80);
                     }
                     break;
                 case Enemy::ThwompState::WAITING:
                     break;
                 case Enemy::ThwompState::GOING_BACK:
-                    if (aabb->right() >= thwompComponent->initialPos) {
-                        auto kinetic = thwomp->get<KineticComponent>();
-                        if (kinetic) {
-                            kinetic->accX_ = 0.0f;
-                            kinetic->speedX_ = 0.0f;
+                    if (left) {
+                        if (aabb->right() >= thwompComponent->initialPos) {
+                            auto kinetic = thwomp->get<KineticComponent>();
+                            if (kinetic) {
+                                kinetic->accX_ = 0.0f;
+                                kinetic->speedX_ = 0.0f;
+                            }
+                            thwompComponent->state = Enemy::ThwompState::RESTING;
                         }
-                        thwompComponent->state = Enemy::ThwompState::RESTING;
+                    } else {
+                        if (aabb->left() <= thwompComponent->initialPos) {
+                            auto kinetic = thwomp->get<KineticComponent>();
+                            if (kinetic) {
+                                kinetic->accX_ = 0.0f;
+                                kinetic->speedX_ = 0.0f;
+                            }
+                            thwompComponent->state = Enemy::ThwompState::RESTING;
+                        }
                     }
                     break;
             }

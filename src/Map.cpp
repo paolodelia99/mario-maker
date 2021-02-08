@@ -293,6 +293,7 @@ void Map::loadTileEntity(
 void Map::createEnemy(ECS::Entity *ent, std::vector<tmx::Property> properties) {
     bool hasParachute = false;
     bool isBig = false;
+    bool left = true;
 
     ent->assign<GravityComponent>();
     ent->assign<KineticComponent>();
@@ -306,6 +307,8 @@ void Map::createEnemy(ECS::Entity *ent, std::vector<tmx::Property> properties) {
                 hasParachute = true;
             } else if (property.getName() == "isBig" && property.getBoolValue()) {
                 isBig = true;
+            } else if (property.getName() == "left" && property.getBoolValue()) {
+                left = false;
             }
         }
     }
@@ -324,6 +327,14 @@ void Map::createEnemy(ECS::Entity *ent, std::vector<tmx::Property> properties) {
         ent->get<EnemyComponent>()->isBig = true;
         aabb->setWidth(aabb->collisionBox_.width * 2);
         aabb->setHeight(aabb->collisionBox_.height * 2);
+    }
+
+    if (ent->has<ThwompComponent>() && !ent->get<ThwompComponent>()->isVertical) {
+        if (!left) {
+            ECS::ComponentHandle<ThwompComponent> thwompComponent = ent->get<ThwompComponent>();
+            thwompComponent->setRight();
+            thwompComponent->setInitialPos(ent->get<AABBComponent>()->left());
+        }
     }
 }
 

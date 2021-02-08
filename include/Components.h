@@ -578,9 +578,16 @@ struct ThwompComponent {
 
     void setHorizontal() { isVertical = false; }
 
+    void setRight() {
+        if (!isVertical) {
+            left = false;
+        }
+    }
+
     Enemy::ThwompState state = Enemy::ThwompState::RESTING;
     float initialPos = 0.0f;
     bool isVertical = true;
+    bool left = true;
 };
 
 struct TartossoComponent {
