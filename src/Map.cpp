@@ -387,7 +387,7 @@ void Map::createPiranhaPlant(ECS::World* world, float spawnX, float spawnY) {
     piranhaPlant->assign<AnimationComponent>(std::vector<TextureId>{
         TextureId::PIRANHA_PLANT_1,
         TextureId::PIRANHA_PLANT_2
-    }, 8);
+    }, 4);
 
 }
 

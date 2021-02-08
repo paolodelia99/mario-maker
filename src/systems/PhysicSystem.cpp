@@ -42,11 +42,11 @@ PhysicSystem::~PhysicSystem() {
 
 void PhysicSystem::checkYCollision(Entity *ent1, Entity *ent2) {
     auto aabb = ent1->get<AABBComponent>();
-    auto kinetic = ent1->get<KineticComponent>();
+    ComponentHandle<KineticComponent> kinetic = ent1->get<KineticComponent>();
     Rectangle objCollisionBox = ent2->get<AABBComponent>()->collisionBox_;
+    Rectangle kineticEntityCollBox;
     float objectBottom = objCollisionBox.y + objCollisionBox.height;
     float objectYCenter = objCollisionBox.y + objCollisionBox.height / 2;
-    Rectangle kineticEntityCollBox;
     if (kinetic) {
         kineticEntityCollBox = Rectangle{
                 aabb->collisionBox_.x + kinetic->speedX_,
@@ -54,6 +54,7 @@ void PhysicSystem::checkYCollision(Entity *ent1, Entity *ent2) {
                 aabb->collisionBox_.width - TILE_ROUNDNESS / 2,
                 aabb->collisionBox_.height + 1 };
     } else {
+        kinetic = new KineticComponent();
         kineticEntityCollBox = Rectangle{
                 aabb->collisionBox_.x,
                 aabb->collisionBox_.y,
@@ -71,25 +72,25 @@ void PhysicSystem::checkYCollision(Entity *ent1, Entity *ent2) {
                 // Bottom collision
                 if (aabb->bottom() + kinetic->speedY_ >= objCollisionBox.y) {
                     aabb->setBottom(objCollisionBox.y);
-                    ent2->assign<TopCollisionComponent>();
                     kinetic->accY_ = std::min(0.0f, kinetic->accY_);
                     kinetic->speedY_ = std::min(0.0f, kinetic->speedY_);
+                    ent2->assign<TopCollisionComponent>();
                     ent1->assign<BottomCollisionComponent>();
-                    checkKillEnemy(ent1, ent2);
                 }
             } else if (kineticEntityCollBox.y <= objectBottom
                        && kineticEntityCollBox.y > objectYCenter) {
                 // Top collision
                 if (aabb->top() + kinetic->speedY_ <= objCollisionBox.y + objCollisionBox.height) {
                     aabb->setTop(objCollisionBox.y + objCollisionBox.height);
-                    ent2->assign<BottomCollisionComponent>();
                     kinetic->accY_ = std::max(0.0f, kinetic->accY_);
                     kinetic->speedY_ = std::max(0.0f, kinetic->speedY_);
+                    ent2->assign<BottomCollisionComponent>();
                     ent1->assign<TopCollisionComponent>();
                     checkIfBreakComponent(ent1, ent2);
                 }
             }
             checkCollisionWithCollectible(ent1, ent2);
+            checkYEnemyCollision(ent1, ent2);
         }
     }
 }
@@ -168,7 +169,7 @@ void PhysicSystem::checkXCollision(Entity *ent1, Entity *ent2) {
                 ent2->assign<LeftCollisionComponent>();
                 ent1->assign<RightCollisionComponent>();
             }
-            checkCollisionWithEnemy(ent1, ent2);
+            checkXEnemyCollision(ent1, ent2);
             checkCollisionWithObject(ent1, ent2);
             checkCollisionWithCollectible(ent1, ent2);
         }
@@ -441,26 +442,7 @@ void PhysicSystem::checkIfBreakComponent(Entity *ent1, Entity *ent2) {
     }
 }
 
-void PhysicSystem::checkKillEnemy(Entity *ent1, Entity *ent2) {
-    if (ent2->has<EnemyComponent>() && ent1->has<PlayerComponent>()) {
-        World* world = ent1->getWorld();
-        Enemy::Type type = ent2->get<EnemyComponent>()->type_;
-
-        if (type != Enemy::PIRANHA_PLANT && type != Enemy::Type::THWOMP) {
-            world->emit<KillEnemyEvent>(KillEnemyEvent(ent2));
-            // Make the player bounce
-            auto playerKinetic = ent1->get<KineticComponent>();
-            playerKinetic->accY_ = -0.8f;
-            playerKinetic->speedY_ = -MARIO_BOUNCE;
-        } else {
-            // Bottom collision with piranha plant
-            EnemyCollisionEvent event{ent1, ent2};
-            if (!ent1->has<FrozenComponent>()) world->emit<EnemyCollisionEvent>(event);
-        }
-    }
-}
-
-void PhysicSystem::checkCollisionWithEnemy(Entity *ent1, Entity *ent2) {
+void PhysicSystem::checkXEnemyCollision(Entity *ent1, Entity *ent2) {
     World* world = ent1->getWorld();
 
     if (ent1->has<PlayerComponent>() && ent2->has<EnemyComponent>()) {
@@ -479,9 +461,13 @@ void PhysicSystem::checkCollisionWithEnemy(Entity *ent1, Entity *ent2) {
 
         if ((enemy1 == Enemy::RED_TURTLE_SHELL || enemy1 == Enemy::GREEN_TURTLE_SHELL) &&
                 (enemy2 != Enemy::RED_TURTLE_SHELL && enemy2 != Enemy::GREEN_TURTLE_SHELL)) {
+            ent1->remove<LeftCollisionComponent>();
+            ent1->remove<RightCollisionComponent>();
             world->emit<KillEnemyEvent>(KillEnemyEvent(ent2, true));
         } else if ((enemy1 != Enemy::RED_TURTLE_SHELL && enemy1 != Enemy::GREEN_TURTLE_SHELL) &&
                    (enemy2 == Enemy::RED_TURTLE_SHELL || enemy2 == Enemy::GREEN_TURTLE_SHELL)) {
+            ent2->remove<LeftCollisionComponent>();
+            ent2->remove<RightCollisionComponent>();
             world->emit<KillEnemyEvent>(KillEnemyEvent(ent1, true));
         }
     }
@@ -565,5 +551,59 @@ void PhysicSystem::checkCollisionWithCollectible(Entity *ent1, Entity *ent2) {
     } else if (ent1->has<CollectibleComponent>() && ent2->has<EnemyComponent>()) {
         world->emit<EnemyCollectableCollisionEvent>(EnemyCollectableCollisionEvent(ent1, ent2
         ));
+    }
+}
+
+void jumpOverEnemy(Entity* player, Entity* enemy) {
+    World* world = player->getWorld();
+    Enemy::Type type = enemy->get<EnemyComponent>()->type_;
+
+    if (type != Enemy::Type::PIRANHA_PLANT
+        && type != Enemy::Type::THWOMP) {
+        world->emit<KillEnemyEvent>(KillEnemyEvent(enemy));
+        // Make the player bounce
+        auto playerKinetic = player->get<KineticComponent>();
+        playerKinetic->accY_ = -0.8f;
+        playerKinetic->speedY_ = -MARIO_BOUNCE;
+    } else {
+        EnemyCollisionEvent event{player, enemy};
+        if (!player->has<FrozenComponent>()) world->emit<EnemyCollisionEvent>(event);
+    }
+}
+
+void enemyOverPlayer(Entity* player, Entity* enemy) {
+    World* world = player->getWorld();
+
+    EnemyCollisionEvent event{player, enemy};
+    if (!player->has<FrozenComponent>()) world->emit<EnemyCollisionEvent>(event);
+}
+
+void PhysicSystem::checkYEnemyCollision(Entity *ent1, Entity *ent2) {
+    World* world = ent1->getWorld();
+
+    if (ent1->has<PlayerComponent>() && ent2->has<EnemyComponent>()) {
+        if (ent1->has<TopCollisionComponent>() && ent2->has<BottomCollisionComponent>()) {
+            enemyOverPlayer(ent1, ent2);
+        } else if (ent1->has<BottomCollisionComponent>() && ent2->has<TopCollisionComponent>()) {
+            jumpOverEnemy(ent1, ent2);
+        }
+    } else if (ent2->has<PlayerComponent>() && ent1->has<EnemyComponent>()) {
+        if (ent1->has<TopCollisionComponent>() && ent2->has<BottomCollisionComponent>()) {
+            jumpOverEnemy(ent2, ent1);
+        } else if (ent1->has<BottomCollisionComponent>() && ent2->has<TopCollisionComponent>()) {
+            enemyOverPlayer(ent2, ent1);
+        }
+    } else if (ent1->has<FireBulletComponent>() && ent2->has<EnemyComponent>()) {
+        if (ent1->has<TopCollisionComponent>() && ent2->has<BottomCollisionComponent>()) {
+
+        } else if (ent1->has<BottomCollisionComponent>() && ent2->has<TopCollisionComponent>()) {
+            world->emit<KillEnemyEvent>(KillEnemyEvent(ent2, true));
+        }
+    } else if (ent1->has<EnemyComponent>() && ent2->has<FireBulletComponent>()) {
+        if (ent1->has<TopCollisionComponent>() && ent2->has<BottomCollisionComponent>()) {
+            world->emit<KillEnemyEvent>(KillEnemyEvent(ent1, true));
+        } else if (ent1->has<BottomCollisionComponent>() && ent2->has<TopCollisionComponent>()) {
+
+        }
     }
 }

@@ -398,8 +398,6 @@ void EnemySystem::manageThwomps(World *world) {
             case Enemy::ThwompState::WAITING:
                 break;
             case Enemy::ThwompState::GOING_UP:
-                std::cout << "top: " << aabb->top() << std::endl;
-                std::cout << "initial height: " << thwompComponent->initialHeight << std::endl;
                 if (aabb->top() <= thwompComponent->initialHeight) {
                     auto kinetic = thwomp->get<KineticComponent>();
                     if (kinetic) {

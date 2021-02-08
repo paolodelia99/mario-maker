@@ -82,6 +82,8 @@ void CameraSystem::defreezeCloseEnemies(World *world) {
             if (std::abs(playerPos.x - enemyPos.x) <= 3 * screenWidth_ / 4
                 && std::abs(playerPos.y - enemyPos.y) <= screenHeight_) {
                 enemy->remove<FrozenComponent>();
+            } else {
+                enemy->assign<FrozenComponent>();
             }
         }
     }

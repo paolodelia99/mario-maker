@@ -50,9 +50,7 @@ private:
 
     void checkIfBreakComponent(Entity *ent1, Entity *ent2);
 
-    void checkKillEnemy(Entity *ent1, Entity *ent2);
-
-    void checkCollisionWithEnemy(Entity *ent1, Entity *ent2);
+    void checkXEnemyCollision(Entity *ent1, Entity *ent2);
 
     void handlingBouncingComponents(World *world);
 
@@ -63,6 +61,8 @@ private:
     void checkCollisionWithObject(Entity *ent1, Entity *ent2);
 
     void checkCollisionWithCollectible(Entity *ent1, Entity *ent2);
+
+    void checkYEnemyCollision(Entity *ent1, Entity *ent2);
 };
 
 
