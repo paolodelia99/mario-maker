@@ -57,7 +57,10 @@ protected:
             if (dstRect.width == 0) dstRect.width = it1->second->width;
             if (dstRect.height == 0) dstRect.height = it1->second->height;
             Texture2D texture2D = it->second;
-            if (DEBUG) DrawRectangleLinesEx(dstRect, 2, RED);
+
+#ifdef DEBUG
+            DrawRectangleLinesEx(dstRect, 2, RED);
+#endif
             DrawTextureRec(texture2D,
                            Rectangle{0, 0, (flipH ? -1 : 1) * dstRect.width, (flipV ? -1 : 1) * dstRect.height } ,
                            Vector2{dstRect.x, dstRect.y},
@@ -80,7 +83,10 @@ protected:
                     (flipV ? -1.0f : 1.0f) * dstRect.height / 2 };
             Rectangle destRect = { dstRect.x, dstRect.y, dstRect.width, dstRect.height };
             Vector2 origin = { 0.0f, 0.0f };
-            if (DEBUG) DrawRectangleLinesEx(destRect, 2, RED);
+
+#ifdef DEBUG
+            DrawRectangleLinesEx(destRect, 2, RED);
+#endif
 
             DrawTexturePro(
                     texture2D,

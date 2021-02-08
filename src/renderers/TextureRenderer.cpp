@@ -169,7 +169,10 @@ void TextureRenderer::renderTileCollisionRect(ECS::World* world) {
     for (auto ent : world->each<AABBComponent, TileComponent, SolidComponent>()) {
         auto aabb = ent->get<AABBComponent>();
 
-        if (DEBUG) DrawRectangleLinesEx(aabb->collisionBox_, 2, RED);
+#ifdef DEBUG
+        DrawRectangleLinesEx(aabb->collisionBox_, 2, RED);
+#endif
+
     }
 }
 
@@ -180,7 +183,11 @@ void TextureRenderer::renderRotationEntity(TextureId textureId, Rectangle destRe
         Texture2D texture2D = it->second;
         Rectangle sourceRect = {0.0f, 0.0f, TILE_SIZE / 2, TILE_SIZE / 2 };
         Vector2 origin = {TILE_SIZE / 2, TILE_SIZE / 2 };
-        if (DEBUG) DrawRectangleLinesEx(destRect, 2, RED);
+
+#ifdef DEBUG
+        DrawRectangleLinesEx(destRect, 2, RED);
+#endif
+
         DrawTexturePro(texture2D, sourceRect, destRect, origin, (float) rotation, WHITE);
     }
 }

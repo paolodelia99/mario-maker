@@ -24,7 +24,7 @@ void Game::mainLoop() {
 
     ECS::ComponentHandle<CameraComponent> camera = world_->getById(cameraId_)->get<CameraComponent>();
 
-    SetTargetFPS(60);
+    SetTargetFPS(FPS);
     double previous = GetTime();
     double lag = 0.0;
 
@@ -53,13 +53,13 @@ void Game::mainLoop() {
 
         BeginMode2D(camera.get().camera);
 
-        render(lag / MS_PER_UPDATE);
+        render(static_cast<float>(lag / FPS));
 
         // just for showing the center of the camera
-        if (DEBUG) {
-            DrawLine(camera->camera.target.x, - screenHeight_ * 10, camera->camera.target.x, screenHeight_ * 10, GREEN);
-            DrawLine(- screenWidth_ * 5, camera->camera.target.y, screenWidth_ * 5, camera->camera.target.y, GREEN);
-        }
+#ifdef DEBUG
+        DrawLine(camera->camera.target.x, - screenHeight_ * 10, camera->camera.target.x, screenHeight_ * 10, GREEN);
+        DrawLine(- screenWidth_ * 5, camera->camera.target.y, screenWidth_ * 5, camera->camera.target.y, GREEN);
+#endif
 
         EndMode2D();
 
