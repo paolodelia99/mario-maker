@@ -147,12 +147,13 @@ void TextureRenderer::renderEntity(ECS::Entity *entity, float d) {
                 texture->h > 0 ? texture->h : aabb->collisionBox_.height
         };
 
-//        if (entity->has<RotationComponent>()) {
-//            // fixme: is not working
-//            renderRotationEntity(texture->textureId_, rect, entity->get<RotationComponent>()->rotation_);
-//        }
-
-        Renderer::renderEntityTexture(texture->textureId_, rect, texture->flipH, texture->flipV);
+        if (entity->has<RotationComponent>()) {
+            auto rotationComponent = entity->get<RotationComponent>();
+            rotationComponent->increment();
+            Renderer::renderRotationEntity(texture->textureId_, rect, rotationComponent->getRotation());
+        } else {
+            Renderer::renderEntityTexture(texture->textureId_, rect, texture->flipH, texture->flipV);
+        }
     } else {
         Rectangle rect{
                 aabb->left() + texture->offSetX,
@@ -173,21 +174,5 @@ void TextureRenderer::renderTileCollisionRect(ECS::World* world) {
         DrawRectangleLinesEx(aabb->collisionBox_, 2, RED);
 #endif
 
-    }
-}
-
-void TextureRenderer::renderRotationEntity(TextureId textureId, Rectangle destRect, int rotation) {
-    auto it = textures_.find(textureId);
-    if (it != textures_.end())
-    {
-        Texture2D texture2D = it->second;
-        Rectangle sourceRect = {0.0f, 0.0f, TILE_SIZE / 2, TILE_SIZE / 2 };
-        Vector2 origin = {TILE_SIZE / 2, TILE_SIZE / 2 };
-
-#ifdef DEBUG
-        DrawRectangleLinesEx(destRect, 2, RED);
-#endif
-
-        DrawTexturePro(texture2D, sourceRect, destRect, origin, (float) rotation, WHITE);
     }
 }

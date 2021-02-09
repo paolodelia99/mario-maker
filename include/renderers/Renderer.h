@@ -98,6 +98,32 @@ protected:
         }
     }
 
+    void renderRotationEntity(TextureId textureId, Rectangle dstRect, int rotation) {
+        auto it = textures_.find(textureId);
+        if (it != textures_.end())
+        {
+            Texture2D texture2D = it->second;
+            Rectangle sourceRect = {
+                    0.0f,
+                    0.0f,
+                    dstRect.width,
+                    dstRect.height };
+            Rectangle destRect = {
+                    dstRect.x,
+                    dstRect.y,
+                    dstRect.width,
+                    dstRect.height };
+            Vector2 origin = { 0.0f , 0.0f };
+
+#ifdef DEBUG
+            DrawRectangleLinesEx(destRect, 2, RED);
+#endif
+
+            // fixme: doesn't rotate in the right way
+            DrawTexturePro(texture2D, sourceRect, destRect, origin, (float) 0.0f, WHITE);
+        }
+    }
+
 private:
 
     std::pair<int, int> getTextureDimensions(TextureId textureId, int width, int height) {

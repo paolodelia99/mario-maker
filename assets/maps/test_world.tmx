@@ -127,6 +127,7 @@
   <object id="80" x="816" y="160" width="16" height="16">
    <properties>
     <property name="isBig" type="bool" value="false"/>
+    <property name="left" type="bool" value="true"/>
     <property name="type" value="THWOMP_H"/>
    </properties>
   </object>
@@ -142,26 +143,26 @@
   </object>
   <object id="102" x="144" y="15.6667" width="16" height="16">
    <properties>
-    <property name="has_parachute" type="bool" value="true"/>
+    <property name="hasParachute" type="bool" value="true"/>
     <property name="type" value="GOOMBA"/>
    </properties>
   </object>
   <object id="104" x="464" y="16" width="16" height="16">
    <properties>
-    <property name="has_parachute" type="bool" value="true"/>
+    <property name="hasParachute" type="bool" value="true"/>
     <property name="type" value="GOOMBA"/>
    </properties>
   </object>
   <object id="105" x="960.333" y="16" width="16" height="16">
    <properties>
-    <property name="has_parachute" type="bool" value="true"/>
+    <property name="hasParachute" type="bool" value="true"/>
     <property name="isBig" type="bool" value="true"/>
     <property name="type" value="GOOMBA"/>
    </properties>
   </object>
   <object id="106" x="256" y="32" width="16" height="16">
    <properties>
-    <property name="has_parachute" type="bool" value="true"/>
+    <property name="hasParachute" type="bool" value="true"/>
     <property name="isBig" type="bool" value="false"/>
     <property name="type" value="KOOPA_TROOPA"/>
    </properties>

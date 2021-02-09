@@ -305,7 +305,7 @@ void PhysicSystem::applyGravity(World* world) {
     for (auto parachute : world->each<ParachuteComponent>()) {
         auto ent = parachute->get<ParachuteComponent>()->associatedEntity;
 
-        ent->get<KineticComponent>()->accY_ -= 0.0997f;
+        ent->get<KineticComponent>()->accY_ /= 2.3f;
     }
 }
 
@@ -562,9 +562,11 @@ void jumpOverEnemy(Entity* player, Entity* enemy) {
         && type != Enemy::Type::THWOMP_V) {
         world->emit<KillEnemyEvent>(KillEnemyEvent(enemy));
         // Make the player bounce
-        auto playerKinetic = player->get<KineticComponent>();
-        playerKinetic->accY_ = -0.8f;
-        playerKinetic->speedY_ = -MARIO_BOUNCE;
+        if (player->has<PlayerComponent>()) {
+            auto playerKinetic = player->get<KineticComponent>();
+            playerKinetic->accY_ = -0.8f;
+            playerKinetic->speedY_ = -MARIO_BOUNCE;
+        }
     } else {
         EnemyCollisionEvent event{player, enemy};
         if (!player->has<FrozenComponent>()) world->emit<EnemyCollisionEvent>(event);
@@ -593,6 +595,12 @@ void PhysicSystem::checkYEnemyCollision(Entity *ent1, Entity *ent2) {
         } else if (ent1->has<BottomCollisionComponent>() && ent2->has<TopCollisionComponent>()) {
             enemyOverPlayer(ent2, ent1);
         }
+    } else if (ent1->has<EnemyComponent>() && ent1->get<EnemyComponent>()->type_ == Enemy::THWOMP_V
+                && ent2->has<EnemyComponent>()) {
+        jumpOverEnemy(ent1, ent2);
+    } else if (ent2->has<EnemyComponent>() && ent2->get<EnemyComponent>()->type_ == Enemy::THWOMP_V
+               && ent1->has<EnemyComponent>()) {
+        jumpOverEnemy(ent1, ent2);
     } else if (ent1->has<FireBulletComponent>() && ent2->has<EnemyComponent>()) {
         if (ent1->has<TopCollisionComponent>() && ent2->has<BottomCollisionComponent>()) {
 

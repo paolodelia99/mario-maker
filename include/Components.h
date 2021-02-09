@@ -355,10 +355,23 @@ struct RotationComponent {
 public:
     RotationComponent() = default;
 
+    RotationComponent(int duration): duration(duration) {}
+
     void increment() {
         rotation_++;
     }
 
+    void increment(int times) {
+        while (times > 0) {
+            rotation_++;
+            times--;
+        }
+    }
+
+    int getRotation() { return rotation_; }
+
+    int duration = 5;
+private:
     int rotation_ = 0;
 };
 

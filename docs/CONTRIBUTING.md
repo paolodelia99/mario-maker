@@ -33,9 +33,12 @@ Here's I made a list of thing that I would like to implement. Enjoy!
 
 Feel free also to add thing that you would like to see in the game.
 
-- [ ] frame rate drops when there are too many entities
+- [ ] make parachute swings
 - [ ] State pattern for controlling the player and the enemies (https://gameprogrammingpatterns.com/state.html)
-- [x] FlagSystem (for winning)
+- Systems to implement: 
+  - [ ] Score System
+  - [ ] Sound & Music system
+  - [x] FlagSystem (for winning)
 - [ ] Enemies to Implement
     - [x] Goomba
     - [x] Koopa Troopa
@@ -52,7 +55,6 @@ Feel free also to add thing that you would like to see in the game.
   - [x] Mushroom
   - [ ] Wings 
 - [ ] fix animation of brick breaking
-- [ ] Sounds and music
 - [ ] Bubble after a player die
 - [ ] Controller for the second player (controller input not detected in linux by raylib)
 - [ ] Make controls customizable

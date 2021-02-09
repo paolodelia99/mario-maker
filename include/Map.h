@@ -71,7 +71,7 @@ private:
 
     void createPiranhaPlant(ECS::World* world, float spawnX, float spawnY);
 
-    void createParachute(ECS::Entity* entity);
+    ECS::Entity * createParachute(ECS::Entity* entity);
 
 private:
     std::string name;

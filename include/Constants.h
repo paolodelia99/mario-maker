@@ -4,7 +4,7 @@
 #pragma once
 
 // remove the comment if you want to display the collision boxes
-// #define DEBUG
+#define DEBUG
 
 constexpr const char* SBM1_PLAYER_TILESET_PATH = "../assets/tilesets/players-tileset.png";
 constexpr const char* SMB1_TILESET_PATH = "../assets/tilesets/tiles-2.png";
@@ -20,10 +20,10 @@ constexpr int TILE_ROUNDNESS = 4;
 constexpr int FPS = 60;
 constexpr float MS_PER_UPDATE = 0.01f;
 
-constexpr float GRAVITY = .10f;
+constexpr float GRAVITY = .12f;
 constexpr float FRICTION = .94;
-constexpr float MAX_SPEED_X = 1.75;
-constexpr float MAX_SPEED_Y = 2;
+constexpr float MAX_SPEED_X = 2.3;
+constexpr float MAX_SPEED_Y = 2.25;
 
 constexpr float MARIO_ACCELERATION_X = .08f;
 constexpr float MARIO_JUMP_ACCELERATION = 6.5f;

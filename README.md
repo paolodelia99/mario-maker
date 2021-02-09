@@ -42,6 +42,7 @@ The first player's commands are:
 
   - `↑ ↓ ← →`: to move the player (`↑` is for jump)
   - `z` for shooting the fireball we mario is Flame
+  - `left_shift` for sprinting
 
 The second player's commands are:
 
@@ -116,7 +117,19 @@ which are part of the levels
 ![graphics_layer](assets/readme/graphics_layer.PNG)
 
 - a **Enemies layer**: the ***object layer*** which contains all the enemies, represented by their AABB( or more simply their collision
-box), and their Type (GOOMBA, KOOPA_TROPA, TARTOSSO, ...)
+box), and their Type. Currently the of enemyies implemented are: 
+  - GOOMBA
+  - KOOPA_TROOPA
+  - TARTOSSO
+  - THWOMP_V (Thwomp with vetical movement)
+  - THWOMP_V (Thwomp with oriziontal movement)
+  - PIRANHA_PLANT
+  
+  - While additional properties that can be added to enemies are:
+    - isBig : **bool** make the enemy bigger
+    - hasParachute: **bool** equip the enemy with a parachute (works only with the entities that have a Gravity Component)
+    - left: **bool** property which make Vertical Thwomp go to the left
+    
 - a **Object layer**: the ***object layer*** which contains all the objects which are not present in the tileset, but 
 they are present in the object tileset. Those objects may be, for example the final flag pole, the various checkpoints, and 
 others additional object that can enrich the map.
@@ -150,7 +163,7 @@ So you have to choose the spawn position according to that coordinate system.
 
 # Contributing
 
-Contributors are welcome! But before you do it check out the [guidelines](docs/CONTRIBUTING.md).
+Contributors are welcome! But before you do it check out the [guidelines](docs/````CONTRIBUTING.md).
 
 # Author
 

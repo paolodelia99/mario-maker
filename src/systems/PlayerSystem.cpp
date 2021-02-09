@@ -531,6 +531,7 @@ void PlayerSystem::movePlayer(Entity *player) {
                 break;
             case MOVE_RIGHT:
                 kinetic->accX_ = (float) (MARIO_ACCELERATION_X) * 1.7f;
+                if (playerComponent->sprint) kinetic->accX_ *= 1.5;
                 playerComponent->right = true;
                 playerComponent->left = false;
                 if (player->has<BottomCollisionComponent>()) {
@@ -546,6 +547,7 @@ void PlayerSystem::movePlayer(Entity *player) {
                 break;
             case MOVE_LEFT:
                 kinetic->accX_ = (float) -1 * (MARIO_ACCELERATION_X) * 1.7f;
+                if (playerComponent->sprint) kinetic->accX_ *= 1.5;
                 playerComponent->right = false;
                 playerComponent->left = true;
                 if (player->has<BottomCollisionComponent>()) {

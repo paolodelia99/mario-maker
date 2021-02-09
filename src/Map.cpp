@@ -291,29 +291,29 @@ void Map::loadTileEntity(
 }
 
 void Map::createEnemy(ECS::Entity *ent, std::vector<tmx::Property> properties) {
-    bool hasParachute = false;
     bool isBig = false;
-    bool left = true;
+    bool left = false;
+    ECS::Entity* parachute = NULL;
 
     ent->assign<GravityComponent>();
     ent->assign<KineticComponent>();
     ent->assign<FrozenComponent>();
+
     if (!properties.empty()) {
         for (const auto& property : properties) {
             if (property.getName() == "type") {
                 setEnemyType(ent, property.getStringValue());
-            } else if (property.getName() == "has_parachute" && property.getBoolValue()) {
-                createParachute(ent);
-                hasParachute = true;
+            } else if (property.getName() == "hasParachute" && property.getBoolValue()) {
+                parachute = createParachute(ent);
             } else if (property.getName() == "isBig" && property.getBoolValue()) {
                 isBig = true;
             } else if (property.getName() == "left" && property.getBoolValue()) {
-                left = false;
+                left = true;
             }
         }
     }
 
-    if (hasParachute) {
+    if (parachute) {
         ent->get<EnemyComponent>()->hasParachute = true;
         ent->remove<WalkComponent>();
         if (ent->has<KineticComponent>()) {
@@ -327,6 +327,10 @@ void Map::createEnemy(ECS::Entity *ent, std::vector<tmx::Property> properties) {
         ent->get<EnemyComponent>()->isBig = true;
         aabb->setWidth(aabb->collisionBox_.width * 2);
         aabb->setHeight(aabb->collisionBox_.height * 2);
+        if (parachute) {
+            auto parAABB = parachute->get<AABBComponent>();
+            parAABB->setCenterX(aabb->getCenterX());
+        }
     }
 
     if (ent->has<ThwompComponent>() && !ent->get<ThwompComponent>()->isVertical) {
@@ -410,7 +414,7 @@ void Map::createPiranhaPlant(ECS::World* world, float spawnX, float spawnY) {
     piranhaPlant->assign<AnimationComponent>(std::vector<TextureId>{
         TextureId::PIRANHA_PLANT_1,
         TextureId::PIRANHA_PLANT_2
-    }, 4);
+    }, 6);
 
 }
 
@@ -445,18 +449,18 @@ void Map::createObject(ECS::Entity *entity, std::vector<tmx::Property> propertie
     }
 }
 
-void Map::createParachute(ECS::Entity *entity) {
+ECS::Entity * Map::createParachute(ECS::Entity *entity) {
     ECS::World* world = entity->getWorld();
     ECS::Entity* parachute = world->create();
     auto aabb = entity->get<AABBComponent>();
     parachute->assign<ObjectComponent>(Object::Type::PARACHUTE);
     parachute->assign<ParachuteComponent>(entity);
-    auto parAABB = parachute->assign<AABBComponent>(Rectangle{
-            aabb->left(),
+    parachute->assign<AABBComponent>(Rectangle{
+            aabb->getCenterX() - static_cast<float>(GAME_TILE_SIZE / 2),
             aabb->top() + GAME_TILE_SIZE,
             GAME_TILE_SIZE,
             GAME_TILE_SIZE
     });
-    parAABB->setCenterX(aabb->getCenterX());
     parachute->assign<TextureComponent>(TextureId::PARACHUTE);
+    return parachute;
 }

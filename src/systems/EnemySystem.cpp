@@ -88,6 +88,10 @@ void EnemySystem::killEnemyWithFireball(Entity *enemy) {
         case Enemy::PIRANHA_PLANT:
             enemy->removeAll();
             textureComponent = enemy->assign<TextureComponent>(TextureId::PIRANHA_PLANT_1);
+            break;
+        case Enemy::Type::THWOMP_H:
+        case Enemy::Type::THWOMP_V:
+            return;
         default:
             break;
     }
@@ -150,7 +154,7 @@ void EnemySystem::killEnemyWithJump(Entity *enemy) {
                     enemy->remove<WalkComponent>();
                     enemy->assign<TextureComponent>(TextureId::G_TURLE_SHELL_STAND_1);
                 } else {
-                    enemy->assign<WalkComponent>(-1.5f);
+                    enemy->assign<WalkComponent>(-2.0f);
                     enemy->assign<AnimationComponent>(std::vector<TextureId>{
                             TextureId::G_TURLE_SHELL_MOVE_1,
                             TextureId::G_TURLE_SHELL_MOVE_2,
@@ -175,6 +179,8 @@ void EnemySystem::killEnemyWithJump(Entity *enemy) {
                 }, 8, false, false, false);
             break;
         }
+        default:
+            break;
     }
 }
 
@@ -339,9 +345,11 @@ void EnemySystem::eatMushroom(Entity *entity, Collectible::CollectibleType type)
                     auto aabb = entity->get<AABBComponent>();
                     entity->remove<FrozenComponent>();
                     entity->remove<AnimationComponent>();
-                    aabb->setTop(oldHeight - GAME_TILE_SIZE);
-                    aabb->collisionBox_.height = GAME_TILE_SIZE * 2;
-                    aabb->collisionBox_.width = GAME_TILE_SIZE * 2;
+                    if (aabb->getHeight() == GAME_TILE_SIZE) aabb->setTop(oldHeight - GAME_TILE_SIZE);
+                    else aabb->setTop(oldHeight - aabb->getHeight() - 2);
+                    aabb->setHeight(aabb->getHeight() * 2);
+                    aabb->setWidth(aabb->getWidth() * 2);
+
                     entity->get<EnemyComponent>()->isBig = true;
                     entity->assign<AnimationComponent>(oldAnimation, oldDuration);
                     entity->get<TextureComponent>()->setDimensions(aabb->getWidth(), aabb->getHeight());
@@ -415,7 +423,7 @@ void EnemySystem::manageThwomps(World *world) {
                 case Enemy::ThwompState::RESTING:
                     for (auto player : world->each<PlayerComponent, AABBComponent>()) {
                         auto playerAABB = player->get<AABBComponent>();
-                        if (playerAABB->top() >= aabb->top() + GAME_TILE_SIZE
+                        if (playerAABB->top() >= aabb->top() - GAME_TILE_SIZE
                             && playerAABB->top() <= aabb->bottom() + GAME_TILE_SIZE) {
                             float dist;
 

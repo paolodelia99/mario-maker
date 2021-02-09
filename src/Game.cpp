@@ -114,6 +114,7 @@ void Game::initPlayers() {
                                             {MOVE_LEFT, KEY_LEFT},
                                             {MOVE_RIGHT, KEY_RIGHT},
                                             {DUCK, KEY_DOWN},
+                                            {SPRINT, KEY_LEFT_SHIFT},
                                             {SHOOT, KEY_Z}
                                     });
     mario->assign<GravityComponent>();
@@ -165,18 +166,30 @@ void Game::registerSystems() {
 void Game::handleInput() {
     for (auto ent : world_->each<CommandComponent>())
     {
-        auto it = ent->get<CommandComponent>();
-        if (IsKeyDown(KEY_RIGHT)) it->setCurrentCommand(KEY_RIGHT);
-        else if (IsKeyDown(KEY_LEFT)) it->setCurrentCommand(KEY_LEFT);
-        else if (IsKeyDown(KEY_DOWN)) it->setCurrentCommand(KEY_DOWN);
-        else if (IsKeyDown(KEY_UP)) it->setCurrentCommand(KEY_UP);
-        else if (IsKeyDown(KEY_W)) it->setCurrentCommand(KEY_W);
-        else if (IsKeyDown(KEY_D)) it->setCurrentCommand(KEY_D);
-        else if (IsKeyDown(KEY_A)) it->setCurrentCommand(KEY_A);
-        else if (IsKeyDown(KEY_S)) it->setCurrentCommand(KEY_S);
-        else if (IsKeyDown(KEY_Z)) it->setCurrentCommand(KEY_Z);
-        else if (IsKeyDown(KEY_F)) it->setCurrentCommand(KEY_F);
-        else it->setNullCommand();
+        auto commandComponent = ent->get<CommandComponent>();
+        auto playerComponent = ent->get<PlayerComponent>();
+
+        if (IsKeyDown(KEY_RIGHT)) commandComponent->setCurrentCommand(KEY_RIGHT);
+        else if (IsKeyDown(KEY_LEFT)) commandComponent->setCurrentCommand(KEY_LEFT);
+        else if (IsKeyDown(KEY_DOWN)) commandComponent->setCurrentCommand(KEY_DOWN);
+        else if (IsKeyDown(KEY_UP)) commandComponent->setCurrentCommand(KEY_UP);
+        else if (IsKeyDown(KEY_W)) commandComponent->setCurrentCommand(KEY_W);
+        else if (IsKeyDown(KEY_D)) commandComponent->setCurrentCommand(KEY_D);
+        else if (IsKeyDown(KEY_A)) commandComponent->setCurrentCommand(KEY_A);
+        else if (IsKeyDown(KEY_S)) commandComponent->setCurrentCommand(KEY_S);
+        else if (IsKeyDown(KEY_Z)) commandComponent->setCurrentCommand(KEY_Z);
+        else if (IsKeyDown(KEY_F)) commandComponent->setCurrentCommand(KEY_F);
+        else commandComponent->setNullCommand();
+
+        // make player sprint
+        if (playerComponent) {
+            if (ent->has<MarioComponent>()) {
+                if (IsKeyDown(KEY_LEFT_SHIFT)) playerComponent->sprint = true;
+                if (IsKeyUp(KEY_LEFT_SHIFT)) playerComponent->sprint = false;
+            } else if (ent->has<LuigiComponent>()) {
+
+            }
+        }
     }
 }
 

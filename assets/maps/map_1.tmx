@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="135" height="28" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="108">
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="135" height="28" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="109">
  <properties>
   <property name="spawn_mario_x" type="int" value="7"/>
   <property name="spawn_mario_y" type="int" value="26"/>
@@ -191,6 +191,13 @@
    <properties>
     <property name="isBig" type="bool" value="false"/>
     <property name="type" value="THWOMP_V"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="11" name="objects">
+  <object id="108" x="176" y="176" width="16" height="16">
+   <properties>
+    <property name="type" value="FINAL_FLAG_POLE"/>
    </properties>
   </object>
  </objectgroup>
