@@ -36,6 +36,8 @@ MapRenderer::MapRenderer(Map *map, const char* filepath)
     texturePositions_.insert({COIN_2, new Rectangle{384, 16, TILE_SIZE, TILE_SIZE}});
     texturePositions_.insert({COIN_3, new Rectangle{400, 16, TILE_SIZE, TILE_SIZE}});
 
+    texturePositions_.insert({BLACK_CANNON, new Rectangle{144, 0, TILE_SIZE, TILE_SIZE * 2}});
+
     loadTextures();
 }
 

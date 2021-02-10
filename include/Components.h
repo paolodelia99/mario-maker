@@ -223,13 +223,13 @@ struct BreakableComponent {};
 
 struct BouncingComponent {};
 
-struct GrowComponent {
+struct VerticalGrowComponent {
 
-    GrowComponent(int frames, bool up) : frames_(frames), up_(up), n_(frames) {}
+    VerticalGrowComponent(int frames, bool up) : frames_(frames), up_(up), n_(frames) {}
 
-    explicit GrowComponent(int frames) : frames_(frames), n_(frames) {}
+    explicit VerticalGrowComponent(int frames) : frames_(frames), n_(frames) {}
 
-    GrowComponent() {
+    VerticalGrowComponent() {
         n_ = frames_;
     };
 
@@ -254,6 +254,32 @@ private:
     int frames_ = 64;
     int n_;
     int waitCounter_ = 0;
+};
+
+struct HorizontalGrowComponent {
+
+    HorizontalGrowComponent() = default;
+
+    HorizontalGrowComponent(int frames) : frames_(frames) {}
+
+    HorizontalGrowComponent(bool left) : left_(left) {}
+
+    HorizontalGrowComponent(bool left, int frames) : left_(left), frames_(frames) {}
+
+    [[nodiscard]] bool finished() {
+        frames_--;
+        return frames_ <= 0;
+    }
+
+    bool isGoingLeft() { return left_; }
+
+    void goRight() { left_ = false; }
+
+    void goLeft() { left_ = true;}
+
+private:
+    bool left_ = true;
+    int frames_ = 64;
 };
 
 namespace Collectible {
@@ -332,6 +358,8 @@ struct ParachuteComponent {
 
 struct TextureComponent {
     explicit TextureComponent(TextureId textureId) : textureId_(textureId) {};
+
+    TextureComponent(TextureId textureId, bool flipH) : textureId_(textureId), flipH(flipH) {}
 
     ~TextureComponent()  = default;
 
@@ -547,6 +575,7 @@ namespace Enemy {
     enum Type {
         NONE,
         GOOMBA,
+        GOOMBRAT,
         KOOPA_TROOPA,
         RED_KOOPA_TROOPA,
         GREEN_TURTLE_SHELL,
@@ -554,7 +583,9 @@ namespace Enemy {
         PIRANHA_PLANT,
         TARTOSSO,
         THWOMP_V,
-        THWOMP_H
+        THWOMP_H,
+        BULLET_BILL,
+        CANNON
     };
 
     enum TartossoState {
@@ -568,6 +599,16 @@ namespace Enemy {
         MOVING_TOWARDS,
         GOING_BACK,
         WAITING
+    };
+
+    enum BulletType {
+        NO_BULLET,
+        B_BULLET_BILL,
+        R_BULLET_BILL,
+        BLUE_BULLET_BILL,
+        SUPER_MUSHROOM,
+        ONE_UP_MUSHROOM,
+        B_GOOMBA
     };
 }
 
@@ -643,6 +684,37 @@ struct TurtleShellComponent {
     TurtleShellComponent(bool isMoving) : isMoving_(isMoving) {}
 
     bool isMoving_ = false;
+};
+
+struct CannonComponent {
+
+    CannonComponent() = default;
+
+    CannonComponent(Enemy::BulletType type) : type_(type) {}
+
+    CannonComponent(Enemy::BulletType type, int n) : type_(type), n_(n) {}
+
+    Enemy::BulletType getType() const {
+        return type_;
+    }
+
+    void setType(Enemy::BulletType type) {
+        type_ = type;
+    }
+
+    [[nodiscard]] bool canShoot() {
+        shootTimer_++;
+        if (shootTimer_ > n_) {
+            shootTimer_ = 0;
+            return true;
+        }
+        return false;
+    }
+
+private:
+    Enemy::BulletType type_ = Enemy::BulletType::NO_BULLET;
+    int shootTimer_ = 0;
+    int n_ = 360;
 };
 
 struct DestroyDelayedComponent {

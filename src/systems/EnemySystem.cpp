@@ -64,8 +64,11 @@ void EnemySystem::killEnemyWithFireball(Entity *enemy) {
 
     switch (type) {
         case Enemy::GOOMBA:
+        case Enemy::GOOMBRAT:
             enemy->removeAll();
-            textureComponent = enemy->assign<TextureComponent>(TextureId::GOOMBA_1);
+            textureComponent = enemy->assign<TextureComponent>(
+                    type == Enemy::GOOMBA ?
+                    TextureId::GOOMBA_1 : TextureId::GOOMBRAT_1);
             break;
         case Enemy::KOOPA_TROOPA:
         case Enemy::RED_KOOPA_TROOPA:
@@ -117,15 +120,16 @@ void EnemySystem::killEnemyWithJump(Entity *enemy) {
 
     switch (type) {
         case Enemy::GOOMBA:
+        case Enemy::GOOMBRAT:
             enemy->removeAll();
             enemy->assign<EnemyComponent>(enemyComponent->type_);
             enemy->get<EnemyComponent>()->isBig = wasBig;
             enemy->assign<TileComponent>();
-            enemy->assign<TextureComponent>(TextureId::GOOMBA_DEAD);
+            enemy->assign<TextureComponent>(type == Enemy::GOOMBA ? TextureId::GOOMBA_DEAD : TextureId::GOOMBRAT_DEAD);
             enemy->get<TextureComponent>()->setDimensions(collisionRec.width, collisionRec.height);
             enemy->assign<AABBComponent>(collisionRec);
             enemy->assign<DestroyDelayedComponent>(100);
-            if (wasBig) createChildGoombas(world, collisionRec);
+            if (wasBig) createChildGoombas(world, collisionRec, type == Enemy::GOOMBA);
             break;
         case Enemy::KOOPA_TROOPA:
         case Enemy::RED_KOOPA_TROOPA:
@@ -195,10 +199,10 @@ void EnemySystem::manageEnemyEntities(World* world) {
 }
 
 void EnemySystem::managePiranhaPlants(World* world) {
-    world->each<EnemyComponent, GrowComponent>([&](
+    world->each<EnemyComponent, VerticalGrowComponent>([&](
             Entity* entity,
             ComponentHandle<EnemyComponent> enemy,
-            ComponentHandle<GrowComponent> growComponent) {
+            ComponentHandle<VerticalGrowComponent> growComponent) {
         if (enemy->type_ == Enemy::PIRANHA_PLANT) {
             if (!growComponent->finished()) {
                 entity->get<AABBComponent>()->collisionBox_.y +=
@@ -255,23 +259,32 @@ void EnemySystem::manageParachutes(World *world) {
     }
 }
 
-Entity* createGoomba(World* world, Rectangle collisionBox) {
+Entity *createGoomba(World *world, Rectangle collisionBox, bool isGoomba) {
     Entity* goomba = world->create();
     goomba->assign<SolidComponent>();
     goomba->assign<GravityComponent>();
-    goomba->assign<EnemyComponent>(Enemy::Type::GOOMBA);
     goomba->assign<AABBComponent>(collisionBox);
     goomba->assign<KineticComponent>();
-    goomba->assign<TextureComponent>(TextureId::GOOMBA_1);
-    goomba->assign<AnimationComponent>(std::vector<TextureId>{
-            TextureId::GOOMBA_1,
-            TextureId::GOOMBA_2
-    }, 8);
+    if (isGoomba) {
+        goomba->assign<EnemyComponent>(Enemy::Type::GOOMBA);
+        goomba->assign<TextureComponent>(TextureId::GOOMBA_1);
+        goomba->assign<AnimationComponent>(std::vector<TextureId>{
+                TextureId::GOOMBA_1,
+                TextureId::GOOMBA_2
+        }, 8);
+    } else {
+        goomba->assign<EnemyComponent>(Enemy::Type::GOOMBRAT);
+        goomba->assign<TextureComponent>(TextureId::GOOMBRAT_1);
+        goomba->assign<AnimationComponent>(std::vector<TextureId>{
+                TextureId::GOOMBRAT_1,
+                TextureId::GOOMBRAT_2
+        }, 8);
+    }
 
     return goomba;
 }
 
-void EnemySystem::createChildGoombas(World *world, Rectangle sourceRect) {
+void EnemySystem::createChildGoombas(World *world, Rectangle sourceRect, bool isGoomba) {
     float centerX = sourceRect.x + sourceRect.width / 2;
     float centerY = sourceRect.y + sourceRect.height / 2;
     Rectangle collisionBox1 = {
@@ -288,8 +301,8 @@ void EnemySystem::createChildGoombas(World *world, Rectangle sourceRect) {
     };
     float accX = 0.5f, accY = -1.5f;
 
-    Entity* goomba1 = createGoomba(world, collisionBox1);
-    Entity* goomba2 = createGoomba(world, collisionBox2);
+    Entity* goomba1 = createGoomba(world, collisionBox1, isGoomba);
+    Entity* goomba2 = createGoomba(world, collisionBox2, isGoomba);
     auto kinetic1 = goomba1->get<KineticComponent>();
     auto kinetic2 = goomba2->get<KineticComponent>();
 

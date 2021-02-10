@@ -290,10 +290,21 @@ void Map::loadTileEntity(
     }
 }
 
+Enemy::BulletType getBulletType(const std::string stringType) {
+    if (stringType == "B_BULLET_BILL") return Enemy::BulletType::B_BULLET_BILL;
+    else if (stringType == "R_BULLET_BILL") return Enemy::BulletType::R_BULLET_BILL;
+    else if (stringType == "BLUE_BULLET_BILL") return Enemy::BulletType::BLUE_BULLET_BILL;
+    else if (stringType == "GOOMBA") return Enemy::BulletType::B_GOOMBA;
+    else if (stringType == "SUPER_MUSHROOM") return Enemy::BulletType::SUPER_MUSHROOM;
+    else if (stringType == "ONE_UP_MUSHROOM") return Enemy::BulletType::ONE_UP_MUSHROOM;
+    else return Enemy::BulletType::NO_BULLET;
+}
+
 void Map::createEnemy(ECS::Entity *ent, std::vector<tmx::Property> properties) {
     bool isBig = false;
     bool left = false;
     ECS::Entity* parachute = NULL;
+    Enemy::BulletType bulletType = Enemy::BulletType::NO_BULLET;
 
     ent->assign<GravityComponent>();
     ent->assign<KineticComponent>();
@@ -309,6 +320,8 @@ void Map::createEnemy(ECS::Entity *ent, std::vector<tmx::Property> properties) {
                 isBig = true;
             } else if (property.getName() == "left" && property.getBoolValue()) {
                 left = true;
+            } else if (property.getName() == "bulletType") {
+                bulletType = getBulletType(property.getStringValue());
             }
         }
     }
@@ -340,6 +353,9 @@ void Map::createEnemy(ECS::Entity *ent, std::vector<tmx::Property> properties) {
             thwompComponent->setInitialPos(ent->get<AABBComponent>()->left());
         }
     }
+
+    auto cannonComponent = ent->get<CannonComponent>();
+    if (cannonComponent) cannonComponent->setType(bulletType);
 }
 
 void Map::setEnemyType(ECS::Entity *ent, std::string type) {
@@ -350,6 +366,14 @@ void Map::setEnemyType(ECS::Entity *ent, std::string type) {
         ent->assign<AnimationComponent>(std::vector<TextureId>{
            TextureId::GOOMBA_1,
            TextureId::GOOMBA_2
+        }, 8);
+    } else if (type == "GOOMBRAT") {
+        ent->assign<EnemyComponent>(Enemy::Type::GOOMBRAT);
+        ent->assign<WalkComponent>();
+        ent->assign<TextureComponent>(TextureId::GOOMBRAT_1);
+        ent->assign<AnimationComponent>(std::vector<TextureId>{
+            TextureId::GOOMBRAT_1,
+            TextureId::GOOMBRAT_2
         }, 8);
     } else if (type == "KOOPA_TROOPA") {
         auto aabb = ent->get<AABBComponent>();
@@ -398,6 +422,14 @@ void Map::setEnemyType(ECS::Entity *ent, std::string type) {
         ECS::ComponentHandle<ThwompComponent> thwompComponent = ent->assign<ThwompComponent>();
         thwompComponent->setInitialPos(aabb->right());
         thwompComponent->setHorizontal();
+    } else if (type == "BLACK_CANNON") {
+        auto aabb = ent->get<AABBComponent>();
+        ent->assign<TileComponent>();
+        ent->assign<TextureComponent>(TextureId::BLACK_CANNON);
+        aabb->setTop(aabb->top() - GAME_TILE_SIZE);
+        aabb->setHeight(GAME_TILE_SIZE * 2);
+        aabb->setWidth(GAME_TILE_SIZE);
+        ent->assign<CannonComponent>();
     }
 }
 
@@ -410,7 +442,7 @@ void Map::createPiranhaPlant(ECS::World* world, float spawnX, float spawnY) {
     piranhaPlant->assign<SolidComponent>();
     piranhaPlant->assign<KineticComponent>();
     piranhaPlant->assign<TextureComponent>(TextureId::PIRANHA_PLANT_1);
-    piranhaPlant->assign<GrowComponent>(384);
+    piranhaPlant->assign<VerticalGrowComponent>(384);
     piranhaPlant->assign<AnimationComponent>(std::vector<TextureId>{
         TextureId::PIRANHA_PLANT_1,
         TextureId::PIRANHA_PLANT_2

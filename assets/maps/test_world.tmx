@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="110" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="109">
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="110" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="110">
  <properties>
   <property name="spawn_mario_x" type="int" value="6"/>
   <property name="spawn_mario_y" type="int" value="11"/>
@@ -116,7 +116,7 @@
   </object>
   <object id="78" x="384" y="176" width="15.8182" height="16.0455">
    <properties>
-    <property name="type" value="GOOMBA"/>
+    <property name="type" value="GOOMBRAT"/>
    </properties>
   </object>
   <object id="79" x="560.125" y="176.188" width="15.75" height="15.625">
@@ -129,11 +129,6 @@
     <property name="isBig" type="bool" value="false"/>
     <property name="left" type="bool" value="true"/>
     <property name="type" value="THWOMP_H"/>
-   </properties>
-  </object>
-  <object id="81" x="976.182" y="176.364" width="15.9091" height="15.0909">
-   <properties>
-    <property name="type" value="GOOMBA"/>
    </properties>
   </object>
   <object id="82" x="1120.27" y="176.364" width="15.4545" height="15.1818">
@@ -153,13 +148,6 @@
     <property name="type" value="GOOMBA"/>
    </properties>
   </object>
-  <object id="105" x="960.333" y="16" width="16" height="16">
-   <properties>
-    <property name="hasParachute" type="bool" value="true"/>
-    <property name="isBig" type="bool" value="true"/>
-    <property name="type" value="GOOMBA"/>
-   </properties>
-  </object>
   <object id="106" x="256" y="32" width="16" height="16">
    <properties>
     <property name="hasParachute" type="bool" value="true"/>
@@ -170,6 +158,12 @@
   <object id="108" x="400" y="32" width="16" height="16">
    <properties>
     <property name="type" value="THWOMP_V"/>
+   </properties>
+  </object>
+  <object id="109" x="1296" y="176" width="16" height="16">
+   <properties>
+    <property name="bulletType" value="B_BULLET_BILL"/>
+    <property name="type" value="BLACK_CANNON"/>
    </properties>
   </object>
  </objectgroup>

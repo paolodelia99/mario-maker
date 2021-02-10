@@ -4,7 +4,7 @@
 #pragma once
 
 // remove the comment if you want to display the collision boxes
-#define DEBUG
+// #define DEBUG
 
 constexpr const char* SBM1_PLAYER_TILESET_PATH = "../assets/tilesets/players-tileset.png";
 constexpr const char* SMB1_TILESET_PATH = "../assets/tilesets/tiles-2.png";

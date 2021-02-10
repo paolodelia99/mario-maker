@@ -17,6 +17,8 @@ void TileSystem::tick(World *world, float delta) {
         ent->get<BounceComponent>()->hit = true;
     }
 
+    manageCannons(world);
+
     manageGrowComponents(world);
 
     manageBounceComponents(world);
@@ -49,7 +51,7 @@ void TileSystem::spawnSuperMarioMushroom(World* world, Entity* ent) {
     auto entAABB = ent->get<AABBComponent>();
     mushroom->assign<TextureComponent>(TextureId::SUPER_MUSHROOM);
     mushroom->assign<TileComponent>();
-    mushroom->assign<GrowComponent>();
+    mushroom->assign<VerticalGrowComponent>();
     mushroom->assign<CollectibleComponent>(Collectible::CollectibleType::SUPER_MARIO_MUSHROOM);
     mushroom->assign<AABBComponent>(Rectangle{
         entAABB->left() + 4,
@@ -91,7 +93,7 @@ void TileSystem::spawnFlameMushroom(World* world, Entity* ent) {
         TextureId::FLAME_FLOWER_4,
     }, 4);
 
-    mushroom->assign<GrowComponent>();
+    mushroom->assign<VerticalGrowComponent>();
     mushroom->assign<CollectibleComponent>(Collectible::CollectibleType::FLAME_MUSHROOM);
     mushroom->assign<AABBComponent>(Rectangle{
             entAABB->left(),
@@ -109,7 +111,7 @@ void TileSystem::spawnOneUpMushroom(World* world, Entity* ent) {
     auto entAABB = ent->get<AABBComponent>();
 
     mushroom->assign<TextureComponent>(TextureId::ONE_UP_MUSHROOM);
-    mushroom->assign<GrowComponent>();
+    mushroom->assign<VerticalGrowComponent>();
     mushroom->assign<TileComponent>();
     mushroom->assign<CollectibleComponent>(Collectible::CollectibleType::ONE_UP_MUSHROOM);
     mushroom->assign<AABBComponent>(Rectangle{
@@ -133,12 +135,12 @@ void TileSystem::configure(World *world) {
 }
 
 void TileSystem::manageGrowComponents(World *world) {
-    for (auto ent : world->each<GrowComponent, AABBComponent, TileComponent>()) {
-        auto grow = ent->get<GrowComponent>();
+    for (auto ent : world->each<VerticalGrowComponent, AABBComponent, TileComponent>()) {
+        auto grow = ent->get<VerticalGrowComponent>();
         if (!grow->finished()) {
             ent->get<AABBComponent>()->collisionBox_.y -= MUSHROOM_GROW_SPEED;
         } else {
-            ent->remove<GrowComponent>();
+            ent->remove<VerticalGrowComponent>();
 
             if (ent->get<CollectibleComponent>()->type != Collectible::FLAME_MUSHROOM) {
                 ent->assign<WalkComponent>(MUSHROOM_MOVE_SPEED);
@@ -149,6 +151,47 @@ void TileSystem::manageGrowComponents(World *world) {
             ent->assign<TileComponent>();
         }
     }
+
+    world->each<HorizontalGrowComponent, AABBComponent>([=](
+            Entity* entity,
+            ComponentHandle<HorizontalGrowComponent> growComponent,
+            ComponentHandle<AABBComponent> aabb) {
+        if (growComponent->finished()) {
+            entity->assign<SolidComponent>();
+            auto enemyComponent = entity->get<EnemyComponent>();
+
+            if (enemyComponent) {
+                switch (enemyComponent->type_) {
+                    case Enemy::GOOMBA:
+                        break;
+                    case Enemy::GOOMBRAT:
+                        break;
+                    case Enemy::GREEN_TURTLE_SHELL:
+                        break;
+                    case Enemy::RED_TURTLE_SHELL:
+                        break;
+                    case Enemy::BULLET_BILL:
+                        if (growComponent->isGoingLeft()) {
+                            entity->assign<WalkComponent>(-1.8f);
+                        } else {
+                            entity->assign<WalkComponent>(1.8f);
+                        }
+                        entity->assign<KineticComponent>();
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+
+            }
+        } else {
+            if (growComponent->isGoingLeft()) {
+                aabb->collisionBox_.x -= MUSHROOM_GROW_SPEED;
+            } else {
+                aabb->collisionBox_.x += MUSHROOM_GROW_SPEED;
+            }
+        }
+    });
 }
 
 void TileSystem::removeCollisionComponents(World* world) {
@@ -221,4 +264,55 @@ void TileSystem::createDebris(World *world, float xf, float yf) {
     ent4->assign<TileComponent>();
     ent4->assign<GravityComponent>();
     ent4->assign<KineticComponent>(-0.0f, -0.0f, +2.0f, -1.5f);
+}
+
+void TileSystem::manageCannons(World *world) {
+    world->each<CannonComponent, AABBComponent>([&](
+            Entity* entity,
+            ComponentHandle<CannonComponent> cannonComponent,
+            ComponentHandle<AABBComponent> aabb) {
+        if (entity->has<FrozenComponent>()) return;
+
+        if (cannonComponent->canShoot()) {
+            Entity* player = world->findFirst<LeadCameraComponent>();
+            auto playerAABB = player->get<AABBComponent>();
+            bool shootLeft = true;
+
+            if (playerAABB->getCenterX() >= aabb->getCenterX()) shootLeft = false;
+
+            std::cout << "shoot" << std::endl;
+
+            spawnEntityFromCannon(world, cannonComponent->getType(), aabb->collisionBox_, shootLeft);
+        }
+    });
+}
+
+void TileSystem::spawnEntityFromCannon(World *world, Enemy::BulletType type, Rectangle rectangle, bool shootLeft) {
+    Entity* entity = world->create();
+    float xOffset = shootLeft ? -4.0f : 4.0f;
+    entity->assign<AABBComponent>(Rectangle{
+        rectangle.x + xOffset,
+        rectangle.y - 2,
+        GAME_TILE_SIZE,
+        GAME_TILE_SIZE});
+    entity->assign<HorizontalGrowComponent>(shootLeft, 120);
+
+    switch (type) {
+        case Enemy::B_BULLET_BILL:
+            if (shootLeft) {
+                entity->assign<TextureComponent>(TextureId::BULLET_BILL);
+            } else {
+                entity->assign<TextureComponent>(TextureId::BULLET_BILL, !shootLeft);
+            }
+            entity->assign<EnemyComponent>(Enemy::Type::BULLET_BILL);
+            break;
+        case Enemy::R_BULLET_BILL:
+            break;
+        case Enemy::BLUE_BULLET_BILL:
+            break;
+        case Enemy::SUPER_MUSHROOM:
+            break;
+        case Enemy::ONE_UP_MUSHROOM:
+            break;
+    }
 }

@@ -27,6 +27,8 @@ private:
 
     void followLeadPlayer(World* world);
 
+    bool checkIfDefreezeEntity(Vector2 playerPos, Vector2 entityPos);
+
 private:
     CameraComponent* pCamera_;
     const int screenWidth_;

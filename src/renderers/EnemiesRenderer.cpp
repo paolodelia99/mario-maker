@@ -13,6 +13,11 @@ EnemiesRenderer::EnemiesRenderer(const char *filepath)
     texturePositions_.insert({GOOMBA_FALLING, new Rectangle{56, 1, TILE_SIZE, 19}});
     texturePositions_.insert({GOOMBA_DEAD, new Rectangle{98, 2, TILE_SIZE, TILE_SIZE}});
 
+    // Goombrat
+    texturePositions_.insert({GOOMBRAT_1, new Rectangle{254, 2, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({GOOMBRAT_2, new Rectangle{271, 2, TILE_SIZE, TILE_SIZE}});
+    texturePositions_.insert({GOOMBRAT_DEAD, new Rectangle{351, 2, TILE_SIZE, TILE_SIZE}});
+
     // Green Turtle
     texturePositions_.insert({GREEN_TURTLE_1, new Rectangle{1, 42, TILE_SIZE, 24}});
     texturePositions_.insert({GREEN_TURTLE_2, new Rectangle{18, 42, TILE_SIZE, 24}});
@@ -41,6 +46,8 @@ EnemiesRenderer::EnemiesRenderer(const char *filepath)
     texturePositions_.insert({THWOMP_ANGRY_V, new Rectangle{514, 84, 24, TILE_SIZE * 2}});
     texturePositions_.insert({THWOMP_H, new Rectangle{543, 84, 24, TILE_SIZE * 2}});
     texturePositions_.insert({THWOMP_ANGRY_H, new Rectangle{568, 84, 24, TILE_SIZE * 2}});
+
+    texturePositions_.insert({BULLET_BILL, new Rectangle{1, 356, TILE_SIZE, TILE_SIZE}});
 
     loadTextures();
 }

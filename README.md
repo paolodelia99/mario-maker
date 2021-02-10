@@ -2,7 +2,7 @@
 
 A clone of mario maker made with no game engine, just with C++ and Raylib.
 
-![img1](assets/readme/mario-maker.png)
+![img1](assets/readme/mario-maker-preview.gif)
 
 The main architectural/design pattern used to build the game is the [ECS](https://en.wikipedia.org/wiki/Entity_component_system).
 

@@ -43,7 +43,7 @@ private:
 
     void manageParachutes(World *world);
 
-    void createChildGoombas(World *world, Rectangle sourceRect);
+    void createChildGoombas(World *world, Rectangle sourceRect, bool b);
 
     void eatMushroom(Entity *entity, Collectible::CollectibleType type);
 

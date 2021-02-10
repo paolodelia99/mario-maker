@@ -69,6 +69,11 @@ void CameraSystem::followLeadPlayer(World *world) {
     }
 }
 
+bool CameraSystem::checkIfDefreezeEntity(Vector2 playerPos, Vector2 entityPos) {
+    return std::abs(playerPos.x - entityPos.x) <= 3 * screenWidth_ / 4
+            && std::abs(playerPos.y - entityPos.y) <= screenHeight_;
+}
+
 void CameraSystem::defreezeCloseEnemies(World *world) {
     Entity* leadPlayer = world->findFirst<PlayerComponent, AABBComponent, LeadCameraComponent>();
     if (leadPlayer) {
@@ -79,12 +84,16 @@ void CameraSystem::defreezeCloseEnemies(World *world) {
             auto enemyAABB = enemy->get<AABBComponent>();
             Vector2 enemyPos = { enemyAABB->left(), enemyAABB->top() };
 
-            if (std::abs(playerPos.x - enemyPos.x) <= 3 * screenWidth_ / 4
-                && std::abs(playerPos.y - enemyPos.y) <= screenHeight_) {
-                enemy->remove<FrozenComponent>();
-            } else {
-                enemy->assign<FrozenComponent>();
-            }
+            if (checkIfDefreezeEntity(playerPos, enemyPos)) enemy->remove<FrozenComponent>();
+            else enemy->assign<FrozenComponent>();
+        }
+
+        for (auto cannon : world->each<CannonComponent, AABBComponent>()) {
+            auto cannonAABB = cannon->get<AABBComponent>();
+            Vector2 cannonPos = { cannonAABB->left(), cannonAABB->top() };
+
+            if (checkIfDefreezeEntity(playerPos, cannonPos)) cannon->remove<FrozenComponent>();
+            else cannon->assign<FrozenComponent>();
         }
     }
 }

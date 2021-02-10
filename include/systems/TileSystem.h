@@ -46,6 +46,10 @@ private:
     void createDebris(World *world, float xf, float yf);
 
     virtual void receive(World* world, const BreakEvent& breakEvent) override;
+
+    void manageCannons(World *world);
+
+    void spawnEntityFromCannon(World *world, Enemy::BulletType type, Rectangle rectangle, bool b);
 };
 
 
