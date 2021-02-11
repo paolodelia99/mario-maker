@@ -625,6 +625,8 @@ void PlayerSystem::receive(World *world, const EnemyCollisionEvent &enemyCollisi
         player->get<TextureComponent>()->textureId_ =
                 player->has<MarioComponent>() ? TextureId::MARIO_DEAD : TextureId::LUIGI_DEAD;
         player->assign<DeadComponent>();
+        player->remove<SolidComponent>();
+        player->remove<GravityComponent>();
 
         kinetic->speedY_ = 0.0f;
         kinetic->speedX_ = 0.0f;
@@ -639,6 +641,7 @@ void PlayerSystem::receive(World *world, const EnemyCollisionEvent &enemyCollisi
                         ComponentHandle<WalkComponent> walk,
                         ComponentHandle<KineticComponent> kineticEnt) {
                         if (entity != player) {
+                            entity->assign<FrozenComponent>();
                             entity->remove<WalkComponent>();
                             entity->remove<KineticComponent>();
                             entity->remove<AnimationComponent>();
@@ -659,7 +662,7 @@ void PlayerSystem::receive(World *world, const EnemyCollisionEvent &enemyCollisi
         }
 
         player->assign<TimerComponent>([=] {
-            player->remove<SolidComponent>();
+            player->assign<GravityComponent>();
             kinetic->speedY_ = 0.0f;
             kinetic->speedX_ = 0.0f;
             kinetic->accX_ = 0.0f;

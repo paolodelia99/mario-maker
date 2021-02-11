@@ -59,34 +59,44 @@ EnemiesRenderer::~EnemiesRenderer() {
     }
 }
 
-void EnemiesRenderer::renderEnemies(ECS::World *world, float delta) {
-    for (auto ent : world->each<AABBComponent, EnemyComponent, TextureComponent>()) {
-        auto aabb = ent->get<AABBComponent>();
-        auto textureComponent = ent->get<TextureComponent>();
-        bool flipH = textureComponent->flipH;
-        bool flipV = textureComponent->flipV;
+void EnemiesRenderer::renderUnderTileEnemies(ECS::World *world, float delta) {
+    for (auto ent : world->each<AABBComponent, EnemyComponent, TextureComponent, UnderTileComponent>()) {
+        renderEnemy(ent, delta);
+    }
+}
 
-        if (ent->has<KineticComponent>()) {
-            auto kinetic = ent->get<KineticComponent>();
+void EnemiesRenderer::renderOverTileEnemies(ECS::World *world, float delta) {
+    for (auto ent : world->each<AABBComponent, EnemyComponent, TextureComponent, OverTileComponent>()) {
+        renderEnemy(ent, delta);
+    }
+}
 
-            Rectangle rect{
+void EnemiesRenderer::renderEnemy(ECS::Entity *enemy, float delta) {
+    auto aabb = enemy->get<AABBComponent>();
+    auto textureComponent = enemy->get<TextureComponent>();
+    bool flipH = textureComponent->flipH;
+    bool flipV = textureComponent->flipV;
+
+    if (enemy->has<KineticComponent>()) {
+        auto kinetic = enemy->get<KineticComponent>();
+
+        Rectangle rect{
                 aabb->left() + textureComponent->offSetX - kinetic->speedX_ * delta,
                 aabb->top() + textureComponent->offSetY - kinetic->speedY_ * delta,
                 textureComponent->w > 0 ? textureComponent->w : aabb->collisionBox_.width,
                 textureComponent->h > 0 ? textureComponent->h : aabb->collisionBox_.height
-            };
+        };
 
-            if (ent->get<EnemyComponent>()->isBig) {
-                Renderer::render2XEntityTexture(textureComponent->textureId_, rect, flipH, flipV);
-            } else {
-                Renderer::renderEntityTexture(textureComponent->textureId_, rect, flipH, flipV);
-            }
+        if (enemy->get<EnemyComponent>()->isBig) {
+            Renderer::render2XEntityTexture(textureComponent->textureId_, rect, flipH, flipV);
         } else {
-            if (ent->get<EnemyComponent>()->isBig) {
-                Renderer::render2XEntityTexture(textureComponent->textureId_, aabb->collisionBox_, flipH, flipV);
-            } else {
-                Renderer::renderEntityTexture(textureComponent->textureId_, aabb->collisionBox_, flipH, flipV);
-            }
+            Renderer::renderEntityTexture(textureComponent->textureId_, rect, flipH, flipV);
+        }
+    } else {
+        if (enemy->get<EnemyComponent>()->isBig) {
+            Renderer::render2XEntityTexture(textureComponent->textureId_, aabb->collisionBox_, flipH, flipV);
+        } else {
+            Renderer::renderEntityTexture(textureComponent->textureId_, aabb->collisionBox_, flipH, flipV);
         }
     }
 }

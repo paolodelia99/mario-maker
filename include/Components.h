@@ -686,6 +686,10 @@ struct TurtleShellComponent {
     bool isMoving_ = false;
 };
 
+struct UnderTileComponent {};
+
+struct OverTileComponent {};
+
 struct CannonComponent {
 
     CannonComponent() = default;
@@ -714,7 +718,7 @@ struct CannonComponent {
 private:
     Enemy::BulletType type_ = Enemy::BulletType::NO_BULLET;
     int shootTimer_ = 0;
-    int n_ = 360;
+    int n_ = 400;
 };
 
 struct DestroyDelayedComponent {

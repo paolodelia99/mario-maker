@@ -227,7 +227,8 @@ void Game::render(float d) {
     mapRenderer->renderBackground(world_);
     textureRenderer->renderTextureEntities(world_, d);
     textureRenderer->renderTileCollisionRect(world_);
-    enemiesRenderer->renderEnemies(world_, d);
+    enemiesRenderer->renderUnderTileEnemies(world_, d);
     objectRenderer->render(world_);
     mapRenderer->render(world_, d);
+    enemiesRenderer->renderOverTileEnemies(world_, d);
 }

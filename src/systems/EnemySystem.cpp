@@ -106,6 +106,7 @@ void EnemySystem::killEnemyWithFireball(Entity *enemy) {
     enemy->assign<AABBComponent>(aabb->collisionBox_);
     enemy->get<TextureComponent>()->setDimensions(aabb->collisionBox_.width, aabb->collisionBox_.height);
     enemy->assign<GravityComponent>();
+    enemy->assign<OverTileComponent>();
     enemy->assign<KineticComponent>(xVelocity, -1.5f, 0.0f, -0.50f);
 }
 
@@ -183,9 +184,18 @@ void EnemySystem::killEnemyWithJump(Entity *enemy) {
                 }, 8, false, false, false);
             break;
         }
+        case Enemy::Type::BULLET_BILL:
+            enemy->assign<GravityComponent>();
+            enemy->remove<SolidComponent>();
+            enemy->remove<WalkComponent>();
+            kinetic->accX_ = 0;
+            kinetic->speedX_ = -kinetic->speedX_;
+            break;
         default:
             break;
     }
+
+    enemy->assign<UnderTileComponent>();
 }
 
 void EnemySystem::manageEnemyEntities(World* world) {

@@ -17,7 +17,12 @@ public:
 
     ~EnemiesRenderer();
 
-    void renderEnemies(ECS::World* world, float delta);
+    void renderUnderTileEnemies(ECS::World* world, float delta);
+
+    void renderOverTileEnemies(ECS::World* world, float delta);
+
+private:
+    void renderEnemy(ECS::Entity* enemy, float delta);
 };
 
 

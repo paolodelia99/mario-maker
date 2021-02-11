@@ -367,6 +367,7 @@ void Map::setEnemyType(ECS::Entity *ent, std::string type) {
            TextureId::GOOMBA_1,
            TextureId::GOOMBA_2
         }, 8);
+        ent->assign<UnderTileComponent>();
     } else if (type == "GOOMBRAT") {
         ent->assign<EnemyComponent>(Enemy::Type::GOOMBRAT);
         ent->assign<WalkComponent>();
@@ -375,6 +376,7 @@ void Map::setEnemyType(ECS::Entity *ent, std::string type) {
             TextureId::GOOMBRAT_1,
             TextureId::GOOMBRAT_2
         }, 8);
+        ent->assign<UnderTileComponent>();
     } else if (type == "KOOPA_TROOPA") {
         auto aabb = ent->get<AABBComponent>();
         ent->assign<EnemyComponent>(Enemy::Type::KOOPA_TROOPA);
@@ -386,8 +388,10 @@ void Map::setEnemyType(ECS::Entity *ent, std::string type) {
                 TextureId::GREEN_TURTLE_1,
                 TextureId::GREEN_TURTLE_2
         }, 8);
+        ent->assign<UnderTileComponent>();
     } else if (type == "RED_KOOPA_TROOPA") {
         ent->assign<EnemyComponent>(Enemy::Type::RED_KOOPA_TROOPA);
+        ent->assign<UnderTileComponent>();
     } else if (type == "TARTOSSO") {
         auto aabb = ent->get<AABBComponent>();
         ent->assign<EnemyComponent>(Enemy::Type::TARTOSSO);
@@ -400,6 +404,7 @@ void Map::setEnemyType(ECS::Entity *ent, std::string type) {
                 TextureId::TARTOSSO_1,
                 TextureId::TARTOSSO_2
         }, 8);
+        ent->assign<UnderTileComponent>();
     } else if (type == "THWOMP_V") {
         auto aabb = ent->get<AABBComponent>();
         ent->assign<EnemyComponent>(Enemy::THWOMP_V);
@@ -410,6 +415,7 @@ void Map::setEnemyType(ECS::Entity *ent, std::string type) {
         aabb->setWidth(24 * 2);
         ent->assign<ThwompComponent>();
         ent->get<ThwompComponent>()->setInitialPos(aabb->top());
+        ent->assign<UnderTileComponent>();
     } else if (type == "THWOMP_H") {
         auto aabb = ent->get<AABBComponent>();
         ent->assign<EnemyComponent>(Enemy::THWOMP_H);
@@ -422,6 +428,7 @@ void Map::setEnemyType(ECS::Entity *ent, std::string type) {
         ECS::ComponentHandle<ThwompComponent> thwompComponent = ent->assign<ThwompComponent>();
         thwompComponent->setInitialPos(aabb->right());
         thwompComponent->setHorizontal();
+        ent->assign<UnderTileComponent>();
     } else if (type == "BLACK_CANNON") {
         auto aabb = ent->get<AABBComponent>();
         ent->assign<TileComponent>();
@@ -447,7 +454,7 @@ void Map::createPiranhaPlant(ECS::World* world, float spawnX, float spawnY) {
         TextureId::PIRANHA_PLANT_1,
         TextureId::PIRANHA_PLANT_2
     }, 6);
-
+    piranhaPlant->assign<UnderTileComponent>();
 }
 
 void Map::createObject(ECS::Entity *entity, std::vector<tmx::Property> properties) {

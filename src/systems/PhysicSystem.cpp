@@ -504,7 +504,12 @@ bool PhysicSystem::validXCollision(Entity *ent1, Entity *ent2) {
                 && ent2->get<EnemyComponent>()->type_ == Enemy::PIRANHA_PLANT
                 && ent1->has<PipeComponent>())) {
         return false;
+    } else if (ent2->has<EnemyComponent>() && ent2->get<EnemyComponent>()->type_ == Enemy::Type::BULLET_BILL) {
+        if (ent1->has<EnemyComponent>() || ent1->has<TileComponent>() || ent1->has<ObjectComponent>()) return false;
+    } else if (ent1->has<EnemyComponent>() && ent1->get<EnemyComponent>()->type_ == Enemy::Type::BULLET_BILL) {
+        if (ent2->has<EnemyComponent>() || ent2->has<TileComponent>() || ent2->has<ObjectComponent>()) return false;
     }
+
     return true;
 }
 
@@ -519,7 +524,12 @@ bool PhysicSystem::validYCollision(Entity *ent1, Entity *ent2) {
                     && ent2->get<EnemyComponent>()->type_ == Enemy::PIRANHA_PLANT
                     && ent1->has<PipeComponent>())) {
         return false;
+    } else if (ent2->has<EnemyComponent>() && ent2->get<EnemyComponent>()->type_ == Enemy::Type::BULLET_BILL) {
+        if (ent1->has<EnemyComponent>() || ent1->has<TileComponent>() || ent1->has<ObjectComponent>()) return false;
+    } else if (ent1->has<EnemyComponent>() && ent1->get<EnemyComponent>()->type_ == Enemy::Type::BULLET_BILL) {
+        if (ent2->has<EnemyComponent>() || ent2->has<TileComponent>() || ent2->has<ObjectComponent>()) return false;
     }
+
     return true;
 }
 

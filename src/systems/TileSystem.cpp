@@ -159,10 +159,23 @@ void TileSystem::manageGrowComponents(World *world) {
         if (growComponent->finished()) {
             entity->assign<SolidComponent>();
             auto enemyComponent = entity->get<EnemyComponent>();
+            auto collectibleComponent = entity->get<CollectibleComponent>();
 
             if (enemyComponent) {
                 switch (enemyComponent->type_) {
                     case Enemy::GOOMBA:
+                        if (growComponent->isGoingLeft()) {
+                            entity->assign<WalkComponent>();
+                        } else {
+                            entity->assign<WalkComponent>(0.6f);
+                        }
+                        entity->assign<AnimationComponent>(std::vector<TextureId>{
+                                TextureId::GOOMBA_1,
+                                TextureId::GOOMBA_2
+                        }, 8);
+                        entity->assign<GravityComponent>();
+                        entity->assign<KineticComponent>();
+                        entity->remove<FrozenComponent>();
                         break;
                     case Enemy::GOOMBRAT:
                         break;
@@ -171,6 +184,8 @@ void TileSystem::manageGrowComponents(World *world) {
                     case Enemy::RED_TURTLE_SHELL:
                         break;
                     case Enemy::BULLET_BILL:
+                        entity->remove<UnderTileComponent>();
+                        entity->assign<OverTileComponent>();
                         if (growComponent->isGoingLeft()) {
                             entity->assign<WalkComponent>(-1.8f);
                         } else {
@@ -181,9 +196,16 @@ void TileSystem::manageGrowComponents(World *world) {
                     default:
                         break;
                 }
-            } else {
-
+            } else if (collectibleComponent) {
+                entity->assign<GravityComponent>();
+                entity->assign<KineticComponent>();
+                if (growComponent->isGoingLeft()) {
+                    entity->assign<WalkComponent>();
+                } else {
+                    entity->assign<WalkComponent>(0.6f);
+                }
             }
+            entity->remove<HorizontalGrowComponent>();
         } else {
             if (growComponent->isGoingLeft()) {
                 aabb->collisionBox_.x -= MUSHROOM_GROW_SPEED;
@@ -280,8 +302,6 @@ void TileSystem::manageCannons(World *world) {
 
             if (playerAABB->getCenterX() >= aabb->getCenterX()) shootLeft = false;
 
-            std::cout << "shoot" << std::endl;
-
             spawnEntityFromCannon(world, cannonComponent->getType(), aabb->collisionBox_, shootLeft);
         }
     });
@@ -296,9 +316,10 @@ void TileSystem::spawnEntityFromCannon(World *world, Enemy::BulletType type, Rec
         GAME_TILE_SIZE,
         GAME_TILE_SIZE});
     entity->assign<HorizontalGrowComponent>(shootLeft, 120);
+    entity->assign<UnderTileComponent>();
 
     switch (type) {
-        case Enemy::B_BULLET_BILL:
+        case Enemy::BulletType::B_BULLET_BILL:
             if (shootLeft) {
                 entity->assign<TextureComponent>(TextureId::BULLET_BILL);
             } else {
@@ -306,13 +327,29 @@ void TileSystem::spawnEntityFromCannon(World *world, Enemy::BulletType type, Rec
             }
             entity->assign<EnemyComponent>(Enemy::Type::BULLET_BILL);
             break;
-        case Enemy::R_BULLET_BILL:
+        case Enemy::BulletType::R_BULLET_BILL:
             break;
-        case Enemy::BLUE_BULLET_BILL:
+        case Enemy::BulletType::BLUE_BULLET_BILL:
             break;
-        case Enemy::SUPER_MUSHROOM:
+        case Enemy::BulletType::SUPER_MUSHROOM:
+            entity->assign<CollectibleComponent>(Collectible::CollectibleType::SUPER_MARIO_MUSHROOM);
+            entity->assign<TextureComponent>(TextureId::SUPER_MUSHROOM);
+            entity->assign<TileComponent>();
             break;
-        case Enemy::ONE_UP_MUSHROOM:
+        case Enemy::BulletType::ONE_UP_MUSHROOM:
+            entity->assign<CollectibleComponent>(Collectible::CollectibleType::ONE_UP_MUSHROOM);
+            entity->assign<TextureComponent>(TextureId::ONE_UP_MUSHROOM);
+            entity->assign<TileComponent>();
+            break;
+        case Enemy::BulletType::B_GOOMBA:
+            if (shootLeft) {
+                entity->assign<TextureComponent>(TextureId::GOOMBA_1);
+            } else {
+                entity->assign<TextureComponent>(TextureId::GOOMBA_1, !shootLeft);
+            }
+            entity->assign<EnemyComponent>(Enemy::Type::GOOMBA);
+            break;
+        default:
             break;
     }
 }
