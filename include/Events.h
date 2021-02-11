@@ -58,3 +58,11 @@ struct CollisionWithFinalPole {
     Entity* player;
     Entity* pole;
 };
+
+struct CollisionWithCoin {
+
+    CollisionWithCoin(Entity *player, Entity *coin) : player(player), coin(coin) {}
+
+    Entity* player;
+    Entity* coin;
+};

@@ -21,6 +21,7 @@
 #include "EnemySystem.h"
 #include "systems/FlagSystem.h"
 #include "systems/IdsMapSystem.h"
+#include "systems/ScoreSystem.h"
 
 class Game {
 public:

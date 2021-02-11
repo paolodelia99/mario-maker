@@ -161,6 +161,7 @@ void Game::registerSystems() {
     world_->registerSystem(new TileSystem());
     world_->registerSystem(new TimerSystem());
     world_->disableSystem(world_->registerSystem(new FlagSystem()));
+    world_->registerSystem(new ScoreSystem());
 }
 
 void Game::handleInput() {

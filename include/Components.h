@@ -336,7 +336,11 @@ namespace Object {
     enum Type {
         FINAL_FLAG_POLE,
         FINAL_FLAG,
-        PARACHUTE
+        PARACHUTE,
+        COIN_10,
+        COIN_30,
+        COIN_50,
+        COIN
     };
 }
 

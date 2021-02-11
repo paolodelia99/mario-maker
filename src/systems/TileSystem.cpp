@@ -29,7 +29,6 @@ void TileSystem::tick(World *world, float delta) {
 void TileSystem::createCoin(World* world, Entity* ent) {
     auto coin = world->create();
     auto entAABBComponent = ent->get<AABBComponent>();
-    coin->assign<TextureComponent>(TextureId::COIN_1);
     coin->assign<AABBComponent>(
             Rectangle{
                     entAABBComponent->left(),
@@ -39,11 +38,22 @@ void TileSystem::createCoin(World* world, Entity* ent) {
             });
     coin->assign<GravityComponent>();
 
-    coin->assign<TileComponent>();
+    coin->assign<ObjectComponent>(Object::Type::COIN);
+    coin->assign<TextureComponent>(TextureId::COIN_1);
+    coin->assign<AnimationComponent>(std::vector<TextureId>{
+            TextureId::COIN_1,
+            TextureId::COIN_2,
+            TextureId::COIN_3,
+            TextureId::COIN_4,
+            TextureId::COIN_5,
+            TextureId::COIN_6,
+            TextureId::COIN_7,
+            TextureId::COIN_8,
+    }, 4);
     coin->assign<KineticComponent>(0.0f, -80.f);
     coin->assign<TimerComponent>([=]() {
         world->destroy(coin);
-        }, 25);
+        }, 30);
 }
 
 void TileSystem::spawnSuperMarioMushroom(World* world, Entity* ent) {

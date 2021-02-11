@@ -66,7 +66,8 @@ void PhysicSystem::checkYCollision(Entity *ent1, Entity *ent2) {
 
     // Check y collision
     if (collisionRect.height != 0 && collisionRect.height != aabb->collisionBox_.height) {
-        if (validYCollision(ent1, ent2)) {
+        if (validYCollision(ent1, ent2) && !checkCollisionWithObject(ent1, ent2)) {
+
             if (kineticEntityCollBox.y + kineticEntityCollBox.height >= objCollisionBox.y
                 && kineticEntityCollBox.y + kineticEntityCollBox.height < objectYCenter) {
                 // Bottom collision
@@ -121,7 +122,7 @@ void PhysicSystem::checkXCollision(Entity *ent1, Entity *ent2) {
     Rectangle collisionRect = GetCollisionRec(kineticEntityCollBox, objCollisionBox);
 
     if (collisionRect.width != 0 && collisionRect.width != aabb->collisionBox_.width) {
-        if (validXCollision(ent1, ent2)) {
+        if (validXCollision(ent1, ent2) && !checkCollisionWithObject(ent1, ent2)) {
             if (kineticEntityCollBox.x <= objectRight && kineticEntityCollBox.x > objectXCenter) {
                 // Left Collision
                 if (kineticEntityCollBox.x < objectRight) {
@@ -170,7 +171,6 @@ void PhysicSystem::checkXCollision(Entity *ent1, Entity *ent2) {
                 ent1->assign<RightCollisionComponent>();
             }
             checkXEnemyCollision(ent1, ent2);
-            checkCollisionWithObject(ent1, ent2);
             checkCollisionWithCollectible(ent1, ent2);
         }
     }
@@ -533,20 +533,41 @@ bool PhysicSystem::validYCollision(Entity *ent1, Entity *ent2) {
     return true;
 }
 
-void PhysicSystem::checkCollisionWithObject(Entity *ent1, Entity *ent2) {
+bool PhysicSystem::checkCollisionWithObject(Entity *ent1, Entity *ent2) {
     World* world = ent1->getWorld();
+    Entity* player;
+    Entity* object;
 
-    if (ent1->has<PlayerComponent>()
-        && ent2->has<ObjectComponent, SolidComponent>()
-        && ent2->get<ObjectComponent>()->type == Object::Type::FINAL_FLAG_POLE) {
-        auto poleAABB = ent2->get<AABBComponent>()->bottom();
-        world->emit<CollisionWithFinalPole>(CollisionWithFinalPole(ent1, ent2));
-    } else if (ent2->has<PlayerComponent>()
-               && ent1->has<ObjectComponent, SolidComponent>()
-               && ent1->get<ObjectComponent>()->type == Object::Type::FINAL_FLAG_POLE) {
-        auto poleAABB = ent1->get<AABBComponent>()->bottom();
-        world->emit<CollisionWithFinalPole>(CollisionWithFinalPole(ent2, ent1));
+    if (ent1->has<PlayerComponent>() && ent2->has<ObjectComponent>()) {
+        player = ent1;
+        object = ent2;
+    } else if (ent2->has<PlayerComponent>() && ent1->has<ObjectComponent>()) {
+        player = ent2;
+        object = ent1;
+    } else {
+        player = NULL;
+        object = NULL;
     }
+
+    if (player && object) {
+        auto objType = object->get<ObjectComponent>()->type;
+
+        switch (objType) {
+            case Object::FINAL_FLAG_POLE:
+                world->emit<CollisionWithFinalPole>(CollisionWithFinalPole(player, object));
+                break;
+            case Object::COIN:
+            case Object::COIN_10:
+            case Object::COIN_30:
+            case Object::COIN_50:
+                world->emit<CollisionWithCoin>(CollisionWithCoin(player, object));
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+    return false;
 }
 
 void PhysicSystem::checkCollisionWithCollectible(Entity *ent1, Entity *ent2) {

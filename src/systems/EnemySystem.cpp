@@ -275,6 +275,7 @@ Entity *createGoomba(World *world, Rectangle collisionBox, bool isGoomba) {
     goomba->assign<GravityComponent>();
     goomba->assign<AABBComponent>(collisionBox);
     goomba->assign<KineticComponent>();
+    goomba->assign<UnderTileComponent>();
     if (isGoomba) {
         goomba->assign<EnemyComponent>(Enemy::Type::GOOMBA);
         goomba->assign<TextureComponent>(TextureId::GOOMBA_1);

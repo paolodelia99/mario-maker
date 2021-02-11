@@ -482,6 +482,58 @@ void Map::createObject(ECS::Entity *entity, std::vector<tmx::Property> propertie
                        GAME_TILE_SIZE
                     });
                     flag->assign<WinnerFlagComponent>();
+                } else if (property.getStringValue() == "COIN") {
+                    entity->assign<ObjectComponent>(Object::Type::COIN);
+                    entity->assign<TextureComponent>(TextureId::COIN_1);
+                    entity->assign<AnimationComponent>(std::vector<TextureId>{
+                            TextureId::COIN_1,
+                            TextureId::COIN_2,
+                            TextureId::COIN_3,
+                            TextureId::COIN_4,
+                            TextureId::COIN_5,
+                            TextureId::COIN_6,
+                            TextureId::COIN_7,
+                            TextureId::COIN_8,
+                    }, 4);
+                } else if (property.getStringValue() == "COIN_10") {
+                    entity->assign<ObjectComponent>(Object::Type::COIN_10);
+                    entity->assign<TextureComponent>(TextureId::COIN_10_1);
+                    entity->assign<AnimationComponent>(std::vector<TextureId>{
+                        TextureId::COIN_10_1,
+                        TextureId::COIN_10_2,
+                        TextureId::COIN_10_3,
+                        TextureId::COIN_10_4,
+                        TextureId::COIN_10_5,
+                        TextureId::COIN_10_6,
+                        TextureId::COIN_10_7,
+                        TextureId::COIN_10_8,
+                    }, 6);
+                } else if (property.getStringValue() == "COIN_30") {
+                    entity->assign<ObjectComponent>(Object::Type::COIN_30);
+                    entity->assign<TextureComponent>(TextureId::COIN_30_1);
+                    entity->assign<AnimationComponent>(std::vector<TextureId>{
+                            TextureId::COIN_30_1,
+                            TextureId::COIN_30_2,
+                            TextureId::COIN_30_3,
+                            TextureId::COIN_30_4,
+                            TextureId::COIN_30_5,
+                            TextureId::COIN_30_6,
+                            TextureId::COIN_30_7,
+                            TextureId::COIN_30_8,
+                    }, 6);
+                } else if (property.getStringValue() == "COIN_50") {
+                    entity->assign<ObjectComponent>(Object::Type::COIN_50);
+                    entity->assign<TextureComponent>(TextureId::COIN_50_1);
+                    entity->assign<AnimationComponent>(std::vector<TextureId>{
+                            TextureId::COIN_50_1,
+                            TextureId::COIN_50_2,
+                            TextureId::COIN_50_3,
+                            TextureId::COIN_50_4,
+                            TextureId::COIN_50_5,
+                            TextureId::COIN_50_6,
+                            TextureId::COIN_50_7,
+                            TextureId::COIN_50_8,
+                    }, 6);
                 }
             }
         }

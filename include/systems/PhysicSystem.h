@@ -58,7 +58,7 @@ private:
 
     bool validYCollision(Entity *ent1, Entity *ent2);
 
-    void checkCollisionWithObject(Entity *ent1, Entity *ent2);
+    bool checkCollisionWithObject(Entity *ent1, Entity *ent2);
 
     void checkCollisionWithCollectible(Entity *ent1, Entity *ent2);
 
