@@ -63,6 +63,8 @@ private:
     void checkCollisionWithCollectible(Entity *ent1, Entity *ent2);
 
     void checkYEnemyCollision(Entity *ent1, Entity *ent2);
+
+    void checkCollisionWithSolidObject(Entity *ent1, Entity *ent2);
 };
 
 

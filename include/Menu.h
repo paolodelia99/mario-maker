@@ -8,6 +8,7 @@
 #include <iostream>
 #include <dirent.h>
 #include "Game.h"
+#include "Constants.h"
 
 class Menu {
 public:

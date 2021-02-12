@@ -170,6 +170,7 @@ void PhysicSystem::checkXCollision(Entity *ent1, Entity *ent2) {
                 ent2->assign<LeftCollisionComponent>();
                 ent1->assign<RightCollisionComponent>();
             }
+            checkCollisionWithSolidObject(ent1, ent2);
             checkXEnemyCollision(ent1, ent2);
             checkCollisionWithCollectible(ent1, ent2);
         }
@@ -533,6 +534,22 @@ bool PhysicSystem::validYCollision(Entity *ent1, Entity *ent2) {
     return true;
 }
 
+void PhysicSystem::checkCollisionWithSolidObject(Entity *ent1, Entity *ent2) {
+    World* world = ent1->getWorld();
+
+    if (ent1->has<PlayerComponent>()
+        && ent2->has<ObjectComponent, SolidComponent>()
+        && ent2->get<ObjectComponent>()->type == Object::Type::FINAL_FLAG_POLE) {
+        auto poleAABB = ent2->get<AABBComponent>()->bottom();
+        world->emit<CollisionWithFinalPole>(CollisionWithFinalPole(ent1, ent2));
+    } else if (ent2->has<PlayerComponent>()
+               && ent1->has<ObjectComponent, SolidComponent>()
+               && ent1->get<ObjectComponent>()->type == Object::Type::FINAL_FLAG_POLE) {
+        auto poleAABB = ent1->get<AABBComponent>()->bottom();
+        world->emit<CollisionWithFinalPole>(CollisionWithFinalPole(ent2, ent1));
+    }
+}
+
 bool PhysicSystem::checkCollisionWithObject(Entity *ent1, Entity *ent2) {
     World* world = ent1->getWorld();
     Entity* player;
@@ -554,8 +571,7 @@ bool PhysicSystem::checkCollisionWithObject(Entity *ent1, Entity *ent2) {
 
         switch (objType) {
             case Object::FINAL_FLAG_POLE:
-                world->emit<CollisionWithFinalPole>(CollisionWithFinalPole(player, object));
-                break;
+                return false;
             case Object::COIN:
             case Object::COIN_10:
             case Object::COIN_30:

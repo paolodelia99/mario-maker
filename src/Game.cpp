@@ -16,6 +16,7 @@ Game::Game(const char *mapName, const int screenWidth, const int screenHeight, b
     textureRenderer = new TextureRenderer(SBM1_PLAYER_TILESET_PATH);
     enemiesRenderer = new EnemiesRenderer(SMB1_ENEMIES_TILESET_PATH);
     objectRenderer = new ObjectRenderer(SMB1_OBJECT_TILESET_PATH);
+    textRenderer_ = new TextRenderer();
 }
 
 void Game::mainLoop() {
@@ -63,6 +64,9 @@ void Game::mainLoop() {
 
         EndMode2D();
 
+        // Draw scores
+        textRenderer_->render(world_);
+
         EndDrawing();
     }
 
@@ -91,6 +95,8 @@ void Game::initWorld() {
     initIdsMap();
 
     registerSystems();
+
+    initTextEntities();
 }
 
 void Game::initPlayers() {
@@ -161,7 +167,6 @@ void Game::registerSystems() {
     world_->registerSystem(new TileSystem());
     world_->registerSystem(new TimerSystem());
     world_->disableSystem(world_->registerSystem(new FlagSystem()));
-    world_->registerSystem(new ScoreSystem());
 }
 
 void Game::handleInput() {
@@ -232,4 +237,26 @@ void Game::render(float d) {
     objectRenderer->render(world_);
     mapRenderer->render(world_, d);
     enemiesRenderer->renderOverTileEnemies(world_, d);
+}
+
+void Game::initTextEntities() {
+    auto coinCounterText = world_->create();
+    coinCounterText->assign<TextComponent>(
+            Text::Type::COIN_COUNTER,
+            Vector2{20.0f, 20.0f},
+            0);
+
+    auto scoreCounterText = world_->create();
+    scoreCounterText->assign<TextComponent>(
+            Text::Type::SCORE_COUNTER,
+            Vector2{screenWidth_ - 175.f, 20.0f},
+            0);
+
+    auto timerText = world_->create();
+    timerText->assign<TextComponent>(
+            Text::Type::TIMER,
+            Vector2{screenWidth_ - 45.f, 20.0f},
+            360);
+
+    world_->registerSystem(new ScoreSystem());
 }

@@ -11,6 +11,8 @@ constexpr const char* SMB1_TILESET_PATH = "../assets/tilesets/tiles-2.png";
 constexpr const char* SMB1_ENEMIES_TILESET_PATH = "../assets/tilesets/enemies-tileset.png";
 constexpr const char* SMB1_OBJECT_TILESET_PATH = "../assets/tilesets/objects-tileset.png";
 
+constexpr const char* FONT_FILE_NAME = "../assets/fonts/SuperMario256.ttf";
+
 constexpr bool SECOND_PLAYER = false;
 
 constexpr int GAME_TILE_SIZE = 32;

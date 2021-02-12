@@ -12,13 +12,14 @@
 #include "renderers/TextureRenderer.h"
 #include "renderers/EnemiesRenderer.h"
 #include "renderers/ObjectRenderer.h"
-#include "CameraSystem.h"
-#include "PlayerSystem.h"
-#include "PhysicSystem.h"
-#include "AnimationSystem.h"
-#include "TileSystem.h"
-#include "TimerSystem.h"
-#include "EnemySystem.h"
+#include "renderers/TextRenderer.h"
+#include "systems/CameraSystem.h"
+#include "systems/PlayerSystem.h"
+#include "systems/PhysicSystem.h"
+#include "systems/AnimationSystem.h"
+#include "systems/TileSystem.h"
+#include "systems/TimerSystem.h"
+#include "systems/EnemySystem.h"
 #include "systems/FlagSystem.h"
 #include "systems/IdsMapSystem.h"
 #include "systems/ScoreSystem.h"
@@ -45,6 +46,8 @@ private:
 
     void render(float d);
 
+    void initTextEntities();
+
 private:
     bool run;
     bool pause;
@@ -61,6 +64,7 @@ private:
     TextureRenderer* textureRenderer;
     EnemiesRenderer *enemiesRenderer;
     ObjectRenderer* objectRenderer;
+    TextRenderer* textRenderer_;
 };
 
 

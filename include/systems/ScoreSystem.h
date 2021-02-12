@@ -26,6 +26,9 @@ public:
 
     void receive(World *world, const CollisionWithCoin &event) override;
 
+private:
+    ECS::Entity* textCoinCounter_;
+    ECS::Entity* textScoreCounter_;
 };
 
 

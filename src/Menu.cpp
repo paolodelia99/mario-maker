@@ -16,15 +16,14 @@ Menu::~Menu() {
 }
 
 void Menu::menuLoop() const {
-    const char* fontFileName = "../assets/fonts/SuperMario256.ttf";
     const char* menuItems[] = {"Play Game", "Options", "Build Map"};
     Vector2 menuItemsPositions[] = {
             (Vector2){200.f, 200.0f},
             (Vector2){200.f, 260.0f},
             (Vector2){200.f, 320.0f}
     };
-    Font titleFont = LoadFontEx(fontFileName, 40, 0, 250);
-    Font textFont = LoadFontEx(fontFileName, 32, 0, 250);
+    Font titleFont = LoadFontEx(FONT_FILE_NAME, 40, 0, 250);
+    Font textFont = LoadFontEx(FONT_FILE_NAME, 32, 0, 250);
     Image coin = LoadImage("../assets/imgs/Gold Coin.png");
     ImageResize(&coin, 35, 35);
     Texture2D coinTexture = LoadTextureFromImage(coin);

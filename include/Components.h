@@ -739,3 +739,43 @@ struct DestroyDelayedComponent {
 private:
     int timer_;
 };
+
+namespace Text {
+
+    enum Type {
+        COIN_COUNTER,
+        SCORE_COUNTER,
+        TIMER
+    };
+}
+
+struct TextComponent {
+
+    TextComponent(Text::Type type, Vector2 position, u_int16_t initValue)
+    : type(type), position(position), value_(initValue) {}
+
+    void setValue(u_int16_t value) {
+        value_ = value;
+    }
+
+    void incrementValueBy(u_int16_t incr) {
+        if (incr > 0) {
+            value_ += incr;
+        }
+    }
+
+    void decreseValueBy(u_int16_t decr) {
+        if (decr > 0) {
+            value_ -= decr;
+        }
+    }
+
+    u_int16_t getValue() const {
+        return value_;
+    }
+
+    Text::Type type;
+    Vector2 position;
+private:
+    u_int16_t value_;
+};
