@@ -2,8 +2,8 @@
 // Created by paolo on 08/01/21.
 //
 
-#ifndef MARIO_MAKER_MAP_H
-#define MARIO_MAKER_MAP_H
+#ifndef MARIO_MAKER_GAMEMAP_H
+#define MARIO_MAKER_GAMEMAP_H
 #include <string>
 #include <set>
 #include <raylib.h>
@@ -14,11 +14,11 @@
 #include "Components.h"
 #include "ECS.h"
 
-class Map {
+class GameMap {
 public:
-    Map(std::string filename);
+    GameMap(std::string filename);
 
-    virtual ~Map();
+    virtual ~GameMap();
 
     int getHeight() const;
 
@@ -73,6 +73,8 @@ private:
 
     ECS::Entity * createParachute(ECS::Entity* entity);
 
+    void createObject(ECS::Entity *entity, std::vector<tmx::Property> properties);
+
 private:
     std::string name;
     int height_;
@@ -83,9 +85,7 @@ private:
     Vector2 spawnPositionP1_;
     Vector2 spawnPostionP2_;
     std::map<unsigned int, TileTexture> mapTextureTable_;
-
-    void createObject(ECS::Entity *entity, std::vector<tmx::Property> properties);
 };
 
 
-#endif //MARIO_MAKER_MAP_H
+#endif //MARIO_MAKER_GAMEMAP_H

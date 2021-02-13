@@ -13,6 +13,14 @@
 #include <bits/stdc++.h>
 
 
+#if defined(_WIN32)
+
+#include <stdint.h>
+
+typedef uint16_t u_int16_t;
+
+#endif
+
 ECS_TYPE_IMPLEMENTATION;
 
 struct AABBComponent {

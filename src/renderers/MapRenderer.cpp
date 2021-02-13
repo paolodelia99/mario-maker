@@ -9,7 +9,7 @@ MapRenderer::~MapRenderer() {
     map_.unloadTextures();
 }
 
-MapRenderer::MapRenderer(Map *map, const char* filepath)
+MapRenderer::MapRenderer(GameMap *map, const char* filepath)
 :map_(*map), Renderer(filepath)
 {
     texturePositions_.insert({QUESTION_BLOCK_1, new Rectangle{368, 0, TILE_SIZE, TILE_SIZE}});

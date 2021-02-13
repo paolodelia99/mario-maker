@@ -8,6 +8,7 @@
 #include <iostream>
 #include "ECS.h"
 #include "Constants.h"
+#include "GameMap.h"
 #include "renderers/MapRenderer.h"
 #include "renderers/TextureRenderer.h"
 #include "renderers/EnemiesRenderer.h"
@@ -54,7 +55,7 @@ private:
     bool secondPlayer;
     ECS::World* world_;
     Camera2D * pCamera_;
-    Map* pMap_;
+    GameMap* pMap_;
     size_t cameraId_;
     size_t player1Id_;
     const int screenWidth_;
