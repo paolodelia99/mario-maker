@@ -41,7 +41,7 @@ Where the `path_map_to_load` is relative to the build folder. So, for example, i
 The first player's commands are:
 
   - `↑ ↓ ← →`: to move the player (`↑` is for jump)
-  - `z` for shooting the fireball we mario is Flame
+  - `z` for shooting the fireball we mario is Flame mode
   - `left_shift` for sprinting
 
 The second player's commands are:
@@ -54,13 +54,12 @@ The second player's commands are:
 
 # Libraries used
 
-- [Raylib](https://github.com/raysan5/raylib) -  used as a framework to build the game
-- [Gtest](https://github.com/google/googletest) - used for testing (is install when running the `cmake`)
+- [Raylib](https://github.com/raysan5/raylib) -  used as a framework to build the game (is install when running the `cmake`)
 - [tmxlite](https://github.com/fallahn/tmxlite) - for parsing the txm file used for the map
 - [rededev/ECS](https://github.com/redxdev/ECS) - an header only entity component system library (already included)
 
-Since `rededev/ECS` is already included and `Google test` and `Raylib` (if it's not installed) is 
-installed with cmake, the only two libraries you need to install are Raylib and tmxlite.
+Since `rededev/ECS` is already included and `Raylib` (if it's not installed) is 
+installed with cmake, the only library that you need to install is tmxlite.
 
 ## Installing txmlite
 
@@ -98,10 +97,10 @@ After that you should be done.
 
 # Creating your own map
 
-The map of the game are created using [Tiled](https://www.mapeditor.org/), which is a 2d open source Map editor. 
-The file format used for storing the map is `.tmx`, which is based on xml, is easy to understand and allows multiple tileset to 
-be used in any map.
-The map is composed by layers,
+The maps of the game are created using [Tiled](https://www.mapeditor.org/),
+which is a 2d open source Map editor. The file format used for storing the map is .tmx, 
+which is based on XML, is easy to understand, and allows multiple tilesets to be used in any map. 
+The first thing to note is that the map is composed of layers,
 
 ![map_layers](assets/readme/map_layer.png)
 
@@ -111,30 +110,31 @@ which in this case are:
 
 ![backgrounfd_layer](assets/readme/background_layer.png)
 
-- a **Graphics layer**: the ***tile layer*** which contains the majority of the tiles(ground's tiles, bricks' tiles and so on) 
-which are part of the levels
+- a **Graphics layer**: the ***tile layer*** which contains the majority of the tiles (ground's tiles, bricks' tiles, 
+  and so on) which are part of the levels
 
 ![graphics_layer](assets/readme/graphics_layer.PNG)
 
-- a **Enemies layer**: the ***object layer*** which contains all the enemies, represented by their AABB( or more simply their collision
-box), and their Type. Currently the of enemyies implemented are: 
+- an **Enemies layer**: the ***object layer*** which contains all the enemies, represented by their AABB( or more 
+  simply their collision box), and their Type. Currently, the enemies implemented are:
   - GOOMBA
   - KOOPA_TROOPA
   - TARTOSSO
-  - THWOMP_V (Thwomp with vetical movement)
-  - THWOMP_V (Thwomp with oriziontal movement)
+  - THWOMP_V (Thwomp with vertical movement)
+  - THWOMP_V (Thwomp with horizontal movement)
   - PIRANHA_PLANT
+  - BULLET_BILL
   
   - While additional properties that can be added to enemies are:
     - isBig : **bool** make the enemy bigger
     - hasParachute: **bool** equip the enemy with a parachute (works only with the entities that have a Gravity Component)
     - left: **bool** property which make Vertical Thwomp go to the left
     
-- a **Object layer**: the ***object layer*** which contains all the objects which are not present in the tileset, but 
-they are present in the object tileset. Those objects may be, for example the final flag pole, the various checkpoints, and 
-others additional object that can enrich the map.
+- an **Object layer**: the ***object layer*** which contains all the objects which are not present in the tileset, but 
+they are present in the object tileset. Those objects may be, for example, the final flag pole, the various checkpoints, and 
+others additional objects that can enrich the map.
 - a **Pipe Layer**: the ***object layer*** wraps all the pipes which are present in the graphics layer making them collidable 
-with the other game's entities. Additionally they can have the bool prop `has_piranha_plant`, which when is true, it makes periodically
+with the other game's entities. Additionally, they can have the bool prop `has_piranha_plant`, which when is true, it makes periodically
 pop out the piranha plant from the pipe
 
 ![pipe layer](assets/readme/pipes_layers.PNG)
@@ -142,8 +142,8 @@ pop out the piranha plant from the pipe
 - a **Ground layer**: the ***object layer*** which wraps all the grounds tiles of the graphics layer, making them collidable entities. 
 - a **Bricks layer**: the ***object layer*** which wraps all the brick tiles of the graphics layer, making them collidable entities.
 - a **Square Bricks layer**: the ***object layer*** which wraps all the square bricks tiles of the graphics layer, making them collidable entities.
-- a **Question Block layer**:  the ***object layer*** which wraps all the question mark tiles of the graphics layer, making them collidable entites.
-The additional properties that a object, in this layer, can have are the following:
+- a **Question Block layer**:  the ***object layer*** which wraps all the question mark tiles of the graphics layer, making them collidable entities.
+The additional properties that an object, in this layer, can have are the following:
     - **coins**: bool prop which when is true means that the question mark block have a coin in it
     - **super_mario_mushroom**: bool prop which when is true means that the question mark block have the super mario mushroom in it
     - **flame_mushroom**: bool prop which when is true means that the question mark block have the flame mushroom/flower in it
@@ -163,7 +163,7 @@ So you have to choose the spawn position according to that coordinate system.
 
 # Contributing
 
-Contributors are welcome! But before you do it check out the [guidelines](docs/````CONTRIBUTING.md).
+Contributors are welcome! But before you do it check out the [guidelines](docs/CONTRIBUTING.md).
 
 # Author
 
