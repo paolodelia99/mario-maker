@@ -62,7 +62,7 @@ void TileSystem::spawnSuperMarioMushroom(World* world, Entity* ent) {
     mushroom->assign<TextureComponent>(TextureId::SUPER_MUSHROOM);
     mushroom->assign<TileComponent>();
     mushroom->assign<VerticalGrowComponent>();
-    mushroom->assign<CollectibleComponent>(Collectible::CollectibleType::SUPER_MARIO_MUSHROOM);
+    mushroom->assign<CollectibleComponent>(Collectible::Type::SUPER_MARIO_MUSHROOM);
     mushroom->assign<AABBComponent>(Rectangle{
         entAABB->left() + 4,
         entAABB->top() - entAABB->collisionBox_.width / 2,
@@ -77,7 +77,7 @@ void TileSystem::spawnMegaMushroom(World *world, Entity *ent) {
     int mushroomSize = GAME_TILE_SIZE * 2;
     mushroom->assign<TextureComponent>(TextureId::MEGA_MUSHROOM);
 
-    mushroom->assign<CollectibleComponent>(Collectible::CollectibleType::MEGA_MUSHROOM);
+    mushroom->assign<CollectibleComponent>(Collectible::Type::MEGA_MUSHROOM);
     mushroom->assign<AABBComponent>(Rectangle{
             entAABB->left(),
             entAABB->top() - mushroomSize,
@@ -104,7 +104,7 @@ void TileSystem::spawnFlameMushroom(World* world, Entity* ent) {
     }, 4);
 
     mushroom->assign<VerticalGrowComponent>();
-    mushroom->assign<CollectibleComponent>(Collectible::CollectibleType::FLAME_MUSHROOM);
+    mushroom->assign<CollectibleComponent>(Collectible::Type::FLAME_MUSHROOM);
     mushroom->assign<AABBComponent>(Rectangle{
             entAABB->left(),
             entAABB->top() - entAABB->collisionBox_.width / 2,
@@ -123,7 +123,7 @@ void TileSystem::spawnOneUpMushroom(World* world, Entity* ent) {
     mushroom->assign<TextureComponent>(TextureId::ONE_UP_MUSHROOM);
     mushroom->assign<VerticalGrowComponent>();
     mushroom->assign<TileComponent>();
-    mushroom->assign<CollectibleComponent>(Collectible::CollectibleType::ONE_UP_MUSHROOM);
+    mushroom->assign<CollectibleComponent>(Collectible::Type::ONE_UP_MUSHROOM);
     mushroom->assign<AABBComponent>(Rectangle{
             entAABB->left() + 4,
             entAABB->top() - entAABB->collisionBox_.width / 2,
@@ -342,12 +342,12 @@ void TileSystem::spawnEntityFromCannon(World *world, Enemy::BulletType type, Rec
         case Enemy::BulletType::BLUE_BULLET_BILL:
             break;
         case Enemy::BulletType::SUPER_MUSHROOM:
-            entity->assign<CollectibleComponent>(Collectible::CollectibleType::SUPER_MARIO_MUSHROOM);
+            entity->assign<CollectibleComponent>(Collectible::Type::SUPER_MARIO_MUSHROOM);
             entity->assign<TextureComponent>(TextureId::SUPER_MUSHROOM);
             entity->assign<TileComponent>();
             break;
         case Enemy::BulletType::ONE_UP_MUSHROOM:
-            entity->assign<CollectibleComponent>(Collectible::CollectibleType::ONE_UP_MUSHROOM);
+            entity->assign<CollectibleComponent>(Collectible::Type::ONE_UP_MUSHROOM);
             entity->assign<TextureComponent>(TextureId::ONE_UP_MUSHROOM);
             entity->assign<TileComponent>();
             break;

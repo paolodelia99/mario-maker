@@ -55,8 +55,10 @@ void EnemySystem::receive(World *world, const KillEnemyEvent& killEnemyEvent) {
 }
 
 void EnemySystem::killEnemyWithFireball(Entity *enemy) {
+    World* world = enemy->getWorld();
     auto enemyComponent = enemy->get<EnemyComponent>();
     auto aabb = enemy->get<AABBComponent>();
+    Vector2 scorePosition = Vector2{aabb->left() + GAME_TILE_SIZE / 2, aabb->top() - GAME_TILE_SIZE};
     Enemy::Type type = enemy->get<EnemyComponent>()->type_;
     float xVelocity = enemy->has<LeftCollisionComponent>() ? 2.0f : -2.0f;
     ComponentHandle<TextureComponent> textureComponent;
@@ -108,16 +110,18 @@ void EnemySystem::killEnemyWithFireball(Entity *enemy) {
     enemy->assign<GravityComponent>();
     enemy->assign<OverTileComponent>();
     enemy->assign<KineticComponent>(xVelocity, -1.5f, 0.0f, -0.50f);
+    world->emit<AddScoreEvent>(AddScoreEvent(200, scorePosition));
 }
 
 void EnemySystem::killEnemyWithJump(Entity *enemy) {
+    World* world = enemy->getWorld();
     auto enemyComponent = enemy->get<EnemyComponent>();
     auto aabb = enemy->get<AABBComponent>();
     Rectangle collisionRec = aabb->collisionBox_;
+    Vector2 scorePosition = Vector2{aabb->left()  + GAME_TILE_SIZE / 2, aabb->top() - GAME_TILE_SIZE};
     auto kinetic = enemy->get<KineticComponent>();
     Enemy::Type type = enemy->get<EnemyComponent>()->type_;
     bool wasBig = enemyComponent->isBig;
-    World* world = enemy->getWorld();
 
     switch (type) {
         case Enemy::GOOMBA:
@@ -131,6 +135,7 @@ void EnemySystem::killEnemyWithJump(Entity *enemy) {
             enemy->assign<AABBComponent>(collisionRec);
             enemy->assign<DestroyDelayedComponent>(100);
             if (wasBig) createChildGoombas(world, collisionRec, type == Enemy::GOOMBA);
+            world->emit<AddScoreEvent>(AddScoreEvent(200, scorePosition));
             break;
         case Enemy::KOOPA_TROOPA:
         case Enemy::RED_KOOPA_TROOPA:
@@ -149,6 +154,7 @@ void EnemySystem::killEnemyWithJump(Entity *enemy) {
                     GAME_TILE_SIZE,
                     GAME_TILE_SIZE
             });
+            world->emit<AddScoreEvent>(AddScoreEvent(200, scorePosition));
             break;
         case Enemy::GREEN_TURTLE_SHELL:
         case Enemy::RED_TURTLE_SHELL:
@@ -190,6 +196,7 @@ void EnemySystem::killEnemyWithJump(Entity *enemy) {
             enemy->remove<WalkComponent>();
             kinetic->accX_ = 0;
             kinetic->speedX_ = -kinetic->speedX_;
+            world->emit<AddScoreEvent>(AddScoreEvent(200, scorePosition));
             break;
         default:
             break;
@@ -339,14 +346,14 @@ void EnemySystem::receive(World *world, const EnemyCollectableCollisionEvent &ev
     world->destroy(collectibleEntity);
 }
 
-void EnemySystem::eatMushroom(Entity *entity, Collectible::CollectibleType type) {
+void EnemySystem::eatMushroom(Entity *entity, Collectible::Type type) {
 
     TextureId currentTexture = entity->get<TextureComponent>()->textureId_;
 
     if (entity->get<EnemyComponent>()->type_ == Enemy::THWOMP_V) return;
 
     switch (type) {
-        case Collectible::CollectibleType::SUPER_MARIO_MUSHROOM:
+        case Collectible::Type::SUPER_MARIO_MUSHROOM:
         case Collectible::MEGA_MUSHROOM: {
             if (!entity->get<EnemyComponent>()->isBig) {
                 float oldHeight = entity->get<AABBComponent>()->top();

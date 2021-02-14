@@ -38,3 +38,15 @@ void TextRenderer::render(ECS::World *world) {
         DrawTextEx(textFont, pchar, textComponent->position, textFont.baseSize, 1, WHITE);
     }
 }
+
+void TextRenderer::renderScoreTextComponents(ECS::World *world) {
+    world->each<GameTextComponent>([&](
+            ECS::Entity* entity,
+            ECS::ComponentHandle<GameTextComponent> gameTextComponent) {
+        if (!gameTextComponent->destroy()) {;
+            const char* pchar = gameTextComponent->text.c_str();
+
+            DrawTextEx(textFont, pchar, gameTextComponent->position, 12, 1, WHITE);
+        }
+    });
+}

@@ -17,7 +17,7 @@ enum FlagState {
 };
 
 class FlagSystem : public EntitySystem,
-                   public EventSubscriber<CollisionWithFinalPole> {
+                   public EventSubscriber<CollisionWithFinalPoleEvent> {
 public:
     FlagSystem();
 
@@ -29,7 +29,7 @@ public:
 
     void unconfigure(World* world) override;
 
-    void receive(World* world, const CollisionWithFinalPole& collisionWithFinalPole) override;
+    void receive(World* world, const CollisionWithFinalPoleEvent& collisionWithFinalPole) override;
 
 private:
     Entity* winner_;

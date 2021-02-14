@@ -237,6 +237,7 @@ void Game::render(float d) {
     objectRenderer->render(world_);
     mapRenderer->render(world_, d);
     enemiesRenderer->renderOverTileEnemies(world_, d);
+    textRenderer_->renderScoreTextComponents(world_);
 }
 
 void Game::initTextEntities() {

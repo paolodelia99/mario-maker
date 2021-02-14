@@ -36,13 +36,14 @@ Feel free also to add features that you would like to see in the game.
 - [ ] make parachute swings
 - [ ] State pattern for controlling the player and the enemies (https://gameprogrammingpatterns.com/state.html)
 - Systems to implement: 
-  - [ ] Score System
+  - [ ] Score System (in progress)
   - [ ] Sound & Music system
   - [x] FlagSystem (for winning)
 - [ ] Enemies to Implement
     - [x] Goomba
     - [x] Koopa Troopa
     - [x] Piranha plant
+    - [x] Bullet-Bill  
     - [ ] Browser
     - [ ] Baby Browser
     - [x] Tartosso
@@ -57,7 +58,7 @@ Feel free also to add features that you would like to see in the game.
 - [ ] fix animation of brick breaking
 - [ ] Bubble after a player dies
 - [ ] Controller for the second player (controller input not detected in Linux by Raylib)
-- [ ] Make controls customizable
+- [ ] Make controls customizable with options
 - [ ] Add the possibility of choosing between Mario and Luigi
 - [ ] Add the possibility of choosing the map to play (if there are more than one)
 - [ ] Documenting the code ?? (if it does make sense)

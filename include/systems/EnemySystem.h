@@ -45,7 +45,7 @@ private:
 
     void createChildGoombas(World *world, Rectangle sourceRect, bool b);
 
-    void eatMushroom(Entity *entity, Collectible::CollectibleType type);
+    void eatMushroom(Entity *entity, Collectible::Type type);
 
     void manageThwomps(World *world);
 };

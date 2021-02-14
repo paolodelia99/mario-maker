@@ -1,8 +1,6 @@
 //
 // Created by paolo on 12/02/21.
 //
-
-#include <iostream>
 #include <Components.h>
 #include "ScoreSystem.h"
 
@@ -14,7 +12,7 @@ ScoreSystem::~ScoreSystem() {
 
 }
 
-void ScoreSystem::receive(World *world, const CollisionWithCoin &event) {
+void ScoreSystem::receive(World *world, const CollisionWithCoinEvent &event) {
 
     switch (event.coin->get<ObjectComponent>()->type) {
         case Object::COIN_10:
@@ -43,7 +41,8 @@ void ScoreSystem::receive(World *world, const CollisionWithCoin &event) {
 void ScoreSystem::configure(World *world) {
     EntitySystem::configure(world);
 
-    world->subscribe<CollisionWithCoin>(this);
+    world->subscribe<CollisionWithCoinEvent>(this);
+    world->subscribe<AddScoreEvent>(this);
 
     world->each<TextComponent>([&](
             ECS::Entity* entity,
@@ -64,4 +63,21 @@ void ScoreSystem::unconfigure(World *world) {
 
 void ScoreSystem::tick(World *world, ECS::DefaultTickData data) {
     EntitySystem::tick(world, data);
+
+    destroyScoreTextComponents(world);
+}
+
+void ScoreSystem::receive(World *world, const AddScoreEvent &event) {
+    textScoreCounter_->get<TextComponent>()->incrementValueBy(event.scoreToAdd);
+
+    if (!event.oneUpEvent) world->create()->assign<GameTextComponent>(event.position, std::to_string(event.scoreToAdd));
+    else world->create()->assign<GameTextComponent>(event.position, "1 UP");
+}
+
+void ScoreSystem::destroyScoreTextComponents(World *world) {
+    world->each<GameTextComponent>([&](
+            Entity* entity,
+            ComponentHandle<GameTextComponent> scoreTextComponent) {
+       if (scoreTextComponent->destroy()) world->destroy(entity);
+    });
 }

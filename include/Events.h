@@ -3,6 +3,7 @@
 //
 #pragma once
 
+#include <raylib.h>
 #include "ECS.h"
 
 using namespace ECS;
@@ -50,19 +51,32 @@ struct KillEnemyEvent {
     bool killedByFireball = false;
 };
 
-struct CollisionWithFinalPole {
+struct CollisionWithFinalPoleEvent {
 
-    CollisionWithFinalPole(Entity *player, Entity* pole)
+    CollisionWithFinalPoleEvent(Entity *player, Entity* pole)
     : player(player), pole(pole) {}
 
     Entity* player;
     Entity* pole;
 };
 
-struct CollisionWithCoin {
+struct CollisionWithCoinEvent {
 
-    CollisionWithCoin(Entity *player, Entity *coin) : player(player), coin(coin) {}
+    CollisionWithCoinEvent(Entity *player, Entity *coin) : player(player), coin(coin) {}
 
     Entity* player;
     Entity* coin;
+};
+
+struct AddScoreEvent {
+
+    AddScoreEvent(u_int16_t scoreToAdd, Vector2 position) : scoreToAdd(scoreToAdd), position(position) {}
+
+    AddScoreEvent(u_int16_t scoreToAdd, const Vector2 &position, bool oneUpEvent) : scoreToAdd(scoreToAdd),
+                                                                                    position(position),
+                                                                                    oneUpEvent(oneUpEvent) {}
+
+    u_int16_t scoreToAdd;
+    Vector2 position;
+    bool oneUpEvent = false;
 };

@@ -30,11 +30,11 @@ public:
     void receive(World* world, const PLayerCollectableCollisionEvent& pLayerCollectableCollisionEvent) override;
 private:
 
-    void eatMushroom(Entity *pEntity, Collectible::CollectibleType type);
+    void eatMushroom(Entity *pEntity, Collectible::Type type);
 
     void handleFrozenTransform(Entity* entity);
 
-    TextureId getRightTransitionAnimation(Entity* entity, Collectible::CollectibleType mushroom, bool isMario);
+    TextureId getRightTransitionAnimation(Entity* entity, Collectible::Type mushroom, bool isMario);
 
     bool isSuperTexture(TextureId textureId);
 

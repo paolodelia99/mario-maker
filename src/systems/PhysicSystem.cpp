@@ -541,12 +541,12 @@ void PhysicSystem::checkCollisionWithSolidObject(Entity *ent1, Entity *ent2) {
         && ent2->has<ObjectComponent, SolidComponent>()
         && ent2->get<ObjectComponent>()->type == Object::Type::FINAL_FLAG_POLE) {
         auto poleAABB = ent2->get<AABBComponent>()->bottom();
-        world->emit<CollisionWithFinalPole>(CollisionWithFinalPole(ent1, ent2));
+        world->emit<CollisionWithFinalPoleEvent>(CollisionWithFinalPoleEvent(ent1, ent2));
     } else if (ent2->has<PlayerComponent>()
                && ent1->has<ObjectComponent, SolidComponent>()
                && ent1->get<ObjectComponent>()->type == Object::Type::FINAL_FLAG_POLE) {
         auto poleAABB = ent1->get<AABBComponent>()->bottom();
-        world->emit<CollisionWithFinalPole>(CollisionWithFinalPole(ent2, ent1));
+        world->emit<CollisionWithFinalPoleEvent>(CollisionWithFinalPoleEvent(ent2, ent1));
     }
 }
 
@@ -576,7 +576,7 @@ bool PhysicSystem::checkCollisionWithObject(Entity *ent1, Entity *ent2) {
             case Object::COIN_10:
             case Object::COIN_30:
             case Object::COIN_50:
-                world->emit<CollisionWithCoin>(CollisionWithCoin(player, object));
+                world->emit<CollisionWithCoinEvent>(CollisionWithCoinEvent(player, object));
                 break;
             default:
                 break;

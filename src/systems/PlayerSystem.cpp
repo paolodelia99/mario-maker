@@ -271,11 +271,13 @@ void PlayerSystem::setAnimation(Entity *playerEntity, PlayerState state) {
     }
 }
 
-void PlayerSystem::eatMushroom(Entity *entity, Collectible::CollectibleType type) {
-
+void PlayerSystem::eatMushroom(Entity *entity, Collectible::Type type) {
+    World* world = entity->getWorld();
     bool isMario = entity->has<MarioComponent>();
+    auto aabb = entity->get<AABBComponent>();
     TextureId currentTexture = entity->get<TextureComponent>()->textureId_;
     TextureId transformTexture = getRightTransitionAnimation(entity, type, isMario);
+    Vector2 scorePosition = {aabb->left() + GAME_TILE_SIZE / 2, aabb->top() - GAME_TILE_SIZE / 2};
 
     switch (type) {
         case Collectible::SUPER_MARIO_MUSHROOM:
@@ -292,6 +294,7 @@ void PlayerSystem::eatMushroom(Entity *entity, Collectible::CollectibleType type
                         transformTexture,
                 }, 4, false, false, false);
                 entity->assign<FrozenComponent>();
+                world->emit<AddScoreEvent>(AddScoreEvent(1000, scorePosition));
                 entity->assign<TimerComponent>([entity, oldHeight]() {
                     auto aabb = entity->get<AABBComponent>();
                     entity->remove<FrozenComponent>();
@@ -316,6 +319,7 @@ void PlayerSystem::eatMushroom(Entity *entity, Collectible::CollectibleType type
                         transformTexture,
                         transformTexture,
                 }, 10, false, false, false);
+                world->emit<AddScoreEvent>(AddScoreEvent(1000, scorePosition));
                 entity->assign<FrozenComponent>();
                 entity->assign<TimerComponent>([entity]() {
                     auto aabb = entity->get<AABBComponent>();
@@ -340,6 +344,7 @@ void PlayerSystem::eatMushroom(Entity *entity, Collectible::CollectibleType type
                         transformTexture,
                 }, 4, false, false, false);
                 entity->assign<FrozenComponent>();
+                world->emit<AddScoreEvent>(AddScoreEvent(1000, scorePosition));
                 entity->assign<TimerComponent>([entity]() {
                     auto aabb = entity->get<AABBComponent>();
                     entity->remove<FrozenComponent>();
@@ -348,6 +353,9 @@ void PlayerSystem::eatMushroom(Entity *entity, Collectible::CollectibleType type
                     aabb->collisionBox_.height = GAME_TILE_SIZE * 2;
                 }, 60);
             }
+            break;
+        case Collectible::Type::ONE_UP_MUSHROOM:
+            world->emit<AddScoreEvent>(AddScoreEvent(0, scorePosition, true));
             break;
         default:
             break;
@@ -403,7 +411,7 @@ void PlayerSystem::handleFrozenTransform(Entity *entity) {
 }
 
 TextureId
-PlayerSystem::getRightTransitionAnimation(Entity *entity, Collectible::CollectibleType mushroom, bool isMario) {
+PlayerSystem::getRightTransitionAnimation(Entity *entity, Collectible::Type mushroom, bool isMario) {
     auto playerState = entity->get<PlayerComponent>()->current_state_;
 
     if (isMario) {

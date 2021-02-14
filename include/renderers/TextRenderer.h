@@ -17,6 +17,8 @@ public:
 
     void render(ECS::World* world);
 
+    void renderScoreTextComponents(ECS::World *world);
+
 private:
     Font textFont;
 };

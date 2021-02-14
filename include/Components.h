@@ -291,7 +291,7 @@ private:
 };
 
 namespace Collectible {
-    enum CollectibleType {
+    enum Type {
         NONE,
         SUPER_MARIO_MUSHROOM,
         MEGA_MUSHROOM,
@@ -302,10 +302,10 @@ namespace Collectible {
 
 struct CollectibleComponent {
 
-    CollectibleComponent(Collectible::CollectibleType type)
+    CollectibleComponent(Collectible::Type type)
     : type(type) {}
 
-    Collectible::CollectibleType type;
+    Collectible::Type type;
 };
 
 struct AnimationComponent {
@@ -786,4 +786,22 @@ struct TextComponent {
     Vector2 position;
 private:
     u_int16_t value_;
+};
+
+struct GameTextComponent {
+
+    GameTextComponent(const Vector2 &position, std::string text) : position(position), text(text) {}
+
+    [[nodiscard]] bool destroy() {
+        timeToLive--;
+        return timeToLive < 0;
+    }
+
+    void setTimeToLive(int timeToLive) {
+        GameTextComponent::timeToLive = timeToLive;
+    }
+
+    int timeToLive = 50;
+    Vector2 position;
+    std::string text;
 };

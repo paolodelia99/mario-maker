@@ -11,7 +11,8 @@ using namespace ECS;
 
 class ScoreSystem :
         public EntitySystem,
-        public EventSubscriber<CollisionWithCoin> {
+        public EventSubscriber<CollisionWithCoinEvent>,
+        public EventSubscriber<AddScoreEvent> {
 public:
 
     ScoreSystem();
@@ -24,11 +25,15 @@ public:
 
     void tick(World *world, ECS::DefaultTickData data) override;
 
-    void receive(World *world, const CollisionWithCoin &event) override;
+    void receive(World *world, const CollisionWithCoinEvent &event) override;
+
+    void receive(World *world, const AddScoreEvent &event) override;
 
 private:
     ECS::Entity* textCoinCounter_;
     ECS::Entity* textScoreCounter_;
+
+    void destroyScoreTextComponents(World *world);
 };
 
 

@@ -49,14 +49,14 @@ void FlagSystem::tick(World *world, float delta) {
 void FlagSystem::configure(World *world) {
     EntitySystem::configure(world);
 
-    world->subscribe<CollisionWithFinalPole>(this);
+    world->subscribe<CollisionWithFinalPoleEvent>(this);
 }
 
 FlagSystem::~FlagSystem() {
 
 }
 
-void FlagSystem::receive(World *world, const CollisionWithFinalPole &collisionWithFinalPole) {
+void FlagSystem::receive(World *world, const CollisionWithFinalPoleEvent &collisionWithFinalPole) {
     world->enableSystem(this);
 
     collisionWithFinalPole.player->get<PlayerComponent>()->sit = true;
