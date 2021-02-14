@@ -5,6 +5,7 @@
 
 #include <raylib.h>
 #include "ECS.h"
+#include "SoundId.h"
 
 using namespace ECS;
 
@@ -79,4 +80,11 @@ struct AddScoreEvent {
     u_int16_t scoreToAdd;
     Vector2 position;
     bool oneUpEvent = false;
+};
+
+struct SoundEvent {
+
+    SoundEvent(SoundId soundId) : soundId(soundId) {}
+
+    SoundId soundId;
 };

@@ -9,6 +9,7 @@
 #include "ECS.h"
 #include "Constants.h"
 #include "GameMap.h"
+#include "SoundManager.h"
 #include "renderers/MapRenderer.h"
 #include "renderers/TextureRenderer.h"
 #include "renderers/EnemiesRenderer.h"
@@ -24,6 +25,7 @@
 #include "systems/FlagSystem.h"
 #include "systems/IdsMapSystem.h"
 #include "systems/ScoreSystem.h"
+#include "systems/SoundSystem.h"
 
 class Game {
 public:

@@ -8,6 +8,9 @@ Menu::Menu(const char* mapFilepath, int width, int height)
 : mapFilepath_(mapFilepath), width(width), height(height)
 {
     InitWindow(width, height, "Mario Maker");
+
+    InitAudioDevice();
+
     SetTargetFPS(60);
 }
 
@@ -64,6 +67,8 @@ void Menu::menuLoop() const {
 
     UnloadFont(titleFont);
     UnloadFont(textFont);
+
+    CloseAudioDevice();
 
     CloseWindow();
 }

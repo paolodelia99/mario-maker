@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <raylib.h>
 #include "renderers/TextureRenderer.h"
+#include "SoundId.h"
 #include <map>
 #include <utility>
 #include <iostream>

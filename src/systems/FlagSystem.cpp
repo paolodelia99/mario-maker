@@ -24,7 +24,10 @@ void FlagSystem::tick(World *world, float delta) {
                 auto flagAABB = winningFlag_->get<AABBComponent>();
 
                 if (winnerAABB->bottom() < flagPoleBottom_) winnerAABB->collisionBox_.y += .5f;
-                if (flagAABB->bottom() >= flagPoleBottom_) state_ = WALKING_TO_CASTE;
+                if (flagAABB->bottom() >= flagPoleBottom_) {
+                    state_ = WALKING_TO_CASTE;
+                    world->emit<SoundEvent>(SoundEvent{SoundId::STAGE_CLEAR});
+                }
                 else flagAABB->collisionBox_.y += 1.0f;
             }
                 break;
@@ -79,4 +82,5 @@ void FlagSystem::receive(World *world, const CollisionWithFinalPoleEvent &collis
     finalPole_ = collisionWithFinalPole.pole;
     flagPoleBottom_ = collisionWithFinalPole.pole->get<AABBComponent>()->bottom();
     state_ = TAKING_FLAG_DOWN;
+    world->emit<SoundEvent>(SoundEvent{SoundId::DOWN_THE_FLAG_POLE});
 }

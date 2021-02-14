@@ -69,6 +69,7 @@ void TileSystem::spawnSuperMarioMushroom(World* world, Entity* ent) {
         GAME_TILE_SIZE,
         GAME_TILE_SIZE
     });
+    world->emit<SoundEvent>(SoundEvent{SoundId::POWER_APPEARS});
 }
 
 void TileSystem::spawnMegaMushroom(World *world, Entity *ent) {
@@ -89,6 +90,7 @@ void TileSystem::spawnMegaMushroom(World *world, Entity *ent) {
     mushroom->assign<SolidComponent>();
     mushroom->assign<TileComponent>();
     mushroom->assign<KineticComponent>(0.0f, 0.0f, +0.5f, -1.0f);
+    world->emit<SoundEvent>(SoundEvent{SoundId::POWER_APPEARS});
 }
 
 void TileSystem::spawnFlameMushroom(World* world, Entity* ent) {
@@ -114,6 +116,7 @@ void TileSystem::spawnFlameMushroom(World* world, Entity* ent) {
     mushroom->assign<GravityComponent>();
     mushroom->assign<SolidComponent>();
     mushroom->assign<TileComponent>();
+    world->emit<SoundEvent>(SoundEvent{SoundId::POWER_APPEARS});
 }
 
 void TileSystem::spawnOneUpMushroom(World* world, Entity* ent) {
@@ -130,6 +133,7 @@ void TileSystem::spawnOneUpMushroom(World* world, Entity* ent) {
             GAME_TILE_SIZE,
             GAME_TILE_SIZE
     });
+    world->emit<SoundEvent>(SoundEvent{SoundId::POWER_APPEARS});
 }
 
 void TileSystem::unconfigure(World *world) {

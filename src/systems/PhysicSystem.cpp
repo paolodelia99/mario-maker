@@ -577,6 +577,7 @@ bool PhysicSystem::checkCollisionWithObject(Entity *ent1, Entity *ent2) {
             case Object::COIN_30:
             case Object::COIN_50:
                 world->emit<CollisionWithCoinEvent>(CollisionWithCoinEvent(player, object));
+                world->emit<SoundEvent>(SoundId::COIN);
                 break;
             default:
                 break;
@@ -613,6 +614,7 @@ void jumpOverEnemy(Entity* player, Entity* enemy) {
             auto playerKinetic = player->get<KineticComponent>();
             playerKinetic->accY_ = -0.8f;
             playerKinetic->speedY_ = -MARIO_BOUNCE;
+            world->emit<SoundEvent>(SoundEvent{SoundId::STOMP});
         }
     } else {
         EnemyCollisionEvent event{player, enemy};

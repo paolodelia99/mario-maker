@@ -303,6 +303,7 @@ void PlayerSystem::eatMushroom(Entity *entity, Collectible::Type type) {
                     aabb->collisionBox_.height = GAME_TILE_SIZE * 2;
                     }, 60);
             }
+            world->emit<SoundEvent>(SoundId::POWER_UP);
             break;
         case Collectible::MEGA_MUSHROOM:
             if (!entity->has<MegaComponent>()) {
@@ -331,6 +332,7 @@ void PlayerSystem::eatMushroom(Entity *entity, Collectible::Type type) {
                     aabb->collisionBox_.width = GAME_TILE_SIZE * 2;
                 }, 80);
             }
+            world->emit<SoundEvent>(SoundId::POWER_UP);
             break;
         case Collectible::FLAME_MUSHROOM:
             if (!(entity->has<SuperFlameComponent>() || entity->has<MegaComponent>())) {
@@ -353,9 +355,11 @@ void PlayerSystem::eatMushroom(Entity *entity, Collectible::Type type) {
                     aabb->collisionBox_.height = GAME_TILE_SIZE * 2;
                 }, 60);
             }
+            world->emit<SoundEvent>(SoundId::POWER_UP);
             break;
         case Collectible::Type::ONE_UP_MUSHROOM:
             world->emit<AddScoreEvent>(AddScoreEvent(0, scorePosition, true));
+            world->emit<SoundEvent>(SoundEvent{SoundId::UP_1});
             break;
         default:
             break;
@@ -514,6 +518,7 @@ bool PlayerSystem::isMegaTexture(TextureId textureId) {
 }
 
 void PlayerSystem::movePlayer(Entity *player) {
+    World* world = player->getWorld();
     auto kinetic = player->get<KineticComponent>();
     ComponentHandle<CommandComponent> commandComponent = player->get<CommandComponent>();
     Command command = commandComponent->currentCommand_;
@@ -534,6 +539,10 @@ void PlayerSystem::movePlayer(Entity *player) {
             case JUMP:
                 if (player->has<BottomCollisionComponent>()) {
                     kinetic->accY_ = -MARIO_JUMP_ACCELERATION;
+                    if (player->has<SuperComponent>()
+                        || player->has<SuperFlameComponent>()
+                        || player->has<MegaComponent>()) world->emit<SoundEvent>(SoundEvent{SoundId::JUMP_SUPER});
+                    else world->emit<SoundEvent>(SoundEvent{SoundId::JUMP_SMALL});
                 }
                 playerState = PlayerState::JUMPING;
                 break;
@@ -656,6 +665,7 @@ void PlayerSystem::receive(World *world, const EnemyCollisionEvent &enemyCollisi
                             entity->remove<TimerComponent>();
                         }
                     });
+            world->emit<SoundEvent>(SoundEvent{SoundId::MARIO_DIE});
         } else {
             if (player->has<LeadCameraComponent>()) {
                 player->remove<LeadCameraComponent>();
