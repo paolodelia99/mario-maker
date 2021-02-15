@@ -5,15 +5,16 @@
 #ifndef MARIO_MAKER_SOUNDSYSTEM_H
 #define MARIO_MAKER_SOUNDSYSTEM_H
 #include "ECS.h"
-#include "SoundManager.h"
-#include "SoundId.h"
+#include "AudioManager.h"
+#include "AudioIds.h"
 #include "Events.h"
 
 using namespace ECS;
 
 class SoundSystem :
         public EntitySystem,
-        public EventSubscriber<SoundEvent> {
+        public EventSubscriber<SoundEvent>,
+        public EventSubscriber<SetMusicEvent> {
 public:
     SoundSystem();
 
@@ -27,8 +28,12 @@ public:
 
     void receive(World *world, const SoundEvent &event) override;
 
+    void receive(World *world, const SetMusicEvent &event) override;
+
+    Music getCurrentMusic();
+
 private:
-    SoundManager* soundManager_;
+    AudioManager* audioManager_;
 };
 
 

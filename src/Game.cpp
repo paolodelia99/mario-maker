@@ -47,6 +47,8 @@ void Game::mainLoop() {
 
         world_->enableSystem(animationSystem_);
 
+        updateMusicStream();
+
         // Drawing
         BeginDrawing();
 
@@ -97,6 +99,8 @@ void Game::initWorld() {
     registerSystems();
 
     initTextEntities();
+
+    startMusic();
 }
 
 void Game::initPlayers() {
@@ -105,7 +109,7 @@ void Game::initPlayers() {
 
     // First Player
     ECS::Entity* mario = world_->create();
-    player1Id_ = mario->getEntityId();
+    mario->getEntityId();
     mario->assign<PlayerComponent>();
     mario->assign<AABBComponent>(
             Rectangle {
@@ -167,7 +171,7 @@ void Game::registerSystems() {
     world_->registerSystem(new TileSystem());
     world_->registerSystem(new TimerSystem());
     world_->disableSystem(world_->registerSystem(new FlagSystem()));
-    world_->registerSystem(new SoundSystem());
+    soundSystem_ = dynamic_cast<SoundSystem *>(world_->registerSystem(new SoundSystem()));
 }
 
 void Game::handleInput() {
@@ -261,4 +265,12 @@ void Game::initTextEntities() {
             360);
 
     world_->registerSystem(new ScoreSystem());
+}
+
+void Game::startMusic() {
+    world_->emit<SetMusicEvent>(SetMusicEvent(MusicId::SMB1_MAIN_THEME));
+}
+
+void Game::updateMusicStream() {
+    UpdateMusicStream(soundSystem_->getCurrentMusic());
 }

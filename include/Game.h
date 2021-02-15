@@ -9,7 +9,7 @@
 #include "ECS.h"
 #include "Constants.h"
 #include "GameMap.h"
-#include "SoundManager.h"
+#include "AudioManager.h"
 #include "renderers/MapRenderer.h"
 #include "renderers/TextureRenderer.h"
 #include "renderers/EnemiesRenderer.h"
@@ -51,18 +51,21 @@ private:
 
     void initTextEntities();
 
+    void startMusic();
+
+    void updateMusicStream();
+
 private:
     bool run;
     bool pause;
     bool secondPlayer;
     ECS::World* world_;
-    Camera2D * pCamera_;
     GameMap* pMap_;
     size_t cameraId_;
-    size_t player1Id_;
     const int screenWidth_;
     const int screenHeight_;
     ECS::EntitySystem* animationSystem_;
+    SoundSystem* soundSystem_;
     MapRenderer* mapRenderer;
     TextureRenderer* textureRenderer;
     EnemiesRenderer *enemiesRenderer;

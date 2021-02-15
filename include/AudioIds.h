@@ -23,3 +23,7 @@ enum SoundId{
     VINE_GROWING,
     STAGE_CLEAR
 };
+
+enum MusicId {
+    SMB1_MAIN_THEME,
+};

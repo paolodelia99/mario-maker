@@ -5,7 +5,7 @@
 
 #include <raylib.h>
 #include "ECS.h"
-#include "SoundId.h"
+#include "AudioIds.h"
 
 using namespace ECS;
 
@@ -87,4 +87,11 @@ struct SoundEvent {
     SoundEvent(SoundId soundId) : soundId(soundId) {}
 
     SoundId soundId;
+};
+
+struct SetMusicEvent {
+
+    SetMusicEvent(MusicId musicId) : musicId(musicId) {}
+
+    MusicId musicId;
 };

@@ -270,6 +270,7 @@ void TileSystem::manageBounceComponents(World *world) {
 
 void TileSystem::receive(World *world, const BreakEvent &breakEvent) {
     createDebris(world, breakEvent.x, breakEvent.y);
+    world->emit<SoundEvent>(SoundEvent(SoundId::BRICK_SMASH));
 }
 
 void TileSystem::createDebris(World *world, float xf, float yf) {

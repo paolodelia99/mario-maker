@@ -588,6 +588,7 @@ void PlayerSystem::movePlayer(Entity *player) {
                     createFireBullet(world, player);
                     playerComponent->canShoot = false;
                     playerState = PlayerState::SHOOTING;
+                    world->emit<SoundEvent>(SoundEvent(SoundId::FIREBALL));
                     player->assign<TimerComponent>([player]() {
                         player->get<PlayerComponent>()->canShoot = true;
                     }, 40);
