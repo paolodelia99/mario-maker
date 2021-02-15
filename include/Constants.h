@@ -22,13 +22,13 @@ constexpr int TILE_ROUNDNESS = 4;
 constexpr int FPS = 60;
 constexpr float MS_PER_UPDATE = 0.01f;
 
-constexpr float GRAVITY = .12f;
+constexpr float GRAVITY = .15f;
 constexpr float FRICTION = .94;
 constexpr float MAX_SPEED_X = 2.3;
-constexpr float MAX_SPEED_Y = 2.25;
+constexpr float MAX_SPEED_Y = 2.75;
 
 constexpr float MARIO_ACCELERATION_X = .08f;
-constexpr float MARIO_JUMP_ACCELERATION = 6.5f;
+constexpr float MARIO_JUMP_ACCELERATION = 7.0f;
 constexpr float MARIO_BOUNCE = 10.0f;
 
 constexpr float MUSHROOM_GROW_SPEED = .25f;

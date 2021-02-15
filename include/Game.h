@@ -55,6 +55,8 @@ private:
 
     void updateMusicStream();
 
+    void restartGame();
+
 private:
     bool run;
     bool pause;
@@ -71,6 +73,7 @@ private:
     EnemiesRenderer *enemiesRenderer;
     ObjectRenderer* objectRenderer;
     TextRenderer* textRenderer_;
+    bool restart = false;
 };
 
 

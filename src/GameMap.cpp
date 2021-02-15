@@ -268,7 +268,7 @@ void GameMap::loadTileEntity(
                     TextureId::QUESTION_BLOCK_2,
                     TextureId::QUESTION_BLOCK_3,
                     TextureId::QUESTION_BLOCK_2,
-            }, 10);
+            }, 12);
             if (!properties.empty()) {
                 auto questionComponent = ent->get<QuestionBlockComponent>();
                 for (const auto& property : properties) {
@@ -366,7 +366,7 @@ void GameMap::setEnemyType(ECS::Entity *ent, std::string type) {
         ent->assign<AnimationComponent>(std::vector<TextureId>{
            TextureId::GOOMBA_1,
            TextureId::GOOMBA_2
-        }, 8);
+        }, 16);
         ent->assign<UnderTileComponent>();
     } else if (type == "GOOMBRAT") {
         ent->assign<EnemyComponent>(Enemy::Type::GOOMBRAT);
@@ -375,7 +375,7 @@ void GameMap::setEnemyType(ECS::Entity *ent, std::string type) {
         ent->assign<AnimationComponent>(std::vector<TextureId>{
             TextureId::GOOMBRAT_1,
             TextureId::GOOMBRAT_2
-        }, 8);
+        }, 16);
         ent->assign<UnderTileComponent>();
     } else if (type == "KOOPA_TROOPA") {
         auto aabb = ent->get<AABBComponent>();
@@ -387,7 +387,7 @@ void GameMap::setEnemyType(ECS::Entity *ent, std::string type) {
         ent->assign<AnimationComponent>(std::vector<TextureId>{
                 TextureId::GREEN_TURTLE_1,
                 TextureId::GREEN_TURTLE_2
-        }, 8);
+        }, 16);
         ent->assign<UnderTileComponent>();
     } else if (type == "RED_KOOPA_TROOPA") {
         ent->assign<EnemyComponent>(Enemy::Type::RED_KOOPA_TROOPA);
@@ -403,7 +403,7 @@ void GameMap::setEnemyType(ECS::Entity *ent, std::string type) {
         ent->assign<AnimationComponent>(std::vector<TextureId>{
                 TextureId::TARTOSSO_1,
                 TextureId::TARTOSSO_2
-        }, 8);
+        }, 16);
         ent->assign<UnderTileComponent>();
     } else if (type == "THWOMP_V") {
         auto aabb = ent->get<AABBComponent>();
@@ -453,7 +453,7 @@ void GameMap::createPiranhaPlant(ECS::World* world, float spawnX, float spawnY) 
     piranhaPlant->assign<AnimationComponent>(std::vector<TextureId>{
         TextureId::PIRANHA_PLANT_1,
         TextureId::PIRANHA_PLANT_2
-    }, 6);
+    }, 12);
     piranhaPlant->assign<UnderTileComponent>();
 }
 
@@ -494,7 +494,7 @@ void GameMap::createObject(ECS::Entity *entity, std::vector<tmx::Property> prope
                             TextureId::COIN_6,
                             TextureId::COIN_7,
                             TextureId::COIN_8,
-                    }, 4);
+                    }, 6);
                 } else if (property.getStringValue() == "COIN_10") {
                     entity->assign<ObjectComponent>(Object::Type::COIN_10);
                     entity->assign<TextureComponent>(TextureId::COIN_10_1);
@@ -507,7 +507,7 @@ void GameMap::createObject(ECS::Entity *entity, std::vector<tmx::Property> prope
                         TextureId::COIN_10_6,
                         TextureId::COIN_10_7,
                         TextureId::COIN_10_8,
-                    }, 6);
+                    }, 8);
                 } else if (property.getStringValue() == "COIN_30") {
                     entity->assign<ObjectComponent>(Object::Type::COIN_30);
                     entity->assign<TextureComponent>(TextureId::COIN_30_1);
@@ -520,7 +520,7 @@ void GameMap::createObject(ECS::Entity *entity, std::vector<tmx::Property> prope
                             TextureId::COIN_30_6,
                             TextureId::COIN_30_7,
                             TextureId::COIN_30_8,
-                    }, 6);
+                    }, 12);
                 } else if (property.getStringValue() == "COIN_50") {
                     entity->assign<ObjectComponent>(Object::Type::COIN_50);
                     entity->assign<TextureComponent>(TextureId::COIN_50_1);
@@ -533,7 +533,7 @@ void GameMap::createObject(ECS::Entity *entity, std::vector<tmx::Property> prope
                             TextureId::COIN_50_6,
                             TextureId::COIN_50_7,
                             TextureId::COIN_50_8,
-                    }, 6);
+                    }, 12);
                 }
             }
         }

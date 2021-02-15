@@ -306,16 +306,16 @@ void PhysicSystem::applyGravity(World* world) {
     for (auto parachute : world->each<ParachuteComponent>()) {
         auto ent = parachute->get<ParachuteComponent>()->associatedEntity;
 
-        ent->get<KineticComponent>()->accY_ /= 2.3f;
+        ent->get<KineticComponent>()->accY_ /= 2.75f;
     }
 }
 
 std::unordered_set<int> PhysicSystem::getNeighborIds(ComponentHandle<IdsMapComponent> map, ComponentHandle<AABBComponent> aabb) {
-    int height = (int) std::round(aabb->collisionBox_.height / 32);
-    int width = (int) std::round(aabb->collisionBox_.width / 32);
+    int height = (int) std::round(aabb->collisionBox_.height / GAME_TILE_SIZE);
+    int width = (int) std::round(aabb->collisionBox_.width / GAME_TILE_SIZE);
     std::unordered_set<int> neighbors;
-    int x = (int) std::round(aabb->left() / 32);
-    int y = (int) std::round(aabb->top() / 32);
+    int x = (int) std::round(aabb->left() / GAME_TILE_SIZE);
+    int y = (int) std::round(aabb->top() / GAME_TILE_SIZE);
 
     //todo change this hardcoded stuff
     if (height == 1 && width == 1) {

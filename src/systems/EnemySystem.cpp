@@ -171,7 +171,7 @@ void EnemySystem::killEnemyWithJump(Entity *enemy) {
                             TextureId::G_TURLE_SHELL_MOVE_2,
                             TextureId::G_TURLE_SHELL_MOVE_3,
                             TextureId::G_TURLE_SHELL_MOVE_4,
-                    }, 4);
+                    }, 8);
                 }
                 enemy->get<TurtleShellComponent>()->isMoving_ = !isMoving;
             }
@@ -187,7 +187,7 @@ void EnemySystem::killEnemyWithJump(Entity *enemy) {
                         TextureId::TARTOSSO_D_2,
                         TextureId::TARTOSSO_D_3,
                         TextureId::TARTOSSO_DEAD,
-                }, 8, false, false, false);
+                }, 16, false, false, false);
             break;
         }
         case Enemy::Type::BULLET_BILL:
@@ -244,7 +244,7 @@ void EnemySystem::manageTartossos(World *world) {
                         TextureId::TARTOSSO_D_2,
                         TextureId::TARTOSSO_D_1,
                         TextureId::TARTOSSO_1
-                    }, 8);
+                    }, 16);
                 }
                 break;
             case Enemy::TRANSFORMING:
@@ -254,7 +254,7 @@ void EnemySystem::manageTartossos(World *world) {
                     tartosso->assign<AnimationComponent>(std::vector<TextureId>{
                             TextureId::TARTOSSO_1,
                             TextureId::TARTOSSO_2
-                    }, 8);
+                    }, 16);
                 }
                 break;
             case Enemy::LIVE:
@@ -289,14 +289,14 @@ Entity *createGoomba(World *world, Rectangle collisionBox, bool isGoomba) {
         goomba->assign<AnimationComponent>(std::vector<TextureId>{
                 TextureId::GOOMBA_1,
                 TextureId::GOOMBA_2
-        }, 8);
+        }, 16);
     } else {
         goomba->assign<EnemyComponent>(Enemy::Type::GOOMBRAT);
         goomba->assign<TextureComponent>(TextureId::GOOMBRAT_1);
         goomba->assign<AnimationComponent>(std::vector<TextureId>{
                 TextureId::GOOMBRAT_1,
                 TextureId::GOOMBRAT_2
-        }, 8);
+        }, 16);
     }
 
     return goomba;
@@ -370,7 +370,7 @@ void EnemySystem::eatMushroom(Entity *entity, Collectible::Type type) {
                     TextureId::EMPTY,
                     TextureId::EMPTY,
                     currentTexture,
-                }, 4, false, false, false);
+                }, 8, false, false, false);
                 entity->assign<FrozenComponent>();
                 entity->assign<TimerComponent>([=]() {
                     auto aabb = entity->get<AABBComponent>();

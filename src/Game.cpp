@@ -41,11 +41,11 @@ void Game::mainLoop() {
         //Update
         while (lag >= MS_PER_UPDATE) {
             world_->tick(0.0f);
-            world_->disableSystem(animationSystem_);
+            // world_->disableSystem(animationSystem_);
             lag -= MS_PER_UPDATE;
         }
 
-        world_->enableSystem(animationSystem_);
+        // world_->enableSystem(animationSystem_);
 
         updateMusicStream();
 
@@ -70,6 +70,15 @@ void Game::mainLoop() {
         textRenderer_->render(world_);
 
         EndDrawing();
+    }
+
+    if (restart) {
+        restart = !restart;
+        run = true;
+        world_->reset();
+        world_->destroyWorld();
+        world_ = ECS::World::createWorld();
+        mainLoop();
     }
 
 }
@@ -202,6 +211,9 @@ void Game::handleInput() {
             }
         }
     }
+
+    // fixme: doesn't work properly
+    // if (IsKeyReleased(KEY_ENTER)) restartGame();
 }
 
 void Game::initIdsMap() {
@@ -273,4 +285,12 @@ void Game::startMusic() {
 
 void Game::updateMusicStream() {
     UpdateMusicStream(soundSystem_->getCurrentMusic());
+}
+
+void Game::restartGame() {
+    auto player = world_->findFirst<PlayerComponent>();
+    if (!player) {
+        run = false;
+        restart = true;
+    }
 }

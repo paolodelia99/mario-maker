@@ -6,7 +6,7 @@
 #include <Constants.h>
 #include "systems/PlayerSystem.h"
 
-constexpr int RUNNING_ANIMATION_SPEED = 4;
+constexpr int RUNNING_ANIMATION_SPEED = 8;
 
 PlayerSystem::PlayerSystem() {
 
@@ -292,7 +292,7 @@ void PlayerSystem::eatMushroom(Entity *entity, Collectible::Type type) {
                         currentTexture,
                         transformTexture,
                         transformTexture,
-                }, 4, false, false, false);
+                }, 10, false, false, false);
                 entity->assign<FrozenComponent>();
                 world->emit<AddScoreEvent>(AddScoreEvent(1000, scorePosition));
                 entity->assign<TimerComponent>([entity, oldHeight]() {
@@ -344,7 +344,7 @@ void PlayerSystem::eatMushroom(Entity *entity, Collectible::Type type) {
                         currentTexture,
                         transformTexture,
                         transformTexture,
-                }, 4, false, false, false);
+                }, 10, false, false, false);
                 entity->assign<FrozenComponent>();
                 world->emit<AddScoreEvent>(AddScoreEvent(1000, scorePosition));
                 entity->assign<TimerComponent>([entity]() {
@@ -719,7 +719,7 @@ void PlayerSystem::shrink(Entity *player) {
         currentTexture,
         transformTexture,
         transformTexture
-    }, 8);
+    }, 16);
 
     if (player->has<SuperComponent>()) {
         player->remove<SuperComponent>();

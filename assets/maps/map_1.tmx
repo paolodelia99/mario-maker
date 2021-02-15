@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="135" height="28" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="109">
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="135" height="28" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="125">
  <properties>
   <property name="spawn_mario_x" type="int" value="7"/>
   <property name="spawn_mario_y" type="int" value="26"/>
@@ -193,11 +193,82 @@
     <property name="type" value="THWOMP_V"/>
    </properties>
   </object>
+  <object id="123" x="1856" y="416" width="16" height="16">
+   <properties>
+    <property name="bulletType" value="B_BULLET_BILL"/>
+    <property name="type" value="BLACK_CANNON"/>
+   </properties>
+  </object>
+  <object id="124" x="2128" y="304" width="16" height="16">
+   <properties>
+    <property name="type" value="GOOMBRAT"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="11" name="objects">
   <object id="108" x="176" y="176" width="16" height="16">
    <properties>
     <property name="type" value="FINAL_FLAG_POLE"/>
+   </properties>
+  </object>
+  <object id="109" x="384" y="256" width="32" height="32">
+   <properties>
+    <property name="type" value="COIN_10"/>
+   </properties>
+  </object>
+  <object id="110" x="272" y="320" width="16" height="16">
+   <properties>
+    <property name="type" value="COIN"/>
+   </properties>
+  </object>
+  <object id="111" x="304" y="320" width="16" height="16">
+   <properties>
+    <property name="type" value="COIN"/>
+   </properties>
+  </object>
+  <object id="112" x="576" y="352" width="32" height="32">
+   <properties>
+    <property name="type" value="COIN_30"/>
+   </properties>
+  </object>
+  <object id="113" x="848" y="320" width="16" height="16">
+   <properties>
+    <property name="type" value="COIN"/>
+   </properties>
+  </object>
+  <object id="114" x="896" y="320" width="16" height="16">
+   <properties>
+    <property name="type" value="COIN"/>
+   </properties>
+  </object>
+  <object id="115" x="928" y="304" width="16" height="16">
+   <properties>
+    <property name="type" value="COIN"/>
+   </properties>
+  </object>
+  <object id="116" x="960" y="256" width="16" height="16">
+   <properties>
+    <property name="type" value="COIN"/>
+   </properties>
+  </object>
+  <object id="117" x="1008" y="256" width="16" height="16">
+   <properties>
+    <property name="type" value="COIN"/>
+   </properties>
+  </object>
+  <object id="118" x="1056" y="256" width="16" height="16">
+   <properties>
+    <property name="type" value="COIN"/>
+   </properties>
+  </object>
+  <object id="119" x="1376" y="352" width="16" height="16">
+   <properties>
+    <property name="type" value="COIN"/>
+   </properties>
+  </object>
+  <object id="120" x="1408" y="352" width="16" height="16">
+   <properties>
+    <property name="type" value="COIN"/>
    </properties>
   </object>
  </objectgroup>

@@ -1,8 +1,6 @@
 //
 // Created by paolo on 14/02/21.
 //
-
-#include <iostream>
 #include "SoundSystem.h"
 
 SoundSystem::SoundSystem() {
@@ -47,7 +45,6 @@ void SoundSystem::receive(World *world, const SoundEvent &event) {
 }
 
 void SoundSystem::receive(World *world, const SetMusicEvent &event) {
-    std::cout << "play music" << std::endl;
     audioManager_->playMusic(event.musicId);
 }
 

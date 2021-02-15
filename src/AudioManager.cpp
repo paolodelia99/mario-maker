@@ -1,7 +1,6 @@
 //
 // Created by paolo on 14/02/21.
 //
-#include <iostream>
 #include "AudioManager.h"
 
 AudioManager::AudioManager() {
@@ -44,7 +43,6 @@ void AudioManager::playMusic(MusicId musicId) {
     if (it != musicMap_.end()) {
         PlayMusicStream(it->second);
         SetMusicVolume(it->second, 1.0f);
-        std::cout << IsMusicPlaying(it->second) << std::endl;
         currentMusic_ = it->second;
         pause = false;
     }
