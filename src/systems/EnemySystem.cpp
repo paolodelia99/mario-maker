@@ -188,8 +188,8 @@ void EnemySystem::killEnemyWithJump(Entity *enemy) {
                         TextureId::TARTOSSO_D_3,
                         TextureId::TARTOSSO_DEAD,
                 }, 16, false, false, false);
+            }
             break;
-        }
         case Enemy::Type::BULLET_BILL:
             enemy->assign<GravityComponent>();
             enemy->remove<SolidComponent>();

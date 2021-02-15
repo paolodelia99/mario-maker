@@ -37,7 +37,7 @@ Feel free also to add features that you would like to see in the game.
 - [ ] State pattern for controlling the player and the enemies (https://gameprogrammingpatterns.com/state.html)
 - Systems to implement: 
   - [ ] Score System (in progress)
-  - [ ] Sound & Music system
+  - [x] Sound & Music system
   - [x] FlagSystem (for winning)
 - [ ] Enemies to Implement
     - [x] Goomba
