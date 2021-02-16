@@ -123,7 +123,8 @@ which in this case are:
   - THWOMP_V (Thwomp with vertical movement)
   - THWOMP_V (Thwomp with horizontal movement)
   - PIRANHA_PLANT
-  - BULLET_BILL
+  - BLACK_CANNON, which must have another property **bulletType** which is the 
+  type of bullet its shoot. The values that bulletType can have are: B_BULLET_BILL, GOOMBA, SUPER_MUSHROOM, ONE_UP_MUSHROOM
   
   - While additional properties that can be added to enemies are:
     - isBig : **bool** make the enemy bigger

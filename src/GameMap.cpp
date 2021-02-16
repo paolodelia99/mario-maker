@@ -535,6 +535,9 @@ void GameMap::createObject(ECS::Entity *entity, std::vector<tmx::Property> prope
                             TextureId::COIN_50_8,
                     }, 12);
                 }
+            } else if (property.getName() == "left") {
+                if (property.getBoolValue()) entity->assign<PoleComponent>(Object::PoleDir::LEFT);
+                else entity->assign<PoleComponent>(Object::PoleDir::RIGHT);
             }
         }
     }

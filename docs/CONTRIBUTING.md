@@ -23,16 +23,13 @@ game dev check out the fantastic [gameProgrammingPatterns e-book](https://gamepr
 - [Tools for making the background transparent](https://www.photopea.com/)
 - [Enemies' behavior](https://supermariomaker2.fandom.com/wiki/Category:Enemies)
 
-## Code style
-
-**todo**
-
 ## Todos
 
 Here's I made a list of things that I would like to implement. Enjoy!
 
 Feel free also to add features that you would like to see in the game.
 
+- [ ] Make the game works on Windows
 - [ ] make parachute swings
 - [ ] State pattern for controlling the player and the enemies (https://gameprogrammingpatterns.com/state.html)
 - Systems to implement: 

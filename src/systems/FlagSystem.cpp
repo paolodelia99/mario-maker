@@ -35,9 +35,16 @@ void FlagSystem::tick(World *world, float delta) {
                 finalPole_->remove<SolidComponent>();
                 winner_->get<PlayerComponent>()->sit = false;
                 winner_->assign<GravityComponent>();
-                winner_->get<AABBComponent>()->collisionBox_.y += 3.0f;
-                winner_->get<AABBComponent>()->collisionBox_.x += 2.0f;
-                winner_->get<KineticComponent>()->accX_ = MARIO_ACCELERATION_X;
+
+                if (finalPole_->get<PoleComponent>()->poleDir == Object::PoleDir::RIGHT) {
+                    winner_->get<AABBComponent>()->collisionBox_.y += 3.0f;
+                    winner_->get<AABBComponent>()->collisionBox_.x += 2.0f;
+                    winner_->get<KineticComponent>()->accX_ = MARIO_ACCELERATION_X;
+                } else {
+                    winner_->get<AABBComponent>()->collisionBox_.y += 3.0f;
+                    winner_->get<AABBComponent>()->collisionBox_.x -= 2.0f;
+                    winner_->get<KineticComponent>()->accX_ = -MARIO_ACCELERATION_X;
+                }
 
                 winner_->assign<TimerComponent>([&]() {
                     winner_->get<KineticComponent>()->accX_ = 0.0f;

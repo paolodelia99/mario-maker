@@ -351,6 +351,11 @@ namespace Object {
         COIN_50,
         COIN
     };
+
+    enum PoleDir {
+        LEFT,
+        RIGHT
+    };
 }
 
 struct ObjectComponent {
@@ -358,6 +363,13 @@ struct ObjectComponent {
     ObjectComponent(Object::Type type) : type(type) {}
 
     Object::Type type;
+};
+
+struct PoleComponent {
+
+    PoleComponent(Object::PoleDir poleDir) : poleDir(poleDir) {}
+
+    Object::PoleDir poleDir = Object::PoleDir::RIGHT;
 };
 
 struct WinnerFlagComponent {};

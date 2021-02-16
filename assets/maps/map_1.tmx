@@ -208,6 +208,7 @@
  <objectgroup id="11" name="objects">
   <object id="108" x="176" y="176" width="16" height="16">
    <properties>
+    <property name="left" type="bool" value="true"/>
     <property name="type" value="FINAL_FLAG_POLE"/>
    </properties>
   </object>

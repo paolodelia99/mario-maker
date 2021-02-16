@@ -49,7 +49,7 @@ void CameraSystem::followLeadPlayer(World *world) {
         }
 
         if (pCamera_->camera.target.x - playerAABB.getCenterX() > screenWidth_ / 4) {
-            pCamera_->camera.target.x -= 2;
+            pCamera_->camera.target.x -= 4;
         }
 
         pCamera_->camera.target.y = playerAABB.top();
