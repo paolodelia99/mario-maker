@@ -666,6 +666,14 @@ void PlayerSystem::receive(World *world, const EnemyCollisionEvent &enemyCollisi
                             entity->remove<TimerComponent>();
                         }
                     });
+            world->each<CannonComponent>(
+                    [=](Entity* entity,
+                        ComponentHandle<CannonComponent> cannonComponent) {
+                        if (entity != player) {
+                            entity->assign<FrozenComponent>();
+                            entity->remove<TimerComponent>();
+                        }
+                    });
             world->emit<SoundEvent>(SoundEvent{SoundId::MARIO_DIE});
         } else {
             if (player->has<LeadCameraComponent>()) {

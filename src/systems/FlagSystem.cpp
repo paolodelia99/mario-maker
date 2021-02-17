@@ -85,6 +85,18 @@ void FlagSystem::receive(World *world, const CollisionWithFinalPoleEvent &collis
                     entity->remove<TimerComponent>();
                 }
             });
+    world->each<CannonComponent>(
+            [=](Entity* entity,
+                ComponentHandle<CannonComponent> cannonComponent) {
+                entity->assign<FrozenComponent>();
+                entity->remove<TimerComponent>();
+            });
+    world->each<HorizontalGrowComponent>(
+            [=](Entity* entity,
+                ComponentHandle<HorizontalGrowComponent> horizGrowComponent) {
+                entity->assign<FrozenComponent>();
+            });
+
     winningFlag_ = world->findFirst<WinnerFlagComponent>();
     finalPole_ = collisionWithFinalPole.pole;
     flagPoleBottom_ = collisionWithFinalPole.pole->get<AABBComponent>()->bottom();

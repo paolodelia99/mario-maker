@@ -24,9 +24,6 @@ you just need to run:
 Additional args could be:
 
 - `-G <Type_of_generator>`
-
-- `-DTMXLITE_INCLUDE_DIR=<your_path_to_txmlib_include>`, the path to the txmlite library, that I've used to parse
-the tmx files which contains the structure of the map. 
   
 If you're using **CLion** I've included the `./idea` folder, which can help you setting up and build the project.
 
@@ -34,7 +31,7 @@ If you're using **CLion** I've included the `./idea` folder, which can help you 
 
     path_to_build/mario_maker <path_map_to_load>
 
-Where the `path_map_to_load` is relative to the build folder. So, for example, it could be `../assets/maps/map_1.tmx`.
+Where the `path_map_to_load` is relative to the build folder. So, for example, it could be `../assets/maps/playground_world.tmx`.
 
 ## Commands
 
@@ -50,7 +47,7 @@ The second player's commands are:
 - `f` for shooting the fireball we mario is Flame
 
 > For handling the second player I'm planning to use the joystick/gamepad, but for the time being, on linux 
-> the Raylib's gamepad handler is not working (on Windows it works!)
+> the Raylib's gamepad handler is not working.
 
 # Libraries used
 
